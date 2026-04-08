@@ -1,8 +1,6 @@
 # SDD Learning Bundle
 
-**Spec-Driven Development v3.1** — An AI-native methodology that makes delivery metrics move.
-
-Last updated: February 25, 2026
+**Spec-Driven Development** — An AI-native methodology that makes delivery metrics move.
 
 ## What's Inside
 
@@ -26,7 +24,7 @@ Last updated: February 25, 2026
 - `governance/escalation-protocols.md` — When and how to escalate tier
 - `governance/stack-quirks.md` — Platform and tool gotchas
 
-### Spec Templates (SDD v4.0 Experimental)
+### Spec Templates (SDD Experimental)
 - `specs/templates/gate-annotation-guide.md` — How to annotate gate decisions
 - `specs/templates/post-completion-retro.md` — Post-deployment retrospective template
 
