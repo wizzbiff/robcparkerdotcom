@@ -12,11 +12,11 @@ Use the higher tier until resolved. Document reasoning in spec.
 ## Spec Ambiguity During Implementation
 1. Stop implementation on the ambiguous portion
 2. Flag with options
-3. Grant resolves and updates spec
+3. Rob resolves and updates spec
 4. Re-approval from affected gates if scope/architecture changed
 
 ## Pattern Disagreement
-Grant's judgment prevails. Log disagreement as learning event for quarterly review.
+Rob's judgment prevails. Log disagreement as learning event for quarterly review.
 
 ## External Review Triggers
 - Any Critical tier spec
