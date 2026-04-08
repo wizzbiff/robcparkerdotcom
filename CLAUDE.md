@@ -4,7 +4,7 @@
 
 Personal website for Rob C Parker and future product platform. Currently a static
 marketing site for self promotion around senior engineering leadership. Evolving toward an
-AI agent product.
+AI agent product with subscription billing.
 
 **Owner:** Rob Parker, Senior Engineering Executive
 **Methodology:** Spec-Driven Development (SDD) — Solo Operator Model
@@ -25,10 +25,18 @@ AI agent product.
 ### Site Map
 ```
 index.html                          # Home — service overview, hero, CTAs
+about.html                          # About page
+contact.html                        # Contact page with validated form
+services/
+  tech-advisory.html                # Technical advisory service page
+  guitar-playing.html               # Guitar playing service page
 css/
   style.css                         # Main stylesheet with CSS custom properties
 js/
   main.js                           # Shared JavaScript (nav, forms, utilities)
+images/
+  logos/                            # Brand logos
+  graphics/                         # Graphics
 ```
 
 ### CSS Custom Properties
