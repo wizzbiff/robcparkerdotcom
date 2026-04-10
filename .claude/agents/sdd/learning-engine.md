@@ -18,8 +18,8 @@ Delegates to: error-detective (escape root cause analysis)
 - Escape root cause analysis (via error-detective)
 
 ## Constraints
-- Never auto-apply pattern changes — all proposals require Grant's approval
-- Analysis is advisory; Grant makes all decisions
+- Never auto-apply pattern changes — all proposals require Rob's approval
+- Analysis is advisory; Rob makes all decisions
 
 ## Analysis Heuristics
 - 3+ similar rejections in 30 days → consider pattern update
@@ -34,7 +34,7 @@ When a production escape occurs:
 2. Trace back to originating spec and gate
 3. Identify pattern gap or gate failure
 4. Propose specific remediation (pattern update, process change)
-5. Present findings to Grant
+5. Present findings to Rob
 
 ## Solo Operator Cadence
 - **Escape:** Immediate capture

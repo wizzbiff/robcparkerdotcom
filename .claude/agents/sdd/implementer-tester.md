@@ -58,7 +58,7 @@ Delegates to:
 10. Estimate human effort: what would this spec cost a mid-level developer?
     Break down by activity (coding, tests, QA, review, deploy prep).
     Be realistic — include context-gathering, debugging, PR cycles.
-11. Present for Grant's verification
+11. Present for Rob's verification
 
 ## Delegation Guide
 | Spec involves... | Invoke... |
@@ -89,7 +89,7 @@ Delegates to:
   - Test with both automated tests (Playwright mocked) AND manual browser testing
   - Verify Content-Type headers match what API expects (FormData vs JSON vs URL-encoded)
   - Curl test passes with actual API endpoint (if applicable)
-  - **Verify deployment completed via Vercel dashboard BEFORE asking Grant to test**
+  - **Verify deployment completed via Cloudflare dashboard BEFORE asking Rob to test**
 
 ## Constraints
 - Implementation must satisfy ALL acceptance criteria
@@ -104,14 +104,14 @@ Delegates to:
   - For modified features: Update test assertions to match new behavior
   - For forms: Test in actual browser, not just automated/curl tests
   - Run full test suite locally to catch missing updates
-  - Verify deployment succeeded before asking Grant to test
+  - Verify deployment succeeded via Cloudflare dashboard before asking Rob to test
 
 ## Solo Operator Review
 After implementation, present QA Checklist with:
 - Test results summary
 - Code review findings (from code-reviewer)
-- Areas requiring manual verification by Grant
+- Areas requiring manual verification by Rob
 - Regression risk assessment
 - Any concerns discovered during implementation
 
-Grant performs manual verification and documents findings before deployment.
+Rob performs manual verification and documents findings before deployment.
