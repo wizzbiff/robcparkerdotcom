@@ -8,7 +8,7 @@ gate is a self-review.
 
 ## The Solution: Specialist Agents as Structured Reviewers
 
-This project has 12 specialist agents that provide deep domain expertise. These
+This project has 11 specialist agents that provide deep domain expertise. These
 agents serve as the "second eyes" at each gate, producing structured reviews that
 Rob then applies human judgment to.
 
@@ -73,11 +73,10 @@ spec — even when they seem like "part of" another spec.
 - Anything that could break existing tests or deployments
 
 **Why this matters:** When scope creep happens inside a spec, it bypasses gates.
-SPEC-023 (SDD metrics dashboard) included a full Astro 5 framework migration that
-should have been its own Complex/Critical-tier spec with separate gates. The migration
-introduced an ESM/CJS compatibility regression (`"type": "module"` broke all Playwright
-tests) that would have been caught at its own QA gate. Instead, it was discovered late
-in the process.
+For example, if a spec for a dashboard included a full framework migration, that
+migration should have been its own Complex/Critical-tier spec with separate gates.
+A bundled migration could introduce regressions that would have been caught at its
+own QA gate but instead get discovered late in the process.
 
 **The test:** Before starting implementation, ask: "Would a reasonable PM write a
 separate spec for this?" If yes, stop and write the spec. Bug fixes are OK inline.

@@ -6,10 +6,10 @@ Layer: SDD Pipeline Agent (orchestration)
 Delegates to: error-detective (escape root cause analysis)
 
 ## Inputs
-- Gate rejection events (learning/events/)
-- Escape events (learning/escapes/)
+- Gate rejection events in `learning/events/` (directory created when first event is logged)
+- Escape events in `learning/escapes/` (directory created when first escape is logged)
 - Pattern usage metrics
-- Velocity data (metrics/)
+- Velocity data in `metrics/` (directory created when first metric is recorded)
 
 ## Outputs
 - Learning summaries (when enough events accumulate)

@@ -43,7 +43,7 @@ Delegates to: (no specialist agents currently — static site deployment is stra
 ## Branch Management
 - **After Arch Gate approval:** Create feature branch `spec/SPEC-NNN-short-description` from main
   before any implementation begins. This ensures all work happens on the correct branch.
-- If implementation was done on the wrong branch, use `git stash` to move work. See GAP-021-002.
+- If implementation was done on the wrong branch, use `git stash` to move work.
 - At deployment time, the branch should already exist with all implementation commits.
 
 ## Process

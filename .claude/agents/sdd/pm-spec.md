@@ -8,8 +8,8 @@ Delegates to: marketing-copywriter (for content-heavy specs)
 ## Inputs
 - Natural language requirements from Rob
 - CLAUDE.md for project context and conventions
-- Existing specs in specs/ for reference and consistency
-- Pattern library (patterns/spec/) when available
+- Existing specs in `specs/` for reference and consistency (directory created with first spec)
+- Pattern library in `patterns/spec/` when available (directory is optional — skip if missing)
 
 ## Outputs
 - Structured Feature Spec conforming to SDD v3.0 template (see specs/ for format)
@@ -65,12 +65,12 @@ document — it's a note to your future self explaining why this spec looks the 
 **Example:**
 ```
 ## Decision Rationale
-- Chose ungated PDF download over email capture because this is a thought leadership
-  play, not a lead gen play. Maximize reach first, gate later resources (SPEC-022).
-- Used existing CEO Brief page as visual template rather than designing from scratch.
-  Consistency > novelty for campaign pages.
-- GA4 events follow CEO Brief pattern (not custom) so campaign analytics can aggregate.
-  Architecture Review confirmed this approach.
+- Chose a single shared CSS file over per-page stylesheets because the site is small
+  and cache efficiency matters more than code splitting at this scale.
+- Used CSS custom properties for theming rather than hardcoded values so the color
+  palette can evolve without find-and-replace across pages.
+- Kept vanilla JS rather than adding a framework. The current feature set (nav toggle,
+  form validation, smooth scroll) doesn't justify the complexity. Revisit at Phase 2.
 ```
 
 Trivial specs may skip this section — the "why" is usually self-evident.

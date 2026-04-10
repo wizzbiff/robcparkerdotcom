@@ -74,7 +74,7 @@ No exceptions. Every change must pass through the QA checklist before `git commi
 - [ ] Validation working (required fields, email format)
 - [ ] Error handling working
 - [ ] Success message displays
-- [ ] Data actually received (check Formspree dashboard)
+- [ ] Data actually received (check service dashboard)
 
 ### For Visual/Design Changes:
 - [ ] Mobile responsive (test at 768px, 375px)
@@ -101,13 +101,13 @@ No exceptions. Every change must pass through the QA checklist before `git commi
 
 **Example Commit Message with QA:**
 ```
-Update campaign title to include "AI" for clarity
+Update service page headline for clarity
 
-- Changed "Fighter Jets" to "AI Fighter Jets"
+- Revised tech-advisory headline to lead with outcomes
 - Updated title tag and OG tags
 - QA: Verified meta tags, tested mobile responsive, checked link preview
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ---
