@@ -36,7 +36,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
 ## Constraints
 - Never assume unstated requirements — flag ambiguities for resolution
 - **Never assume third-party features exist without verification**
-  - If spec mentions third-party service features (e.g., "Cloudflare Workers", "Netlify Functions"), verify in vendor documentation FIRST
+  - If spec mentions third-party service features (e.g., "Cloudflare Workers", "Stripe Checkout"), verify in vendor documentation FIRST
   - Include documentation link in spec confirming feature exists
   - Flag for architecture review if third-party integration (cannot skip review for integrations)
 - Apply spec patterns from patterns/spec/ when available

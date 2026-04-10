@@ -168,56 +168,6 @@ For adding new features or pages, follow this complete workflow:
 
 ---
 
-## Campaign Landing Page Workflow
-
-Special workflow for campaign pages (most common use case):
-
-```
-┌─────────────────────────────────────────────┐
-│ 1. Draft Content                            │
-│    - Outline key points                     │
-│    - Identify target audience               │
-│    - Define conversion goal                 │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 2. Marketing Copywriter Review (REQUIRED)  │
-│    Agent: marketing-copywriter              │
-│    - Optimize headline                      │
-│    - Improve value propositions             │
-│    - Strengthen CTAs                        │
-│    - Create meta descriptions               │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 3. Implementation                           │
-│    - Create HTML with optimized copy       │
-│    - Style for conversion                   │
-│    - Add form integration                   │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 4. QA (REQUIRED)                            │
-│    - Test form submission                   │
-│    - Verify meta tags                       │
-│    - Check mobile responsive                │
-│    - Validate links                         │
-│    - Test LinkedIn preview                  │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 5. Commit & Push                            │
-│    - Document QA in commit message          │
-│    - Push to production                     │
-└─────────────────────────────────────────────┘
-```
-
----
-
 ## Common Mistakes to Avoid
 
 ### ❌ DON'T:
