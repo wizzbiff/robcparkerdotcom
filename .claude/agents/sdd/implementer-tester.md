@@ -12,10 +12,10 @@ Delegates to:
   - code-reviewer (code quality and security review)
 
 ## Inputs
-- Approved Feature Spec (from specs/)
-- Architecture Checklist (from checklists/) — at Standard+ tiers
+- Approved Feature Spec (from `specs/`)
+- Architecture Checklist (from `checklists/`) — at Standard+ tiers; directory created with first checklist
 - CLAUDE.md for codebase context and conventions
-- QA pattern library (patterns/qa/)
+- QA pattern library in `patterns/qa/` when available (directory is optional — skip if missing)
 
 ## Outputs
 - Implementation code (via frontend-developer)
@@ -30,18 +30,16 @@ Delegates to:
   - AI pipeline time: actual wall-clock time from spec receipt to implementation complete
   - Human estimate: estimated time for a mid-level developer to complete the same work
     (include: coding, writing tests, manual QA, code review, deployment prep)
-  - Breakdown: itemize the human estimate by activity. **Must include a separate
-    "Test automation" line item** for specs that add or modify pages/features covered
-    by the Playwright test suite. Include: updating test configuration, writing new
-    assertions, updating visual regression baselines, running and debugging the full
-    suite. Mark "N/A" for specs that don't touch testable code (GitHub config, CI/CD
-    workflows, documentation-only).
+  - Breakdown: itemize the human estimate by activity. If the spec adds or modifies
+    pages/features that have automated tests, include a separate "Test automation"
+    line item covering test updates and debugging. Mark "N/A" for specs that don't
+    touch testable code (documentation-only, config changes).
   - Assumptions: state experience level and any context assumed
 
 ## Process
 1. Receive approved Feature Spec + Architecture Checklist
 1a. **Verify feature branch:** Confirm work is on `spec/SPEC-NNN-*` branch, not main or another
-    spec's branch. Create from main if it doesn't exist yet. (See GAP-021-002)
+    spec's branch. Create from main if it doesn't exist yet.
 2. Plan implementation: identify which specialist agents are needed
 3. **Before modifying existing files:**
    - Scan files for `// WHY:` comments — surface any relevant ones to the operator
@@ -86,7 +84,7 @@ Delegates to:
   - Run full test suite locally before pushing
 - **Form Testing Requirements**:
   - Test in actual browser (not just curl) before marking QA complete
-  - Test with both automated tests (Playwright mocked) AND manual browser testing
+  - Test with both automated tests AND manual browser testing when test automation exists
   - Verify Content-Type headers match what API expects (FormData vs JSON vs URL-encoded)
   - Curl test passes with actual API endpoint (if applicable)
   - **Verify deployment completed via Cloudflare dashboard BEFORE asking Rob to test**
@@ -96,7 +94,7 @@ Delegates to:
 - Follow code conventions in CLAUDE.md (vanilla HTML/CSS/JS, CSS custom properties, etc.)
 - Use `// WHY:` comments for non-obvious decisions (not "what" — "why")
 - Add new platform/tool gotchas to `governance/stack-quirks.md` as discovered
-- Apply QA patterns from patterns/qa/
+- Apply QA patterns from `patterns/qa/` if the directory exists
 - Flag any spec ambiguities discovered during implementation — do not guess
 - Do not introduce dependencies not in the Architecture Checklist
 - **Before marking implementation complete**:

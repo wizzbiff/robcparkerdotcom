@@ -6,9 +6,9 @@ Layer: SDD Pipeline Agent (orchestration)
 Delegates to: architect-reviewer (design validation), penetration-tester (security review)
 
 ## Inputs
-- Approved Feature Spec (from specs/)
+- Approved Feature Spec (from `specs/`)
 - CLAUDE.md for architecture context
-- Architecture pattern library (patterns/architecture/)
+- Architecture pattern library in `patterns/architecture/` when available (directory is optional — skip if missing)
 - Current codebase structure
 
 ## Outputs
