@@ -1,14 +1,14 @@
-# CLAUDE.md — GeekByte Website
+# CLAUDE.md — RobCParker Website
 
 ## Project Overview
 
-GeekByte LLC corporate website and future product platform. Currently a static
-marketing site for PE-focused technology advisory services. Evolving toward an
+Personal website for Rob C Parker and future product platform. Currently a static
+marketing site for self promotion around senior engineering leadership. Evolving toward an
 AI agent product with subscription billing.
 
-**Owner:** Grant Howe, Managing Partner, GeekByte LLC
-**Methodology:** Spec-Driven Development (SDD) v3.0 — Solo Operator Model
-**URL:** https://www.geekbyte.biz
+**Owner:** Rob Parker, Senior Engineering Executive
+**Methodology:** Spec-Driven Development (SDD) — Solo Operator Model
+**URL:** https://www.robcparker.com
 
 ## Current State
 
@@ -17,31 +17,27 @@ AI agent product with subscription billing.
 - **Structure:** Multi-page static site with shared nav/footer
 - **Styling:** CSS custom properties for theming, Flexbox/Grid, mobile-first responsive
 - **JavaScript:** Vanilla JS — mobile nav toggle, contact form validation, smooth scrolling, debounce/viewport utilities
-- **Hosting:** Vercel (connected to GitHub repository for automatic deployments)
-- **Domain:** geekbyte.biz
+- **Hosting:** Cloudflare (connected to GitHub repository for automatic deployments)
+- **Domain:** robcparker.com
 - **Frameworks:** None — pure HTML/CSS/JS, no build process
 - **Dependencies:** None
 
 ### Site Map
 ```
 index.html                          # Home — service overview, hero, CTAs
-about.html                          # About page
+about.html                          # Page about Rob C Parker
+resume.html                         # Rob C Parker resume
 contact.html                        # Contact page with validated form
 services/
-  fractional-cto.html               # Fractional CTO service page
-  board-advisory.html               # Board Advisory service page
-  growth-advisory.html              # Growth Advisory service page
-campaigns/
-  ai-ceo-brief.html                 # AI executive brief campaign landing page
-  downloads/                        # Campaign PDF downloads
+  tech-advisory.html                # Technical advisory service page
+  guitar-playing.html               # Guitar playing service page
 css/
   style.css                         # Main stylesheet with CSS custom properties
 js/
   main.js                           # Shared JavaScript (nav, forms, utilities)
 images/
-  logos/brand/geekbyte-logo.png     # Brand logo
-  graphics/hero-value-cycle.svg     # Hero section SVG
-  geekbyte-og-image.png             # Social sharing OG image (1200x630)
+  logos/                            # Brand logos
+  graphics/                         # Graphics
 ```
 
 ### CSS Custom Properties
@@ -56,7 +52,7 @@ images/
 
 ### JavaScript Capabilities
 - Mobile navigation toggle (hamburger menu)
-- Contact form client-side validation (backend integration ready — see main.js lines 75-92)
+- Contact form client-side validation (backend integration ready — see main.js)
 - Smooth scrolling
 - Active page highlighting
 - Utility functions: debounce, viewport detection
@@ -64,25 +60,18 @@ images/
 ### Known Issues
 - None currently tracked
 
-### Recent Updates
-- Added campaign landing pages with Formspree integration
-- Contact form now submits to Formspree (f/mbdrppqp)
-- Added LinkedIn social links to footer and about page
-- Implemented development workflow requiring marketing-copywriter review
-
 ## Product Roadmap
 
 1. **Current:** Static marketing site (HTML/CSS/JS)
-2. **Near-term:** Content additions, blog/insights, case studies, SDD methodology page
-3. **Mid-term:** AI agent product — conversational agent trained on Grant's knowledge
-4. **Long-term:** Subscription model with payments, user accounts, gated access
+2. **Next:** AI agent product — conversational agent trained on Rob's knowledge
+3. **Future:** Subscription payment model for conversational agent
 
 ### Architectural Implications
-- Phase 2 can stay static or move to a static site generator (Hugo, Astro)
-- Phase 3 requires a backend (API, database, AI integration) — this is the critical architecture decision
-- Phase 4 adds auth, payments, user management — mandatory Critical tier in SDD
+- Phase 1 can stay static or move to a static site generator (Hugo, Astro)
+- Phase 2 requires a backend (API, database, AI integration) — this is the critical architecture decision
+- Phase 3 requires integration with a payment processor (stripe, etc.)
 
-## Development Methodology: SDD v3.0
+## Development Methodology: Spec Driven Development (SDD)
 
 ### Pipeline
 ```
@@ -94,7 +83,7 @@ PM-Spec → Spec Gate → Architect-Review → Arch Gate → Implementer-Tester 
 This project uses a **two-layer agent architecture**:
 
 **Layer 1 — SDD Pipeline Agents** (orchestration)
-These control the flow of work through the pipeline. They produce and validate
+These control the flow of work through the SDD pipeline. They produce and validate
 artifacts (specs, checklists) and invoke specialist agents for execution.
 - `sdd/pm-spec.md` — Spec authoring and structuring
 - `sdd/architect-review.md` — Architecture validation against patterns
@@ -140,7 +129,7 @@ When a spec flows through the pipeline:
    Invokes `error-detective` for escape root cause analysis.
 
 ### Gate Ownership (Solo Operator)
-All gates owned by Grant with AI agent structured review.
+All gates owned by Rob C Parker with AI agent structured review.
 See `governance/solo-operator-model.md` for the full model.
 Critical tier requires external second reviewer.
 
@@ -162,9 +151,9 @@ Critical tier requires external second reviewer.
 | Auth/user accounts | Critical |
 | Payment/subscription | Critical |
 
-### SDD v4.0 Experimental: Preserving the Why
+### SDD Experimental: Preserving the Why
 
-These additions are experimental (introduced 2026-02-20). Evaluate after 10 specs.
+These additions are experimental. Evaluate after 10 specs.
 
 **Decision Rationale:** Standard+ specs include a `## Decision Rationale` section
 capturing alternatives considered, constraints, assumptions, and trade-offs.

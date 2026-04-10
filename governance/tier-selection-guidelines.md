@@ -1,4 +1,4 @@
-# Tier Selection Guidelines — GeekByte Website
+# Tier Selection Guidelines — RobCParker Website
 
 ## Quick Reference
 

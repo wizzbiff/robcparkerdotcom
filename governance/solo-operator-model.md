@@ -1,16 +1,16 @@
-# Solo Operator Gate Model — GeekByte Website
+# Solo Operator Gate Model — RobCParker Website
 
 ## The Problem
 
-SDD v3.0 states: "Gate owners cannot approve their own specs (no self-review)."
-When one person (Grant) is the PM, architect, developer, QA, and ops lead, every
+SDD states: "Gate owners cannot approve their own specs (no self-review)."
+When one person (Rob) is the PM, architect, developer, QA, and ops lead, every
 gate is a self-review.
 
 ## The Solution: Specialist Agents as Structured Reviewers
 
-This project has 12 specialist agents that provide deep domain expertise. These
+This project has 11 specialist agents that provide deep domain expertise. These
 agents serve as the "second eyes" at each gate, producing structured reviews that
-Grant then applies human judgment to.
+Rob then applies human judgment to.
 
 The two-step process at each gate:
 
@@ -18,14 +18,14 @@ The two-step process at each gate:
    agents to evaluate the artifact against patterns, checklists, and the spec.
    This surfaces concerns, gaps, and questions that a solo reviewer might miss.
 
-2. **Grant provides documented human judgment** — reviewing the agents' output
+2. **Rob provides documented human judgment** — reviewing the agents' output
    and making the approval decision with written reasoning. The discipline:
-   Grant must respond to each concern raised, even if the response is
+   Rob must respond to each concern raised, even if the response is
    "acknowledged, accepted because [reason]."
 
 ## Gate Assignments
 
-| Gate | SDD Pipeline Agent | Specialist Agents Invoked | Grant's Role |
+| Gate | SDD Pipeline Agent | Specialist Agents Invoked | Rob's Role |
 |------|-------------------|--------------------------|-------------|
 | Spec Approval | sdd/pm-spec | marketing-copywriter (content specs) | Confirm business intent, approve tier |
 | Architecture Review | sdd/architect-review | architect-reviewer, penetration-tester | Review risks, confirm feasibility |
@@ -34,7 +34,7 @@ The two-step process at each gate:
 
 ## Evidence of Engagement
 
-The key discipline: Grant's approval must include specific responses to
+The key discipline: Rob's approval must include specific responses to
 agent-raised concerns. This is not a rubber stamp.
 
 | Tier | Evidence Required |
@@ -52,7 +52,7 @@ Mandatory:
 - Annual pipeline audit
 
 Recommended:
-- Any spec where Grant is uncertain after agent review
+- Any spec where Rob is uncertain after agent review
 - Major framework or platform decisions
 
 ## Scope Discipline: Every Feature Needs a Spec
@@ -73,15 +73,40 @@ spec — even when they seem like "part of" another spec.
 - Anything that could break existing tests or deployments
 
 **Why this matters:** When scope creep happens inside a spec, it bypasses gates.
-SPEC-023 (SDD metrics dashboard) included a full Astro 5 framework migration that
-should have been its own Complex/Critical-tier spec with separate gates. The migration
-introduced an ESM/CJS compatibility regression (`"type": "module"` broke all Playwright
-tests) that would have been caught at its own QA gate. Instead, it was discovered late
-in the process.
+For example, if a spec for a dashboard included a full framework migration, that
+migration should have been its own Complex/Critical-tier spec with separate gates.
+A bundled migration could introduce regressions that would have been caught at its
+own QA gate but instead get discovered late in the process.
 
 **The test:** Before starting implementation, ask: "Would a reasonable PM write a
 separate spec for this?" If yes, stop and write the spec. Bug fixes are OK inline.
 Re-architecture is never OK inline.
+
+## Model Selection Convention
+
+Specialist agents use one of two Claude models, chosen by the nature of the work:
+
+**Opus** — deep reasoning, review, and orchestration roles where analysis quality
+is the main constraint:
+- architect-reviewer
+- code-reviewer
+- penetration-tester
+- multi-agent-coordinator
+
+**Sonnet** — execution roles where the work is more mechanical and speed/cost
+matter more than maximum reasoning depth:
+- error-detective
+- frontend-developer
+- graphic-artist
+- marketing-copywriter
+- qa-expert
+- test-automator
+- ui-designer
+
+**Rule of thumb:** If the agent's primary job is to catch what a human reviewer
+would miss, use opus. If its primary job is to produce an artifact from a clear
+spec, use sonnet. Revisit this convention if specialist outputs consistently fall
+short or if cost becomes a concern.
 
 ## Process Atrophy Prevention
 

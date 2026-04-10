@@ -1,8 +1,8 @@
-# Geekbyte Development Workflow
+# RobCParker Development Workflow
 
 ## Mandatory Process for All Changes
 
-This document defines the required workflow for all changes to the Geekbyte website. Following this process ensures quality, consistency, and proper review before deployment.
+This document defines the required workflow for all changes to the RobCParker website. Following this process ensures quality, consistency, and proper review before deployment.
 
 ---
 
@@ -74,7 +74,7 @@ No exceptions. Every change must pass through the QA checklist before `git commi
 - [ ] Validation working (required fields, email format)
 - [ ] Error handling working
 - [ ] Success message displays
-- [ ] Data actually received (check Formspree dashboard)
+- [ ] Data actually received (check service dashboard)
 
 ### For Visual/Design Changes:
 - [ ] Mobile responsive (test at 768px, 375px)
@@ -101,13 +101,13 @@ No exceptions. Every change must pass through the QA checklist before `git commi
 
 **Example Commit Message with QA:**
 ```
-Update campaign title to include "AI" for clarity
+Update service page headline for clarity
 
-- Changed "Fighter Jets" to "AI Fighter Jets"
+- Revised tech-advisory headline to lead with outcomes
 - Updated title tag and OG tags
 - QA: Verified meta tags, tested mobile responsive, checked link preview
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ---
@@ -165,56 +165,6 @@ For adding new features or pages, follow this complete workflow:
 
 ### 8. Commit & Push
 **Only after QA passes**
-
----
-
-## Campaign Landing Page Workflow
-
-Special workflow for campaign pages (most common use case):
-
-```
-┌─────────────────────────────────────────────┐
-│ 1. Draft Content                            │
-│    - Outline key points                     │
-│    - Identify target audience               │
-│    - Define conversion goal                 │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 2. Marketing Copywriter Review (REQUIRED)  │
-│    Agent: marketing-copywriter              │
-│    - Optimize headline                      │
-│    - Improve value propositions             │
-│    - Strengthen CTAs                        │
-│    - Create meta descriptions               │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 3. Implementation                           │
-│    - Create HTML with optimized copy       │
-│    - Style for conversion                   │
-│    - Add form integration                   │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 4. QA (REQUIRED)                            │
-│    - Test form submission                   │
-│    - Verify meta tags                       │
-│    - Check mobile responsive                │
-│    - Validate links                         │
-│    - Test LinkedIn preview                  │
-└────────────────┬────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────┐
-│ 5. Commit & Push                            │
-│    - Document QA in commit message          │
-│    - Push to production                     │
-└─────────────────────────────────────────────┘
-```
 
 ---
 
