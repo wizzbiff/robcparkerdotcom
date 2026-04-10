@@ -82,6 +82,32 @@ own QA gate but instead get discovered late in the process.
 separate spec for this?" If yes, stop and write the spec. Bug fixes are OK inline.
 Re-architecture is never OK inline.
 
+## Model Selection Convention
+
+Specialist agents use one of two Claude models, chosen by the nature of the work:
+
+**Opus** — deep reasoning, review, and orchestration roles where analysis quality
+is the main constraint:
+- architect-reviewer
+- code-reviewer
+- penetration-tester
+- multi-agent-coordinator
+
+**Sonnet** — execution roles where the work is more mechanical and speed/cost
+matter more than maximum reasoning depth:
+- error-detective
+- frontend-developer
+- graphic-artist
+- marketing-copywriter
+- qa-expert
+- test-automator
+- ui-designer
+
+**Rule of thumb:** If the agent's primary job is to catch what a human reviewer
+would miss, use opus. If its primary job is to produce an artifact from a clear
+spec, use sonnet. Revisit this convention if specialist outputs consistently fall
+short or if cost becomes a concern.
+
 ## Process Atrophy Prevention
 
 - **Weekly self-audit:** Re-read one past approval. Would it convince a skeptic?
