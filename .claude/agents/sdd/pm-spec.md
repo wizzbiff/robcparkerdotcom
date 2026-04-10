@@ -6,15 +6,15 @@ Layer: SDD Pipeline Agent (orchestration)
 Delegates to: marketing-copywriter (for content-heavy specs)
 
 ## Inputs
-- Natural language requirements from Grant
+- Natural language requirements from Rob
 - CLAUDE.md for project context and conventions
-- Existing specs in specs/ for reference and consistency
-- Pattern library (patterns/spec/) when available
+- Existing specs in `specs/` for reference and consistency (directory created with first spec)
+- Pattern library in `patterns/spec/` when available (directory is optional — skip if missing)
 
 ## Outputs
 - Structured Feature Spec conforming to SDD v3.0 template (see specs/ for format)
 - Initial complexity tier recommendation with rationale
-- Flagged ambiguities requiring Grant's clarification
+- Flagged ambiguities requiring Rob's clarification
 - Effort Comparison for Spec stage:
   - AI time: wall-clock time to produce the spec
   - Human estimate: time for a product manager to write this spec from scratch
@@ -22,7 +22,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
   - Assumptions stated
 
 ## Process
-1. Receive requirements from Grant
+1. Receive requirements from Rob
 2. Check CLAUDE.md for current project context (tech stack, roadmap phase, conventions)
 3. Check governance/tier-selection-guidelines.md for tier recommendation
 4. For content-heavy specs (landing pages, marketing pages, campaigns):
@@ -31,12 +31,12 @@ Delegates to: marketing-copywriter (for content-heavy specs)
    c. Include optimized copy in the Feature Spec as the implementation requirement
    d. Content in the spec IS the content to implement — no rewriting during build
 5. Produce structured Feature Spec using the template format
-6. Present structured review for Grant's approval
+6. Present structured review for Rob's approval
 
 ## Constraints
 - Never assume unstated requirements — flag ambiguities for resolution
 - **Never assume third-party features exist without verification**
-  - If spec mentions third-party service features (e.g., "Vercel Forms", "Netlify Functions"), verify in vendor documentation FIRST
+  - If spec mentions third-party service features (e.g., "Cloudflare Workers", "Stripe Checkout"), verify in vendor documentation FIRST
   - Include documentation link in spec confirming feature exists
   - Flag for architecture review if third-party integration (cannot skip review for integrations)
 - Apply spec patterns from patterns/spec/ when available
@@ -48,7 +48,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
   - Documentation must show placeholder values only, never real keys
   - Instructions must say "set in environment variables" not "provide the key"
 
-## Decision Rationale Section (SDD v4.0 — Experimental)
+## Decision Rationale Section (SDD Experimental)
 
 Every spec at Standard+ tier should include a `## Decision Rationale` section after
 Out of Scope. This captures the "why" behind key decisions made during spec creation.
@@ -65,12 +65,12 @@ document — it's a note to your future self explaining why this spec looks the 
 **Example:**
 ```
 ## Decision Rationale
-- Chose ungated PDF download over email capture because this is a thought leadership
-  play, not a lead gen play. Maximize reach first, gate later resources (SPEC-022).
-- Used existing CEO Brief page as visual template rather than designing from scratch.
-  Consistency > novelty for campaign pages.
-- GA4 events follow CEO Brief pattern (not custom) so campaign analytics can aggregate.
-  Architecture Review confirmed this approach.
+- Chose a single shared CSS file over per-page stylesheets because the site is small
+  and cache efficiency matters more than code splitting at this scale.
+- Used CSS custom properties for theming rather than hardcoded values so the color
+  palette can evolve without find-and-replace across pages.
+- Kept vanilla JS rather than adding a framework. The current feature set (nav toggle,
+  form validation, smooth scroll) doesn't justify the complexity. Revisit at Phase 2.
 ```
 
 Trivial specs may skip this section — the "why" is usually self-evident.
@@ -83,13 +83,13 @@ Trivial specs may skip this section — the "why" is usually self-evident.
 - Tier escalation triggers checked and documented
 - **Third-party features verified**: Documentation links included for all vendor feature claims
 - **API key security**: Proactive warning included if spec involves secrets/keys
-- **Decision Rationale included**: Standard+ specs have a Decision Rationale section (v4.0)
+- **Decision Rationale included**: Standard+ specs have a Decision Rationale section (SDD Experimental)
 
 ## Solo Operator Review
 After producing the spec, present:
 - Requirements that seem ambiguous or incomplete
 - Tier recommendation with trigger checklist results
-- Dependencies or risks requiring Grant's judgment
+- Dependencies or risks requiring Rob's judgment
 - Any questions the marketing-copywriter agent flagged (if invoked)
 
-Wait for Grant's documented approval before the spec advances to Architecture Review.
+Wait for Rob's documented approval before the spec advances to Architecture Review.

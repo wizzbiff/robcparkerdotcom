@@ -1,26 +1,24 @@
-# QA Checklist for Geekbyte Website
+# QA Checklist for RobCParker Website
 
 ## Pre-Commit Checks
 
 ### Test Coverage Impact
-- [ ] Identify test files covering modified/removed features
+- [ ] Identify test files covering modified/removed features (if automated tests exist)
 - [ ] Update or remove affected test files
 - [ ] Verify no orphaned test fixtures or mocks
-- [ ] **Start local dev server** (`npx serve -l 3000 .`) before running Playwright tests
-  - If 188+ tests fail but visual regression passes, the server is not running (see GAP-021-001)
-- [ ] Run full test suite locally before pushing (`npm test`)
+- [ ] Run full test suite locally before pushing (if automated tests exist)
 
 ### Forms
 - [ ] **Test in actual browser** (not just curl) before marking QA complete
-- [ ] Test with both automated tests (Playwright mocked) AND manual browser testing
+- [ ] Test with both automated tests AND manual browser testing (when test automation exists)
 - [ ] Verify Content-Type headers match what API expects (FormData vs JSON vs URL-encoded)
 - [ ] Curl test passes with actual API endpoint (if applicable)
 - [ ] Test form submission on local/staging environment
-- [ ] Verify third-party service URLs match documented format (e.g., Formspree)
+- [ ] Verify third-party service URLs match documented format
 - [ ] Confirm form data is actually received (check email/dashboard)
 - [ ] Test validation messages (required fields, email format)
 - [ ] Test error handling (network failure, service down)
-- [ ] **Verify deployment completed via Vercel dashboard BEFORE asking user to test**
+- [ ] **Verify deployment completed via Cloudflare dashboard BEFORE asking user to test**
 
 ### Links
 - [ ] All internal links resolve correctly
@@ -53,13 +51,11 @@
 - [ ] Architecture review completed BEFORE implementation starts (cannot be skipped for integrations)
 
 ### Deployment Configuration
-- [ ] Check vercel.json for potential conflicts (if adding scripts, routes, or headers)
 - [ ] Run visual regression tests locally if any UI/script changes
 - [ ] Test staging deployment before marking complete
 - [ ] Architecture review includes deployment config impact (observability tools, analytics, etc.)
 - [ ] CSP and routing rules verified for new scripts
-- [ ] **After vercel.json changes: verify Production deployment triggers (not just Preview)**
-  - Silent deployment failures can masquerade as infrastructure issues (see SPEC-016)
+- [ ] Verify Cloudflare Pages deployment completes successfully after merge
 
 ## Post-Deploy Checks
 
@@ -71,9 +67,8 @@
 5. [ ] Test on mobile (hamburger menu)
 
 ### Third-Party Integrations
-- [ ] Formspree: Submit test, confirm email received
-- [ ] Google Fonts: Verify fonts load
-- [ ] CalendarBridge: Test booking link
+- [ ] Verify all integrated third-party services are functioning
+- [ ] Confirm form submissions are received (if contact form has a backend service)
 
 ## Form Change Specific
 

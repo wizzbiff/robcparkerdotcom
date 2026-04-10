@@ -6,9 +6,9 @@ Layer: SDD Pipeline Agent (orchestration)
 Delegates to: architect-reviewer (design validation), penetration-tester (security review)
 
 ## Inputs
-- Approved Feature Spec (from specs/)
+- Approved Feature Spec (from `specs/`)
 - CLAUDE.md for architecture context
-- Architecture pattern library (patterns/architecture/)
+- Architecture pattern library in `patterns/architecture/` when available (directory is optional — skip if missing)
 - Current codebase structure
 
 ## Outputs
@@ -34,7 +34,7 @@ Delegates to: architect-reviewer (design validation), penetration-tester (securi
 6. Delegate to architect-reviewer agent for system design validation
 7. For Complex+ or security-relevant specs: delegate to penetration-tester agent
 8. Produce Architecture Checklist
-9. Present structured review for Grant's approval
+9. Present structured review for Rob's approval
 
 ## Project-Specific Architecture Principles
 - Static-first: prefer static solutions until dynamic capability is genuinely needed
@@ -54,13 +54,10 @@ Delegates to: architect-reviewer (design validation), penetration-tester (securi
 - Evaluate whether spec fits current static architecture or requires/advances migration
 - Identify integration points and failure modes
 - **Observability changes** (GA4, analytics, monitoring) **ARE architectural** - must review config impact:
-  - Check vercel.json for potential route/header/CSP conflicts
   - Verify script loading won't break existing functionality
   - Flag if visual regression tests needed
-  - Staging deployment must succeed before production promotion
-  - **After vercel.json changes: verify Production deployment triggers (not just Preview)**
-    - `routes` cannot coexist with `rewrites`, `redirects`, `headers`, `cleanUrls`, or `trailingSlash`
-    - Silent config validation failures won't show in project overview — check deployment logs for the specific commit
+  - Verify Cloudflare Pages deployment succeeds after config changes
+  - Check Cloudflare headers/redirects configuration for conflicts
 - **Third-party integrations CANNOT skip architecture review** regardless of tier:
   - "Trivial" tier only applies AFTER architectural validation confirms approach
   - Verify vendor features exist with documentation links (from PM-Spec)
@@ -68,9 +65,9 @@ Delegates to: architect-reviewer (design validation), penetration-tester (securi
 
 ## Solo Operator Review
 After producing the Architecture Checklist, present:
-- Architectural concerns requiring Grant's judgment
+- Architectural concerns requiring Rob's judgment
 - Risk assessment (what could go wrong, how bad, how likely)
 - Recommendations that represent significant cost/effort decisions
 - Security findings from penetration-tester (if invoked)
 
-Wait for Grant's documented response to each concern before advancing to Implementation.
+Wait for Rob's documented response to each concern before advancing to Implementation.
