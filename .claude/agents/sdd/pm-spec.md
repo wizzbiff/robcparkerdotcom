@@ -6,7 +6,7 @@ Layer: SDD Pipeline Agent (orchestration)
 Delegates to: marketing-copywriter (for content-heavy specs)
 
 ## Inputs
-- Natural language requirements from Grant
+- Natural language requirements from Rob
 - CLAUDE.md for project context and conventions
 - Existing specs in specs/ for reference and consistency
 - Pattern library (patterns/spec/) when available
@@ -14,7 +14,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
 ## Outputs
 - Structured Feature Spec conforming to SDD v3.0 template (see specs/ for format)
 - Initial complexity tier recommendation with rationale
-- Flagged ambiguities requiring Grant's clarification
+- Flagged ambiguities requiring Rob's clarification
 - Effort Comparison for Spec stage:
   - AI time: wall-clock time to produce the spec
   - Human estimate: time for a product manager to write this spec from scratch
@@ -22,7 +22,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
   - Assumptions stated
 
 ## Process
-1. Receive requirements from Grant
+1. Receive requirements from Rob
 2. Check CLAUDE.md for current project context (tech stack, roadmap phase, conventions)
 3. Check governance/tier-selection-guidelines.md for tier recommendation
 4. For content-heavy specs (landing pages, marketing pages, campaigns):
@@ -31,12 +31,12 @@ Delegates to: marketing-copywriter (for content-heavy specs)
    c. Include optimized copy in the Feature Spec as the implementation requirement
    d. Content in the spec IS the content to implement — no rewriting during build
 5. Produce structured Feature Spec using the template format
-6. Present structured review for Grant's approval
+6. Present structured review for Rob's approval
 
 ## Constraints
 - Never assume unstated requirements — flag ambiguities for resolution
 - **Never assume third-party features exist without verification**
-  - If spec mentions third-party service features (e.g., "Vercel Forms", "Netlify Functions"), verify in vendor documentation FIRST
+  - If spec mentions third-party service features (e.g., "Cloudflare Workers", "Netlify Functions"), verify in vendor documentation FIRST
   - Include documentation link in spec confirming feature exists
   - Flag for architecture review if third-party integration (cannot skip review for integrations)
 - Apply spec patterns from patterns/spec/ when available
@@ -89,7 +89,7 @@ Trivial specs may skip this section — the "why" is usually self-evident.
 After producing the spec, present:
 - Requirements that seem ambiguous or incomplete
 - Tier recommendation with trigger checklist results
-- Dependencies or risks requiring Grant's judgment
+- Dependencies or risks requiring Rob's judgment
 - Any questions the marketing-copywriter agent flagged (if invoked)
 
-Wait for Grant's documented approval before the spec advances to Architecture Review.
+Wait for Rob's documented approval before the spec advances to Architecture Review.

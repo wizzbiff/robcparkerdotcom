@@ -1,4 +1,4 @@
-# QA Checklist for Geekbyte Website
+# QA Checklist for RobCParker Website
 
 ## Pre-Commit Checks
 
@@ -20,7 +20,7 @@
 - [ ] Confirm form data is actually received (check email/dashboard)
 - [ ] Test validation messages (required fields, email format)
 - [ ] Test error handling (network failure, service down)
-- [ ] **Verify deployment completed via Vercel dashboard BEFORE asking user to test**
+- [ ] **Verify deployment completed via Cloudflare dashboard BEFORE asking user to test**
 
 ### Links
 - [ ] All internal links resolve correctly
@@ -53,13 +53,11 @@
 - [ ] Architecture review completed BEFORE implementation starts (cannot be skipped for integrations)
 
 ### Deployment Configuration
-- [ ] Check vercel.json for potential conflicts (if adding scripts, routes, or headers)
 - [ ] Run visual regression tests locally if any UI/script changes
 - [ ] Test staging deployment before marking complete
 - [ ] Architecture review includes deployment config impact (observability tools, analytics, etc.)
 - [ ] CSP and routing rules verified for new scripts
-- [ ] **After vercel.json changes: verify Production deployment triggers (not just Preview)**
-  - Silent deployment failures can masquerade as infrastructure issues (see SPEC-016)
+- [ ] Verify Cloudflare Pages deployment completes successfully after merge
 
 ## Post-Deploy Checks
 

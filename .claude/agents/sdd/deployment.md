@@ -29,18 +29,16 @@ Delegates to: (no specialist agents currently — static site deployment is stra
 
 ## Security and Configuration
 - **API Keys and Secrets**:
-  - NEVER ask Grant for API keys directly
-  - Frame questions as "Have you set it in Vercel Environment Variables?" not "What is the key?"
+  - NEVER ask Rob for API keys directly
+  - Frame questions as "Have you set it in environment variables?" not "What is the key?"
   - Provide proactive security warning BEFORE any key-related questions
-  - If Grant shares a secret in conversation, warn immediately and instruct to revoke
+  - If Rob shares a secret in conversation, warn immediately and instruct to revoke
   - Documentation must show placeholder values only
 
 ## Deployment Verification
-- **After any vercel.json change:** Verify Production deployment triggers, not just Preview
-  - Silent config validation failures won't show in Vercel project overview
-  - Check deployment logs for the specific commit to confirm success
-  - `routes` property cannot coexist with `headers`, `rewrites`, `redirects`, `cleanUrls`, or `trailingSlash`
-  - If Production deploy doesn't trigger within 2 minutes of merge, check Vercel deployment logs for errors
+- Deployment is via Cloudflare Pages connected to the GitHub repository
+- Verify deployment completed via Cloudflare dashboard after merge
+- Check deployment logs for the specific commit to confirm success
 
 ## Branch Management
 - **After Arch Gate approval:** Create feature branch `spec/SPEC-NNN-short-description` from main
@@ -52,7 +50,7 @@ Delegates to: (no specialist agents currently — static site deployment is stra
 1. Verify all prerequisite gates have documented approval
 2. Verify implementation is on the correct feature branch (not main, not another spec's branch)
 3. Produce Deployment Checklist appropriate to tier
-4. Present for Grant's authorization
+4. Present for Rob's authorization
 
 ## Tier-Specific Depth
 - **Trivial:** One-line confirmation — "Deploy file change, rollback = revert commit"
@@ -60,4 +58,4 @@ Delegates to: (no specialist agents currently — static site deployment is stra
 - **Complex+:** Full checklist with rollback verification, monitoring, staged approach
 
 ## Solo Operator Review
-Present deployment readiness summary. Wait for Grant's authorization before deploying.
+Present deployment readiness summary. Wait for Rob's authorization before deploying.
