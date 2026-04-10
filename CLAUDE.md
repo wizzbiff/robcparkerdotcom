@@ -25,7 +25,8 @@ AI agent product with subscription billing.
 ### Site Map
 ```
 index.html                          # Home — service overview, hero, CTAs
-about.html                          # About page
+about.html                          # Page about Rob C Parker
+resume.html                         # Rob C Parker resume
 contact.html                        # Contact page with validated form
 services/
   tech-advisory.html                # Technical advisory service page
