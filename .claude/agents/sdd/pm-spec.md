@@ -48,7 +48,7 @@ Delegates to: marketing-copywriter (for content-heavy specs)
   - Documentation must show placeholder values only, never real keys
   - Instructions must say "set in environment variables" not "provide the key"
 
-## Decision Rationale Section (SDD v4.0 — Experimental)
+## Decision Rationale Section (SDD Experimental)
 
 Every spec at Standard+ tier should include a `## Decision Rationale` section after
 Out of Scope. This captures the "why" behind key decisions made during spec creation.
@@ -83,7 +83,7 @@ Trivial specs may skip this section — the "why" is usually self-evident.
 - Tier escalation triggers checked and documented
 - **Third-party features verified**: Documentation links included for all vendor feature claims
 - **API key security**: Proactive warning included if spec involves secrets/keys
-- **Decision Rationale included**: Standard+ specs have a Decision Rationale section (v4.0)
+- **Decision Rationale included**: Standard+ specs have a Decision Rationale section (SDD Experimental)
 
 ## Solo Operator Review
 After producing the spec, present:
