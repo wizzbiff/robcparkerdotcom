@@ -1,0 +1,6 @@
+# WHY: Source images are large unoptimized originals (e.g. 793KB PNG).
+# Only the optimized outputs in images/ are committed.
+images/source/
+
+# Files temporarily needed by Claude Code for context
+additional-context/
