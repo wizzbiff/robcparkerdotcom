@@ -35,10 +35,11 @@ css/
   style.css                         # Main stylesheet with CSS custom properties
 js/
   main.js                           # Shared JavaScript (nav, forms, utilities)
-images/
-  logos/                            # Brand logos
-  graphics/                         # Graphics
+images/                             # Committed: web-optimized image assets
+  source/                           # Gitignored: unoptimized source files (originals)
 ```
+
+**Image convention:** Originals (PNG, HEIC, RAW) live in `images/source/` (gitignored). Web-optimized outputs (JPEG at multiple sizes for `srcset`) are committed to `images/`. See `governance/stack-quirks.md` for the exact optimization recipe.
 
 ### CSS Custom Properties
 ```css
