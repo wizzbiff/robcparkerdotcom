@@ -1016,6 +1016,268 @@ p {
 }
 
 /* ==========================================================================
+   15g. RESUME PAGE — Header
+   ========================================================================== */
+
+/* WHY (IG-1): New .resume-header component — document-style page, not hero-style.
+   No photo, no dark background. Intentionally distinct from .hero-profile. */
+.resume-header-section {
+    padding-bottom: var(--space-12);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.resume-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.resume-header-identity h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-3);
+    color: var(--text-color);
+}
+
+.resume-positioning {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    line-height: var(--line-height-snug);
+    margin-bottom: 0;
+}
+
+.resume-header-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    align-items: center;
+}
+
+.resume-contact-item {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+a.resume-contact-item {
+    text-decoration: underline;
+    text-decoration-color: var(--border-color);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--transition-base), color var(--transition-base);
+}
+
+a.resume-contact-item:hover {
+    color: var(--primary-color);
+    text-decoration-color: var(--primary-color);
+}
+
+/* ==========================================================================
+   15h. RESUME PAGE — Summary
+   ========================================================================== */
+
+.resume-summary p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    max-width: 860px;
+}
+
+/* ==========================================================================
+   15i. RESUME PAGE — Experience Roles
+   ========================================================================== */
+
+/* WHY (IG-3): .resume-role is a document-dense component. No card shadow or
+   border-radius — this is a resume, not a marketing card. Subtle bottom
+   separator between roles provides rhythm without introducing card weight. */
+.resume-role {
+    padding-bottom: var(--space-12);
+    margin-bottom: var(--space-12);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.resume-role--last {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.resume-role-header {
+    margin-bottom: var(--space-6);
+}
+
+.resume-role-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+    margin-bottom: var(--space-1);
+    line-height: var(--line-height-snug);
+}
+
+.resume-role-company {
+    display: block;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    /* WHY: --text-color (not --primary-color) — primary-color reads as a link to
+       sighted users, especially adjacent to the hyperlinked header contacts. Semibold
+       weight alone carries enough visual hierarchy. SPEC-003 I-3. */
+    color: var(--text-color);
+    margin-bottom: var(--space-1);
+}
+
+.resume-role-meta {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.resume-role-bullets {
+    /* WHY: disc markers intentionally retained here (overriding the site-wide
+       list-style:none convention). Resume bullets are traditional document markers —
+       recruiters expect them. Other visually-stripped lists restore semantics via
+       role="list"; this list doesn't need that workaround because markers are visible. */
+    list-style: disc;
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.resume-role-bullets li {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   15j. RESUME PAGE — Metric Callouts (Senior Director role only)
+   ========================================================================== */
+
+/* WHY (IG-4): .resume-metrics is a 3-up flex strip placed between the role
+   header and the bullet list. Color is --accent-color per Rob's override —
+   deliberate visual distinction from home-page .highlight-metric numbers
+   which use --primary-color. */
+.resume-metrics {
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+    padding: var(--space-6) var(--space-8);
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.resume-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    flex: 1;
+    min-width: 120px;
+}
+
+.resume-metric-number {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent-color);
+    line-height: 1;
+}
+
+.resume-metric-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-muted);
+    line-height: var(--line-height-snug);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   15k. RESUME PAGE — Earlier Experience
+   ========================================================================== */
+
+/* WHY (IG-5): compact text rows, no card styling. Each <li> is a strong
+   company/title line followed by a one-sentence descriptor. */
+.resume-earlier {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.resume-earlier li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.resume-earlier li strong {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    line-height: var(--line-height-snug);
+}
+
+.resume-earlier li span {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+}
+
+/* ==========================================================================
+   15l. RESUME PAGE — Education
+   ========================================================================== */
+
+.resume-education {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.resume-education li {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    line-height: var(--line-height-snug);
+}
+
+.resume-education li strong {
+    color: var(--text-color);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================================
+   15m. RESUME PAGE — Skills
+   ========================================================================== */
+
+/* WHY (IG-6): Semantic <dl> with <dt>/<dd> pairs. A wrapper <div> per group
+   allows two-column grid layout on desktop without sacrificing <dl> semantics
+   — <div> children of <dl> are valid HTML and preserve <dt>/<dd> association. */
+.resume-skills {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+}
+
+.resume-skills-group {
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.resume-skills dt {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+}
+
+.resume-skills dd {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+}
+
+/* ==========================================================================
    15. PLACEHOLDER PAGE
    ========================================================================== */
 
@@ -1097,6 +1359,42 @@ p {
     .footer-brand {
         max-width: 280px;
     }
+
+    /* Resume — tablet/desktop enhancements */
+    .resume-header {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+    }
+
+    .resume-header-identity {
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .resume-header-contact {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-2);
+    }
+
+    .resume-header-download {
+        align-self: flex-start;
+    }
+
+    .resume-header-identity h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    .resume-metrics {
+        flex-wrap: nowrap;
+    }
+
+    .resume-skills {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* ==========================================================================
@@ -1157,5 +1455,121 @@ p {
     .cta-actions .btn {
         width: 100%;
         text-align: center;
+    }
+
+    /* Resume — small mobile: download button full-width, metrics stacked */
+    .resume-download-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .resume-metrics {
+        flex-direction: column;
+        gap: var(--space-5);
+    }
+
+    /* WHY: at <=480px each callout is a horizontal row (number + label) rather than
+       stacking label under number. Three vertically-stacked 3xl-size numbers would
+       waste significant screen height; the number is visually dominant enough at
+       row-layout without extra size. The 4rem min-width locks labels into an aligned
+       column. SPEC-003 I-4. */
+    .resume-metric {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-4);
+        min-width: unset;
+    }
+
+    .resume-metric-number {
+        font-size: var(--font-size-3xl);
+        min-width: 4rem;
+    }
+}
+
+/* ==========================================================================
+   19. PRINT STYLESHEET — Resume page
+   ========================================================================== */
+
+/* WHY (IG-9): Print rules scoped inside a single @media print block appended
+   to the main stylesheet — no separate print.css file needed at this scale.
+   WHY (IG-9): URL expansion is targeted (mailto: and linkedin.com only), not
+   global a[href], to avoid printing internal nav URLs unnecessarily. */
+@media print {
+    /* Page geometry */
+    @page {
+        margin: 1in;
+    }
+
+    /* WHY: Scoped print reset rather than a universal `*` selector.
+       A wholesale `* !important` reset strips color/border intent from every element
+       in the DOM, making future print-only styles painful to reason about. This
+       version targets only what we actually want neutralized (body text, accent
+       backgrounds on alt sections and metric/skill groups, and shadows). SPEC-003 I-2. */
+    body {
+        color: #000000;
+        background-color: #ffffff;
+    }
+
+    .section-alt,
+    .resume-metrics,
+    .resume-skills-group {
+        background-color: #ffffff !important;
+    }
+
+    .resume-role,
+    .resume-metrics,
+    .resume-skills-group {
+        box-shadow: none !important;
+    }
+
+    /* Hide chrome that doesn't belong in print */
+    .site-header,
+    .site-footer,
+    .cta-section,
+    .skip-link,
+    .resume-download-btn {
+        display: none !important;
+    }
+
+    /* Strip accent color from metric callout numbers — keep number, drop color */
+    .resume-metric-number {
+        color: #000000 !important;
+    }
+
+    /* Show email and LinkedIn URLs inline — targeted selectors only */
+    a[href^="mailto:"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.75em;
+        color: #444444 !important;
+    }
+
+    a[href*="linkedin.com"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.75em;
+        color: #444444 !important;
+    }
+
+    /* Prevent awkward mid-entry page breaks */
+    .resume-role {
+        page-break-inside: avoid;
+    }
+
+    .resume-earlier > li {
+        page-break-inside: avoid;
+    }
+
+    /* WHY: prevent H2 orphans at the bottom of a printed page — keep the section
+       heading attached to its following content. `break-after` is the modern alias
+       kept alongside the legacy `page-break-after` for broader engine support.
+       SPEC-003 I-5. */
+    h2 {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Keep body readable at print size */
+    body {
+        font-size: 11pt;
+        line-height: 1.4;
     }
 }
