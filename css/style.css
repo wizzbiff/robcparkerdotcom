@@ -742,6 +742,280 @@ p {
 }
 
 /* ==========================================================================
+   15. ABOUT PAGE — Hero Profile Variant
+   ========================================================================== */
+
+/* WHY (IG-8): .hero-profile is an additive modifier on .hero — it does not
+   fork or override base .hero styles, only extends the layout for the
+   photo+text side-by-side treatment needed on the About page. */
+.hero-profile .hero-content {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: flex-start;
+}
+
+.hero-profile-photo {
+    flex-shrink: 0;
+}
+
+/* WHY (I-1): Both width and height are explicit here; the HTML width/height
+   attributes (400x400) convey the image's intrinsic aspect ratio for CLS,
+   while the CSS pixel values control rendered display size. Do not change
+   to a single dimension without updating CLS reasoning.
+   WHY (I-5): background-color reserves a visible placeholder circle while
+   the JPEG downloads — prevents a brief "hole" in the dark hero. */
+.hero-profile-photo img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--border-dark);
+}
+
+.hero-profile-text {
+    flex: 1;
+}
+
+.hero-profile-text .hero-eyebrow {
+    margin-bottom: var(--space-3);
+}
+
+/* WHY (I-4): No font-size override — let the cascade apply base .hero h1
+   rules (4xl base, 5xl at 768px, 3xl at <=480px) for responsive parity
+   with the home page hero. */
+.hero-profile-text h1 {
+    color: var(--text-light);
+    margin-bottom: var(--space-3);
+}
+
+.hero-profile-text .hero-positioning {
+    font-size: var(--font-size-base);
+    color: var(--text-on-dark);
+    margin-bottom: var(--space-6);
+    line-height: var(--line-height-snug);
+}
+
+.hero-profile-text .hero-bio p {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-on-dark);
+    margin-bottom: var(--space-4);
+}
+
+.hero-profile-text .hero-bio p:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   15b. ABOUT PAGE — Leadership Philosophy
+   ========================================================================== */
+
+.philosophy-quote {
+    border-left: 4px solid var(--primary-color);
+    padding: var(--space-6) var(--space-8);
+    margin-bottom: var(--space-10);
+    background-color: var(--surface-color);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.philosophy-quote blockquote p {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+    color: var(--text-color);
+    font-style: italic;
+    margin-bottom: var(--space-3);
+}
+
+.philosophy-quote blockquote footer {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+.philosophy-quote blockquote cite {
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+}
+
+.philosophy-body p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+}
+
+.philosophy-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   15c. ABOUT PAGE — AI Adoption Framework
+   ========================================================================== */
+
+.ai-framework-intro p {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+}
+
+/* WHY (IG-7): Stepped list uses CSS counter and additive left-border visual.
+   All text lives in DOM — no content: injection — so screen readers read
+   the actual tier names and descriptions directly. */
+.ai-framework-list {
+    counter-reset: tier-counter;
+    list-style: none;
+    margin: var(--space-10) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.ai-framework-list li {
+    counter-increment: tier-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+/* WHY (I-3): CSS counter renders tier number visually. Since the <ol> already
+   provides ordering semantics, screen readers may announce the number twice
+   (native <ol> ordering + ::before content). Trade-off accepted: the stepped
+   circle is part of the visual identity for this section. The counter number
+   is decorative reinforcement, not primary content — tier names and descriptions
+   live in DOM text. */
+.ai-framework-list li::before {
+    content: counter(tier-counter);
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.ai-framework-tier-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    font-size: var(--font-size-base);
+    display: block;
+    margin-bottom: var(--space-1);
+}
+
+.ai-framework-tier-desc {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+}
+
+.ai-framework-outcome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-6) var(--space-8);
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-lg);
+    margin: var(--space-6) 0;
+    flex-wrap: wrap;
+}
+
+.ai-framework-outcome .highlight-metric {
+    color: #ffffff;
+    margin-bottom: 0;
+}
+
+.ai-framework-outcome-text {
+    flex: 1;
+}
+
+.ai-framework-outcome-text p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 0;
+}
+
+.ai-framework-tools {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+}
+
+.ai-framework-tools strong {
+    color: var(--text-color);
+}
+
+.ai-framework-supporting p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+}
+
+/* ==========================================================================
+   15d. ABOUT PAGE — Off the Clock
+   ========================================================================== */
+
+.off-the-clock p {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    max-width: 700px;
+}
+
+/* WHY (I-6): body-link modifier — subtler than default primary-color link.
+   Inline links inside body copy should feel integrated, not prominent.
+   Still keyboard-accessible and meets WCAG AA (text-color on surface-color). */
+.body-link {
+    color: var(--text-color);
+    text-decoration: underline;
+    text-decoration-color: var(--border-color);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--transition-base), color var(--transition-base);
+}
+
+.body-link:hover {
+    color: var(--primary-color);
+    text-decoration-color: var(--primary-color);
+}
+
+/* ==========================================================================
+   15e. ABOUT PAGE — CTA actions (dual button)
+   ========================================================================== */
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    justify-content: center;
+}
+
+/* ==========================================================================
+   15f. SECTION HEADING — Standalone (no descriptor below)
+   ========================================================================== */
+
+/* WHY (S-3): Used for sections with only an H2 and no descriptor paragraph.
+   Avoids the extra margin-bottom that .section-header would add. */
+.section-heading-standalone {
+    margin-bottom: var(--space-8);
+}
+
+/* ==========================================================================
    15. PLACEHOLDER PAGE
    ========================================================================== */
 
@@ -774,6 +1048,21 @@ p {
 
     .hero h1 {
         font-size: var(--font-size-5xl);
+    }
+
+    .hero-profile .hero-content {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: var(--space-12);
+    }
+
+    .hero-profile-photo img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .ai-framework-list {
+        gap: var(--space-5);
     }
 
     .highlights-grid {
@@ -855,6 +1144,17 @@ p {
     }
 
     .hero-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* WHY (WARN 2.7): Match hero-actions pattern — bottom CTA buttons stack
+       full-width on narrow screens for consistent tap targets */
+    .cta-actions {
+        flex-direction: column;
+    }
+
+    .cta-actions .btn {
         width: 100%;
         text-align: center;
     }
