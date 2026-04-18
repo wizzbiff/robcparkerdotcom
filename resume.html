@@ -5,22 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
-    <title>Resume — Rob Parker, Senior Engineering Executive</title>
-    <meta name="description" content="Rob Parker's professional resume — senior engineering executive with 25+ years of experience in AI/ML platform strategy and engineering leadership.">
+    <title>Rob Parker Resume &mdash; Senior Engineering Executive</title>
+    <meta name="description" content="Senior engineering executive. 25+ years building AI-native platforms and scaling teams. Targeting Director/VP at AI-forward SaaS companies.">
+
+    <!-- WHY: canonical tag prevents duplicate-content penalties if the page is
+         ever reached via a tracking suffix or alternate host. SPEC-003 S-1. -->
+    <link rel="canonical" href="https://www.robcparker.com/resume.html">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
+    <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers
+         (Open Graph protocol requirement). Pattern from SPEC-002. -->
     <meta property="og:url" content="https://www.robcparker.com/resume.html">
-    <meta property="og:title" content="Resume — Rob Parker, Senior Engineering Executive">
-    <meta property="og:description" content="Rob Parker's professional resume — senior engineering executive with 25+ years of experience in AI/ML platform strategy and engineering leadership.">
+    <meta property="og:title" content="Rob Parker Resume &mdash; Senior Engineering Executive">
+    <meta property="og:description" content="Senior engineering executive. 25+ years building AI-native platforms and scaling teams. Targeting Director/VP at AI-forward SaaS companies.">
+    <!-- WHY: og:image must be an absolute URL — relative paths are not resolved by social
+         crawlers (Open Graph protocol requirement). Reusing SPEC-002 headshot per IG-12. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
 
-    <!-- WHY: Placeholder page — prevent indexing of thin content until SPEC-003 builds the real page -->
-    <meta name="robots" content="noindex">
+    <!-- WHY: noindex removed — this is a real, fully-built page (SPEC-003 IG-11).
+         The placeholder version had noindex to prevent thin content from being indexed. -->
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+    <!-- Skip to main content — accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <header class="site-header">
@@ -46,7 +56,7 @@
                 <ul class="nav-links" id="nav-links" role="list">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="resume.html">Resume</a></li>
+                    <li><a href="resume.html" class="active" aria-current="page">Resume</a></li>
                     <li><a href="services/tech-advisory.html">Advisory</a></li>
                     <li><a href="services/guitar-playing.html">Guitar</a></li>
                     <li><a href="contact.html">Contact</a></li>
@@ -56,11 +66,257 @@
     </header>
 
     <main id="main-content">
-        <div class="placeholder-content container">
-            <h1>Resume</h1>
-            <p>Full resume page coming soon — see SPEC-003.</p>
-            <a href="index.html" class="btn btn-primary">Back to Home</a>
-        </div>
+
+        <!-- ================================================================
+             SECTION 1: RESUME HEADER
+             ================================================================ -->
+        <section class="section resume-header-section" aria-labelledby="resume-name">
+            <div class="container">
+                <div class="resume-header">
+
+                    <div class="resume-header-identity">
+                        <h1 id="resume-name">Rob Parker</h1>
+                        <p class="resume-positioning">Senior Engineering Executive &middot; AI-Native Platforms &middot; Targeting Director/VP</p>
+                    </div>
+
+                    <div class="resume-header-contact">
+                        <span class="resume-contact-item">Atlanta, Georgia</span>
+                        <a href="mailto:rob.c.parker@gmail.com" class="resume-contact-item body-link">rob.c.parker@gmail.com</a>
+                        <a
+                            href="https://www.linkedin.com/in/robcparker/"
+                            class="resume-contact-item body-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Rob Parker on LinkedIn (opens in a new tab)"
+                        >LinkedIn</a>
+                    </div>
+
+                    <div class="resume-header-download">
+                        <a
+                            href="files/rob-parker-resume.pdf"
+                            download
+                            type="application/pdf"
+                            aria-label="Download Rob Parker&rsquo;s resume as PDF (50KB)"
+                            class="btn btn-primary resume-download-btn"
+                        >Download PDF</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 2: SUMMARY
+             ================================================================ -->
+        <section class="section section-alt" aria-labelledby="summary-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="summary-heading">Summary</h2>
+                </div>
+                <div class="resume-summary">
+                    <p>Technology executive with 25+ years of engineering experience, including 10+ years in senior leadership roles at B2B SaaS companies, architecting scalable products and building high-performance distributed development teams. Most recently, built and led SugarCRM&rsquo;s multi-tenant AI platform on AWS Bedrock, directing distributed teams across AI/ML, Data Platform, and Identity Management. Track record of scaling engineering organizations while delivering measurable outcomes: 350% increase in system throughput, 25% cost reduction, and 20% increase in developer velocity through AI enablement to scale toward agentic development workflows. Prior experience as CTO at Salesfusion; led the technical track of acquisition by SugarCRM. Targeting Director or VP of Engineering roles at AI-forward companies.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 3: EXPERIENCE
+             ================================================================ -->
+        <section class="section" aria-labelledby="experience-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="experience-heading">Experience</h2>
+                </div>
+
+                <!-- Role 1: Senior Director of Engineering — SugarCRM -->
+                <article class="resume-role">
+                    <div class="resume-role-header">
+                        <h3 class="resume-role-title">Senior Director of Engineering</h3>
+                        <span class="resume-role-company">SugarCRM</span>
+                        <span class="resume-role-meta">January 2021 &ndash; March 2026 &middot; Atlanta, GA</span>
+                    </div>
+
+                    <!-- Metric callouts — Senior Director role only (per spec) -->
+                    <div class="resume-metrics">
+                        <!-- WHY: role="img" + full-sentence aria-label on each callout — same
+                             accessibility pattern as SPEC-001/002 highlight metrics. The numeric
+                             value alone is decorative; the aria-label carries the full meaning. -->
+                        <div class="resume-metric" role="img" aria-label="Increased system throughput by 350% through modernization from monolithic .NET to Python microservices and AWS serverless architecture.">
+                            <span class="resume-metric-number">350%</span>
+                            <span class="resume-metric-label">Throughput increase</span>
+                        </div>
+                        <div class="resume-metric" role="img" aria-label="Reduced infrastructure costs by 25% through modernization from monolithic .NET to Python microservices and AWS serverless architecture.">
+                            <span class="resume-metric-number">25%</span>
+                            <span class="resume-metric-label">Infrastructure cost reduction</span>
+                        </div>
+                        <div class="resume-metric" role="img" aria-label="Increased developer velocity by 20% through AI enablement via GitHub Copilot deployment and a three-tier AI adoption framework.">
+                            <span class="resume-metric-number">20%</span>
+                            <span class="resume-metric-label">Developer velocity via AI</span>
+                        </div>
+                    </div>
+
+                    <ul class="resume-role-bullets" role="list">
+                        <li>Led AI-native platform engineering and data science teams for $100M+ SaaS CRM company (500 employees), managing a global organization of 26 engineers through 5 managers.</li>
+                        <li>Led the design and delivery of a multi-tenant AI platform on AWS Bedrock through beta release, encompassing RAG pipelines, agent orchestration, prompt management, and LLM observability across the SugarCRM product suite.</li>
+                        <li>Built a three-tier AI adoption framework and drove GitHub Copilot deployment across the engineering organization, delivering a measured 20% increase in developer velocity; established evaluation and governance infrastructure for expanded GAI tooling to scale toward agentic workflows.</li>
+                        <li>Led modernization from monolithic .NET to containerized Python microservices and AWS serverless architecture (ECS, Lambda, Step Functions), increasing system throughput by 350% while reducing infrastructure costs by 25%.</li>
+                        <li>Delivered complex, multi-team product roadmaps on time and within budget, driving 17+ major releases annually with less than 10% sprint variance and 5% carryover.</li>
+                        <li>Scaled global engineering organization by 150%, with 90% retention; mentored 8 engineers into senior/staff roles and promoted 3 to engineering manager positions.</li>
+                        <li>Implemented quality-first engineering with automated testing frameworks (Cypress, Virtuoso, PyTest) achieving 90% code coverage across critical platform components.</li>
+                        <li>Drove platform integration strategy unifying disparate systems into cohesive CRM ecosystem, supporting a 25% improvement in customer retention metrics.</li>
+                        <li>Managed $2M annual engineering budget and P&amp;L responsibility for platform infrastructure, optimizing cloud spend and vendor contracts.</li>
+                    </ul>
+                </article>
+
+                <!-- Role 2: Director of Engineering — SugarCRM -->
+                <article class="resume-role">
+                    <div class="resume-role-header">
+                        <h3 class="resume-role-title">Director of Engineering</h3>
+                        <span class="resume-role-company">SugarCRM</span>
+                        <span class="resume-role-meta">May 2019 &ndash; January 2021 &middot; Atlanta, GA</span>
+                    </div>
+                    <ul class="resume-role-bullets" role="list">
+                        <li>Transitioned directly from CTO of acquired Salesfusion into this role to lead the full technology integration, owning the roadmap for a 12-person engineering team and 300+ B2B customer accounts.</li>
+                        <li>Migrated the Salesfusion platform to SugarCRM infrastructure within 6 months, unifying code repositories, CI/CD pipelines, and deployment processes across both organizations, achieving 100% of integration milestones on schedule.</li>
+                        <li>Maintained product velocity and team stability throughout the acquisition, achieving 92% employee retention during the transition.</li>
+                    </ul>
+                </article>
+
+                <!-- Role 3: Chief Technology Officer — Salesfusion -->
+                <article class="resume-role">
+                    <div class="resume-role-header">
+                        <h3 class="resume-role-title">Chief Technology Officer</h3>
+                        <span class="resume-role-company">Salesfusion</span>
+                        <span class="resume-role-meta">January 2019 &ndash; May 2019 &middot; Atlanta, GA</span>
+                    </div>
+                    <ul class="resume-role-bullets" role="list">
+                        <li>Served as CTO through SugarCRM&rsquo;s acquisition of Salesfusion; led the full technical track of the transaction, defining the organization integration strategy and technical roadmap. Completed org integration on schedule in 12 weeks with zero customer churn.</li>
+                        <li>Built and executed technical roadmap for platform scalability, security hardening, and performance improvements, achieving SOC 2 Type II and ISO 27001 certification, significantly improving platform response times, and maintaining 99.95% uptime SLA.</li>
+                        <li>Managed 12-person engineering team across frontend (Angular), backend (Python), and DevOps disciplines.</li>
+                    </ul>
+                </article>
+
+                <!-- Role 4: Director of Engineering / Lead Software Engineer — Salesfusion -->
+                <article class="resume-role resume-role--last">
+                    <div class="resume-role-header">
+                        <h3 class="resume-role-title">Director of Engineering / Lead Software Engineer</h3>
+                        <span class="resume-role-company">Salesfusion</span>
+                        <span class="resume-role-meta">November 2015 &ndash; January 2019 &middot; Atlanta, GA</span>
+                    </div>
+                    <ul class="resume-role-bullets" role="list">
+                        <li>Advanced from Lead Software Engineer to Director of Engineering, demonstrating strong technical and leadership capabilities.</li>
+                        <li>Established development methodologies (Agile/Scrum), code quality standards (80% test coverage), and technical best practices, improving deployment frequency from quarterly to bi-weekly.</li>
+                        <li>Architected marketing automation features processing 2M+ emails daily.</li>
+                    </ul>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 4: EARLIER EXPERIENCE
+             ================================================================ -->
+        <section class="section section-alt" aria-labelledby="earlier-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="earlier-heading">Earlier Experience</h2>
+                </div>
+
+                <!-- WHY: role="list" restores list semantics that Safari/VoiceOver
+                     strips when list-style:none is applied (SPEC-001 convention). -->
+                <ul class="resume-earlier" role="list">
+                    <li>
+                        <strong>Senior Software Engineer / Technical Team Lead &mdash; athenahealth (2015)</strong>
+                        <span>Led re-platforming of an acquired EHR system with 50,000+ users to private cloud, improving deployment frequency from monthly to weekly and reducing MTTR from 4 hours to 45 minutes.</span>
+                    </li>
+                    <li>
+                        <strong>Software Architect / Systems Team Lead &mdash; M2SYS Technology</strong>
+                        <span>Architected an enterprise biometric identity platform scaled to 80M+ records, supporting fingerprint, iris, and vascular recognition across healthcare and government organizations with 99.99% availability.</span>
+                    </li>
+                    <li>
+                        <strong>Senior Software Engineer &mdash; Qcept Technologies</strong>
+                        <span>Designed semiconductor metrology software for sub-100nm wafer defect detection, improving inspection throughput and significantly reducing false positive rates.</span>
+                    </li>
+                    <li>
+                        <strong>Senior Software Engineer &mdash; Cisco Systems</strong>
+                        <span>Built embedded middleware for multi-tuner set-top boxes managing 6 concurrent HD streams across 2M+ deployed cable operator devices.</span>
+                    </li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 5: EDUCATION
+             ================================================================ -->
+        <section class="section" aria-labelledby="education-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="education-heading">Education</h2>
+                </div>
+
+                <!-- WHY: role="list" restores list semantics that Safari/VoiceOver
+                     strips when list-style:none is applied (SPEC-001 convention). -->
+                <ul class="resume-education" role="list">
+                    <li>
+                        <strong>Master of Science, Computer Science</strong>
+                        <span>&mdash; Georgia Institute of Technology</span>
+                    </li>
+                    <li>
+                        <strong>Bachelor of Science, Computer Information Systems</strong>
+                        <span>&mdash; Clemson University</span>
+                    </li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 6: SKILLS
+             ================================================================ -->
+        <section class="section section-alt" aria-labelledby="skills-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="skills-heading">Skills</h2>
+                </div>
+
+                <!-- WHY (IG-6): Semantic <dl> with <dt>/<dd> pairs — screen readers
+                     announce the category/list relationship naturally. -->
+                <dl class="resume-skills">
+                    <div class="resume-skills-group">
+                        <dt>AI &amp; Platform</dt>
+                        <dd>AWS Bedrock, RAG Pipeline Design, LLM Evaluation, Agentic Frameworks (LangGraph, CrewAI), Multi-Tenant SaaS Platforms, AI Observability &amp; Cost Governance, Prompt Management</dd>
+                    </div>
+                    <div class="resume-skills-group">
+                        <dt>Cloud &amp; Architecture</dt>
+                        <dd>Cloud-Native Architecture, Microservices, Serverless Computing, AWS (ECS, Lambda, Step Functions, DynamoDB), DevOps &amp; CI/CD, Site Reliability Engineering, Performance Optimization</dd>
+                    </div>
+                    <div class="resume-skills-group">
+                        <dt>Engineering Leadership</dt>
+                        <dd>Executive Engineering Leadership, Team Scaling &amp; Retention, Technical Mentorship, Strategic Planning, Cross-Functional Collaboration, Stakeholder Management, Change Management, M&amp;A Technical Due Diligence, Budget &amp; P&amp;L Management</dd>
+                    </div>
+                    <div class="resume-skills-group">
+                        <dt>Development</dt>
+                        <dd>Roadmap Planning &amp; Execution, Product Delivery, Automated Testing (Cypress, Virtuoso, PyTest), API &amp; Systems Integration, Data Engineering &amp; ETL Pipelines, Agile &amp; Scrum Methodologies</dd>
+                    </div>
+                </dl>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 7: CTA
+             ================================================================ -->
+        <section class="section section-dark cta-section" aria-labelledby="cta-heading">
+            <div class="container">
+                <h2 id="cta-heading">Let&rsquo;s Connect</h2>
+                <p>If you are evaluating senior engineering leaders for Director or VP roles, I would welcome the conversation.</p>
+                <div class="cta-actions">
+                    <a href="contact.html" class="btn btn-white">Get in Touch</a>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="site-footer">
@@ -97,6 +353,8 @@
         </div>
     </footer>
 
+    <!-- WHY: defer used instead of async — defer preserves execution order
+         and fires after DOM is parsed, which is what DOMContentLoaded listeners need. -->
     <script src="js/main.js" defer></script>
 </body>
 </html>

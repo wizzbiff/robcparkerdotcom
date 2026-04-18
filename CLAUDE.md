@@ -41,6 +41,8 @@ images/                             # Committed: web-optimized image assets
 
 **Image convention:** Originals (PNG, HEIC, RAW) live in `images/source/` (gitignored). Web-optimized outputs (JPEG at multiple sizes for `srcset`) are committed to `images/`. See `governance/stack-quirks.md` for the exact optimization recipe.
 
+**Resume sync:** The resume exists in two forms — `resume.html` (web) and `files/rob-parker-resume.pdf` (downloadable). The PDF is the canonical source. When updating the resume, update the PDF first, then mirror the changes to `resume.html`.
+
 ### CSS Custom Properties
 ```css
 :root {
