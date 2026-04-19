@@ -163,8 +163,8 @@ const isInViewport = (element, threshold = 0) => {
 // =============================================================================
 
 // Module-local constants — swap placeholders before deploy (see Implementation Plan in SPEC-004)
-const FORMSPREE_FORM_ID = '__REPLACE_WITH_FORMSPREE_FORM_ID__';
-const TURNSTILE_SITE_KEY = '__REPLACE_WITH_TURNSTILE_SITE_KEY__';
+const FORMSPREE_FORM_ID = 'mvzdrbnk';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAC_i2Ps6sJsYDeL2';
 // WHY: Single constant for the full endpoint — Phase-2 swap to a Cloudflare Pages Function
 // is one line here, touching nothing else in the submit handler.
 const FORM_ENDPOINT = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
