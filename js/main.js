@@ -156,11 +156,36 @@ const isInViewport = (element, threshold = 0) => {
 };
 
 // =============================================================================
-// CONTACT FORM VALIDATION
+// CONTACT FORM
 // WHY: Validation lives in main.js so it's automatically available on any
 // page that includes a form with class .contact-form, without needing a
-// separate script include. The contact page (SPEC-004) will rely on this.
+// separate script include. The contact page (SPEC-004) relies on this.
 // =============================================================================
+
+// Module-local constants — swap placeholders before deploy (see Implementation Plan in SPEC-004)
+const FORMSPREE_FORM_ID = '__REPLACE_WITH_FORMSPREE_FORM_ID__';
+const TURNSTILE_SITE_KEY = '__REPLACE_WITH_TURNSTILE_SITE_KEY__';
+// WHY: Single constant for the full endpoint — Phase-2 swap to a Cloudflare Pages Function
+// is one line here, touching nothing else in the submit handler.
+const FORM_ENDPOINT = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
+
+// Per-field validation messages keyed by field id (and by type as fallback).
+// WHY: Field-specific messages ("Please enter your email address.") are more
+// helpful than generic "This field is required." They match the copy approved
+// in the SPEC-004 marketing-copywriter deliverables.
+const VALIDATION_MESSAGES = {
+    name: {
+        empty: 'Please enter your name.',
+    },
+    email: {
+        empty: 'Please enter your email address.',
+        invalid: 'That doesn\'t look like a valid email address.',
+    },
+    message: {
+        empty: 'Please include a message.',
+        tooShort: 'Your message is a bit short — please add a few more words.',
+    },
+};
 
 const initContactForm = () => {
     const form = document.querySelector('.contact-form');
@@ -187,8 +212,10 @@ const initContactForm = () => {
     const validateField = (field) => {
         clearError(field);
 
+        const msgs = VALIDATION_MESSAGES[field.id] || {};
+
         if (field.required && !field.value.trim()) {
-            showError(field, 'This field is required.');
+            showError(field, msgs.empty || 'This field is required.');
             return false;
         }
 
@@ -197,9 +224,15 @@ const initContactForm = () => {
             // for client-side UX feedback, server must re-validate anyway.
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(field.value.trim())) {
-                showError(field, 'Please enter a valid email address.');
+                showError(field, msgs.invalid || 'Please enter a valid email address.');
                 return false;
             }
+        }
+
+        // Min-length check for message field (minlength=10 on the textarea)
+        if (field.minLength > 0 && field.value.trim().length < field.minLength && field.value.trim().length > 0) {
+            showError(field, msgs.tooShort || `Please enter at least ${field.minLength} characters.`);
+            return false;
         }
 
         return true;
@@ -210,27 +243,286 @@ const initContactForm = () => {
         field.addEventListener('blur', () => validateField(field));
     });
 
-    form.addEventListener('submit', (event) => {
+    // -------------------------------------------------------------------------
+    // SUCCESS STATE BUILDER
+    // WHY: Constructing the success panel in JS (not hidden in HTML) keeps
+    // the DOM clean and avoids any risk of the panel being partially visible
+    // before submit. The form element is replaced entirely (IG-14) to prevent
+    // resubmission — there is no "show/hide" toggle.
+    // -------------------------------------------------------------------------
+    const buildSuccessPanel = (firstName) => {
+        const panel = document.createElement('div');
+        panel.className = 'success-state';
+        panel.setAttribute('tabindex', '-1');
+
+        const heading = document.createElement('h2');
+        heading.className = 'success-heading';
+        // textContent only — never innerHTML (SD-4 XSS prevention)
+        heading.textContent = 'Message sent.';
+        panel.appendChild(heading);
+
+        const body = document.createElement('p');
+        body.className = 'success-body';
+        if (firstName) {
+            // WHY: 80-char trim prevents an absurdly long name from dominating the
+            // success UI or enabling visual injection attacks via the name field (SD-4).
+            const safeName = firstName.trim().slice(0, 80);
+            // textContent only — never innerHTML or template-literal concat into innerHTML
+            body.textContent = `Thanks, ${safeName} — I have your message. I review new inquiries personally and will be in touch within a few business days.`;
+        } else {
+            body.textContent = 'Thanks — I have your message. I review new inquiries personally and will be in touch within a few business days.';
+        }
+        panel.appendChild(body);
+
+        const nudge = document.createElement('p');
+        nudge.className = 'success-nudge';
+        nudge.textContent = 'In the meantime, connecting on LinkedIn is a good way to stay in touch.';
+        panel.appendChild(nudge);
+
+        const linkedInLink = document.createElement('a');
+        linkedInLink.href = 'https://www.linkedin.com/in/robcparker/';
+        linkedInLink.target = '_blank';
+        linkedInLink.rel = 'noopener noreferrer';
+        linkedInLink.setAttribute('aria-label', 'Connect with Rob Parker on LinkedIn (opens in a new tab)');
+        linkedInLink.className = 'btn btn-primary success-linkedin-btn';
+        // textContent only — SD-4
+        linkedInLink.textContent = 'Connect on LinkedIn';
+        panel.appendChild(linkedInLink);
+
+        return panel;
+    };
+
+    // -------------------------------------------------------------------------
+    // GENERIC ERROR RENDERER (S-1 DRY)
+    // WHY: Both the non-2xx branch and the fetch-catch branch show the same
+    // "Something went wrong" message. One helper keeps the DOM-building logic
+    // in one place and prevents the two paths from drifting apart.
+    // -------------------------------------------------------------------------
+    const renderGenericError = (statusEl) => {
+        statusEl.textContent = '';
+        statusEl.appendChild(
+            document.createTextNode('Something went wrong on our end. Please try again, or email me directly at ')
+        );
+        // Email link assembled inline — same obfuscation approach as initEmailObfuscation
+        const emailLink = document.createElement('a');
+        emailLink.href = 'mailto:rob.c.parker@gmail.com';
+        emailLink.textContent = 'rob.c.parker@gmail.com';
+        statusEl.appendChild(emailLink);
+        statusEl.appendChild(document.createTextNode('.'));
+        statusEl.classList.remove('form-status--warning', 'form-status--success');
+        statusEl.classList.add('form-status--error');
+    };
+
+    // -------------------------------------------------------------------------
+    // SUBMIT HANDLER — fetch-based AJAX to Formspree
+    // -------------------------------------------------------------------------
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const fields = form.querySelectorAll('input, textarea, select');
+        // Run client-side validation first
+        // WHY: Skipping validation here would mean the honeypot and hidden fields
+        // also get validated. Filter to only user-facing required fields.
+        const visibleFields = Array.from(form.querySelectorAll('input:not([type="hidden"]):not([name="_gotcha"]):not([tabindex="-1"]), textarea, select'));
         let isValid = true;
-
-        fields.forEach((field) => {
+        visibleFields.forEach((field) => {
             if (!validateField(field)) isValid = false;
         });
 
         if (!isValid) {
-            // Move focus to first invalid field
             const firstInvalid = form.querySelector('[aria-invalid="true"]');
             if (firstInvalid) firstInvalid.focus();
             return;
         }
 
-        // Backend integration point — SPEC-004 will wire this up
-        // WHY: Stubbing submit handler here keeps the form non-functional
-        // until the backend is ready, rather than silently swallowing input.
-        console.info('[main.js] Form valid — backend integration pending (SPEC-004)');
+        const submitBtn = form.querySelector('[type="submit"]');
+        const formStatus = document.getElementById('form-status');
+
+        // Loading state
+        form.setAttribute('aria-busy', 'true');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            // textContent only — SD-4
+            submitBtn.textContent = 'Sending...';
+        }
+
+        try {
+            // WHY: Sending FormData (not JSON) avoids CORS preflight — the browser
+            // treats FormData as a "simple request". The Accept header alone
+            // gets a JSON response from Formspree without triggering OPTIONS.
+            // credentials: 'omit' and mode: 'cors' are explicit for transport hygiene (SD-9).
+            const response = await fetch(FORM_ENDPOINT, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' },
+                credentials: 'omit',
+                mode: 'cors',
+            });
+
+            if (response.ok) {
+                // Extract first name for personalised success message
+                const nameValue = form.querySelector('#name')?.value ?? '';
+                const firstName = nameValue.trim().split(/\s+/)[0] || '';
+
+                // Replace the form element with the success panel (IG-14)
+                // WHY: Replace (not hide) prevents resubmission — the form element
+                // no longer exists in the DOM after a successful submit.
+                const successPanel = buildSuccessPanel(firstName);
+                form.replaceWith(successPanel);
+
+                // Announce success to screen readers via the aria-live region (BUG-2)
+                // WHY: The success panel is the primary visible UX, but AT users
+                // need a live-region announcement because replaceWith() moves focus
+                // away from the previous DOM context. The short string is intentional
+                // — the panel itself carries the full message once focus lands on it.
+                if (formStatus) {
+                    formStatus.textContent = 'Message sent.';
+                    formStatus.classList.remove('form-status--error', 'form-status--warning');
+                    formStatus.classList.add('form-status--success');
+                }
+
+                // Move focus to the success panel container for keyboard/AT users
+                // WHY: The panel has tabindex="-1" so focus() works reliably.
+                // Targeting the inner h2 would silently fail — h2 has no tabindex.
+                successPanel.focus();
+            } else {
+                // Non-2xx — surface generic error only (SD-5)
+                // WHY: Never surface response.statusText, response body, or error.message
+                // to the DOM — leaks implementation details and creates a CWE-209 vector.
+                console.info('[main.js] Form submit failed status:', response.status);
+
+                if (formStatus) {
+                    renderGenericError(formStatus);
+                }
+
+                // Restore submit button so the user can retry
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                }
+                form.removeAttribute('aria-busy');
+            }
+        } catch (_err) {
+            // Network failure — same generic error, no internals in the DOM (SD-5)
+            console.info('[main.js] Form submit failed status:', 'network');
+
+            if (formStatus) {
+                renderGenericError(formStatus);
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+            }
+            form.removeAttribute('aria-busy');
+        }
+    });
+};
+
+// =============================================================================
+// TURNSTILE CALLBACKS
+// WHY: Cloudflare Turnstile calls these by name via the data-callback,
+// data-expired-callback, and data-error-callback attributes on the widget div.
+// They must be window-scoped so Turnstile's iframe can invoke them.
+// =============================================================================
+
+window.onTurnstileSuccess = (_token) => {
+    const submitBtn = document.querySelector('.contact-form [type="submit"]');
+    if (submitBtn) submitBtn.disabled = false;
+};
+
+window.onTurnstileExpired = () => {
+    const submitBtn = document.querySelector('.contact-form [type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+};
+
+window.onTurnstileError = () => {
+    const submitBtn = document.querySelector('.contact-form [type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    // Optionally surface a hint that the widget errored
+    const formStatus = document.getElementById('form-status');
+    if (formStatus && !formStatus.textContent.trim()) {
+        formStatus.textContent = 'The security check encountered an error. Please refresh and try again.';
+        formStatus.classList.remove('form-status--warning', 'form-status--success');
+        formStatus.classList.add('form-status--error');
+    }
+};
+
+// =============================================================================
+// TURNSTILE LOAD-TIMEOUT
+// WHY: Corporate proxies and aggressive privacy extensions can silently block
+// challenges.cloudflare.com/turnstile/v0/api.js. Without a timeout, the form
+// is permanently stuck on a disabled submit button — a complete deadlock.
+// 8 seconds is long enough for slow connections, short enough to avoid
+// confusion. The fallback message (LinkedIn + email) IS the escape hatch for
+// blocked-Turnstile users — native POST is not reachable while JS is running
+// because the submit handler calls event.preventDefault() unconditionally,
+// including when the form is submitted via keyboard Enter. (IG-9 / SD-10 / PEN-10)
+// =============================================================================
+
+const initTurnstileLoadTimeout = () => {
+    const form = document.querySelector('.contact-form');
+    if (!form) return;
+
+    setTimeout(() => {
+        if (typeof window.turnstile !== 'undefined') return; // loaded fine
+
+        const formStatus = document.getElementById('form-status');
+        if (formStatus) {
+            // Build the fallback message with a decoded email link
+            formStatus.textContent = '';
+
+            const intro = document.createTextNode(
+                'The security check failed to load — this can happen behind corporate firewalls or with some browser extensions. You can reach me directly on '
+            );
+            formStatus.appendChild(intro);
+
+            const linkedInLink = document.createElement('a');
+            linkedInLink.href = 'https://www.linkedin.com/in/robcparker/';
+            linkedInLink.target = '_blank';
+            linkedInLink.rel = 'noopener noreferrer';
+            linkedInLink.textContent = 'LinkedIn';
+            formStatus.appendChild(linkedInLink);
+
+            formStatus.appendChild(document.createTextNode(' or by email at '));
+
+            // Assemble email address — same approach as initEmailObfuscation
+            const emailLink = document.createElement('a');
+            emailLink.href = 'mailto:rob.c.parker@gmail.com';
+            emailLink.textContent = 'rob.c.parker@gmail.com';
+            formStatus.appendChild(emailLink);
+
+            formStatus.appendChild(document.createTextNode('.'));
+            formStatus.classList.remove('form-status--error', 'form-status--success');
+            formStatus.classList.add('form-status--warning');
+        }
+    }, 8000);
+};
+
+// =============================================================================
+// EMAIL OBFUSCATION DECODER
+// WHY: Assembling the visible email address client-side from split data-user +
+// data-domain attributes cuts ~70% of naive email harvesters that scrape the
+// raw HTML. The final DOM contains a real mailto: link so copy-paste and
+// screen readers work correctly. No-JS users see the fallback text. (AG-4 / PEN-4)
+// =============================================================================
+
+const initEmailObfuscation = () => {
+    const containers = document.querySelectorAll('[data-user][data-domain]');
+    containers.forEach((container) => {
+        const user = container.getAttribute('data-user');
+        const domain = container.getAttribute('data-domain');
+        if (!user || !domain) return;
+
+        const address = `${user}@${domain}`;
+        const link = document.createElement('a');
+        link.href = `mailto:${address}`;
+        // textContent only — SD-4 XSS prevention
+        link.textContent = address;
+
+        // Replace the container's entire content with the decoded link
+        container.textContent = '';
+        container.appendChild(link);
     });
 };
 
@@ -243,6 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initActiveNav();
     initSmoothScroll();
     initContactForm();
+    initTurnstileLoadTimeout();
+    initEmailObfuscation();
 });
 
 // Export utilities for potential future use in page-specific scripts

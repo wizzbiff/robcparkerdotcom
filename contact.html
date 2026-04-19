@@ -6,21 +6,30 @@
 
     <!-- SEO -->
     <title>Contact Rob Parker — Senior Engineering Executive</title>
-    <meta name="description" content="Get in touch with Rob Parker to discuss engineering leadership roles or advisory engagements.">
+    <meta name="description" content="Reach Rob Parker to discuss Director or VP of Engineering roles or advisory engagements. He replies to relevant inquiries within a few business days.">
+
+    <!-- Referrer policy — limits referrer header data sent to third-party endpoints (SD-8) -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
+    <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers. -->
     <meta property="og:url" content="https://www.robcparker.com/contact.html">
     <meta property="og:title" content="Contact Rob Parker — Senior Engineering Executive">
-    <meta property="og:description" content="Get in touch with Rob Parker to discuss engineering leadership roles or advisory engagements.">
+    <meta property="og:description" content="Rob Parker is actively exploring Director and VP of Engineering roles at AI-forward SaaS companies. Advisory inquiries are welcome. Reach out via the contact form or LinkedIn.">
+    <!-- WHY: og:image must be absolute — relative paths are not resolved by social crawlers
+         (Open Graph protocol requirement). Reusing validated headshot asset from SPEC-002. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
 
-    <!-- WHY: Placeholder page — prevent indexing of thin content until SPEC-004 builds the real page -->
-    <meta name="robots" content="noindex">
+    <!-- WHY: noindex removed — this is now a real, fully-built page (SPEC-004 IG-12).
+         The placeholder version had noindex to prevent thin content from being indexed. -->
 
+    <link rel="canonical" href="https://www.robcparker.com/contact.html">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+    <!-- Skip to main content — accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <header class="site-header">
@@ -56,11 +65,172 @@
     </header>
 
     <main id="main-content">
-        <div class="placeholder-content container">
-            <h1>Contact</h1>
-            <p>Full contact page with form coming soon — see SPEC-004.</p>
-            <a href="index.html" class="btn btn-primary">Back to Home</a>
-        </div>
+
+        <!-- ================================================================
+             SECTION 1: HERO / PAGE INTRO
+             ================================================================ -->
+        <section class="hero contact-page-hero" aria-labelledby="contact-heading">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="contact-heading">Get in Touch</h1>
+                    <p class="hero-subheadline">If you are evaluating senior engineering leaders for a Director or VP of Engineering role, I would welcome the conversation. Advisory inquiries are also open. I reply within a few business days.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 2: CONTACT FORM + ALTERNATE CHANNELS
+             ================================================================ -->
+        <section class="section contact-page" aria-labelledby="form-section-label">
+            <!-- WHY: visually-hidden heading gives the section a meaningful label for
+                 screen reader navigation without adding a visible H2 above the form
+                 (the hero H1 already frames the page purpose adequately). -->
+            <h2 id="form-section-label" class="visually-hidden">Contact form</h2>
+            <div class="container">
+                <div class="contact-layout">
+
+                    <!-- Form column -->
+                    <div class="contact-form-column">
+
+                        <!-- WHY (IG-4): aria-live region must exist at page-load (empty), not
+                             injected on submit, so the browser registers it as a live region
+                             before any updates land in it. Placed ABOVE the form so screen
+                             readers encounter it before the form fields on re-read. -->
+                        <!-- WHY: role="status" implies aria-live="polite" — keeping both causes
+                             some screen readers to double-announce. The explicit aria-live
+                             attribute is removed; role="status" alone is sufficient (S-2). -->
+                        <div id="form-status" class="form-status" role="status"></div>
+
+                        <form
+                            class="contact-form"
+                            method="POST"
+                            action="https://formspree.io/f/__REPLACE_WITH_FORMSPREE_FORM_ID__"
+                            novalidate
+                        >
+                            <!-- Hidden subject line for Formspree email threading -->
+                            <input type="hidden" name="_subject" value="New contact from robcparker.com">
+
+                            <!-- Name field -->
+                            <div class="form-field">
+                                <label class="form-label" for="name">Your name</label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    autocomplete="name"
+                                    placeholder="Rob Parker"
+                                    aria-describedby="name-error"
+                                >
+                                <span id="name-error" class="form-error" hidden></span>
+                            </div>
+
+                            <!-- Email field -->
+                            <div class="form-field">
+                                <label class="form-label" for="email">Email address</label>
+                                <input
+                                    class="form-input"
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    autocomplete="email"
+                                    placeholder="you@company.com"
+                                    aria-describedby="email-error"
+                                >
+                                <span id="email-error" class="form-error" hidden></span>
+                            </div>
+
+                            <!-- Message field -->
+                            <div class="form-field">
+                                <label class="form-label" for="message">Message</label>
+                                <textarea
+                                    class="form-textarea"
+                                    id="message"
+                                    name="message"
+                                    required
+                                    rows="6"
+                                    minlength="10"
+                                    aria-describedby="message-error"
+                                ></textarea>
+                                <span id="message-error" class="form-error" hidden></span>
+                            </div>
+
+                            <!-- Honeypot — off-screen, invisible to real users, visible to bots (IG-7)
+                                 WHY: position:absolute off-screen (not display:none or visibility:hidden)
+                                 because naive bots skip fields they detect as hidden via display/visibility.
+                                 tabindex="-1" and aria-hidden="true" keep it out of keyboard and AT flow. -->
+                            <div class="honeypot-field" aria-hidden="true">
+                                <input
+                                    type="text"
+                                    name="_gotcha"
+                                    tabindex="-1"
+                                    autocomplete="off"
+                                    aria-hidden="true"
+                                >
+                            </div>
+
+                            <!-- Cloudflare Turnstile widget (IG-5)
+                                 WHY: data-sitekey placeholder will be replaced before deploy.
+                                 Callbacks are registered as window functions in main.js so Turnstile
+                                 can call them by name from the data-callback attributes. -->
+                            <div
+                                class="cf-turnstile turnstile-slot"
+                                data-sitekey="__REPLACE_WITH_TURNSTILE_SITE_KEY__"
+                                data-callback="onTurnstileSuccess"
+                                data-expired-callback="onTurnstileExpired"
+                                data-error-callback="onTurnstileError"
+                            ></div>
+
+                            <!-- WHY (IG-8): Submit disabled by default — enabled only after Turnstile
+                                 issues a valid token via onTurnstileSuccess callback. Prevents
+                                 submissions with no token reaching Formspree at all. -->
+                            <button type="submit" class="btn btn-primary contact-submit-btn" disabled>
+                                Send Message
+                            </button>
+
+                            <!-- Privacy note (C-2 / GDPR Art. 13/14 — PEN-1) -->
+                            <p class="form-privacy-note">Your information is submitted securely through Formspree. See their <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">privacy policy</a> for details on how it is handled.</p>
+
+                        </form>
+                    </div>
+
+                    <!-- Alternate channels column -->
+                    <aside class="alt-channels" aria-labelledby="alt-channels-heading">
+                        <h2 id="alt-channels-heading" class="alt-channels-heading">Or reach out directly</h2>
+
+                        <ul class="alt-channels-list" role="list">
+                            <li class="alt-channel-item">
+                                <span class="alt-channel-label">LinkedIn</span>
+                                <a
+                                    href="https://www.linkedin.com/in/robcparker/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Connect with Rob Parker on LinkedIn (opens in a new tab)"
+                                    class="alt-channel-link"
+                                >Connect on LinkedIn</a>
+                            </li>
+
+                            <!-- Email item — JS decoded from data attributes (AG-4 / PEN-4 / IG-13 amended)
+                                 WHY: Assembling the address client-side from split parts cuts ~70% of naive
+                                 harvesters. No-JS users see the fallback span — they can still use the form
+                                 or the LinkedIn link above. textContent assignment in JS prevents XSS. -->
+                            <li class="alt-channel-item">
+                                <span class="alt-channel-label">Email</span>
+                                <span
+                                    class="alt-channel-email-container"
+                                    data-user="rob.c.parker"
+                                    data-domain="gmail.com"
+                                ><span class="alt-channel-email-fallback">Contact via the form above</span></span>
+                            </li>
+                        </ul>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="site-footer">
@@ -97,6 +267,11 @@
         </div>
     </footer>
 
+    <!-- Cloudflare Turnstile — contact page only; not in shared chrome (IG-6) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <!-- WHY: defer used instead of async — defer preserves execution order
+         and fires after DOM is parsed, which is what DOMContentLoaded listeners need. -->
     <script src="js/main.js" defer></script>
 </body>
 </html>
