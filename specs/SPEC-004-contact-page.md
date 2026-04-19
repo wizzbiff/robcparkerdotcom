@@ -1,6 +1,6 @@
 # SPEC-004: Contact Page
 
-**Status:** Implementation + Review Complete — pending Manual Browser Verification
+**Status:** Complete (deployment deferred)
 **Tier:** Complex
 **Author:** PM-Spec Agent
 **Date:** 2026-04-18
@@ -669,8 +669,8 @@ Before merging to main and deploying:
 
 ### Manual Browser Verification
 
-*Pending Rob's execution of the plan above.*
+**Completed by:** Rob Parker
+**Date:** 2026-04-19
+**Result:** All 24 verification items pass (groups A–H). Pre-Deploy Configuration completed in parallel: Formspree form `mvzdrbnk` created with `rob.c.parker@gmail.com` recipient, Turnstile widget provisioned (site key `0x4AAAAAAC_i2Ps6sJsYDeL2`), Turnstile Secret Key pasted into Formspree dashboard, all 4 `__REPLACE_WITH_` placeholders swapped and confirmed via `git grep`.
 
-**Completed by:** *Pending*
-**Date:** *Pending*
-**Result:** *Pending*
+**Status:** SPEC-004 complete. Deployment deferred until all content specs are built and SPEC-000 (Cloudflare Pages setup) is completed — consistent with SPEC-002 / SPEC-003 posture.
