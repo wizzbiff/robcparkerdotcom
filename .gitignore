@@ -4,3 +4,14 @@ images/source/
 
 # Files temporarily needed by Claude Code for context
 additional-context/
+
+# External-service secrets — defensive (SPEC-004)
+# WHY: These patterns guard against accidentally committing API keys, secret
+# tokens, or other credentials. None of these files currently exist in the
+# repo; the patterns are pre-emptive. Real values for Formspree and Turnstile
+# live in their respective dashboards only — never in this repo.
+.env
+.env.*
+*.secret
+secrets/
+*.key
