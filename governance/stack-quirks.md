@@ -12,9 +12,24 @@ One-liners preferred — link to the spec or commit where it was hit.
 
 (none yet)
 
+## Third-Party Services
+
+Formspree AJAX submissions should send `FormData` (not JSON) to avoid CORS preflight. `Accept: application/json` request header alone gets a JSON response. Established in SPEC-004.
+
+## Content Security Policy (future)
+
+When a CSP is added (separate spec), the following directives will be required for the contact page to function:
+
+- `script-src https://challenges.cloudflare.com` — Turnstile widget script
+- `frame-src https://challenges.cloudflare.com` — Turnstile challenge iframe
+- `connect-src https://formspree.io https://*.formspree.io` — fetch POST to Formspree
+- `form-action 'self' https://formspree.io` — native POST fallback target
+
+Note: `style-src` may need `'unsafe-inline'` for Turnstile's injected styles — verify empirically before enforcing. Established in SPEC-004.
+
 ## Cloudflare
 
-(none yet)
+Cloudflare Turnstile `api.js` can be blocked by corporate proxies or privacy extensions. Always pair the widget with a load-timeout fallback (8s is a reasonable default) so the form doesn't deadlock on a disabled submit button. Established in SPEC-004.
 
 ## Static Assets
 

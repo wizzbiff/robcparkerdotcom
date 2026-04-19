@@ -1573,3 +1573,362 @@ a.resume-contact-item:hover {
         line-height: 1.4;
     }
 }
+
+/* ==========================================================================
+   20. CONTACT PAGE — Form Primitives & Layout (SPEC-004)
+   ========================================================================== */
+
+/* Page-level layout: form column + alt-channels aside, side-by-side on desktop
+   WHY: .contact-page scopes all contact-specific rules so they cannot leak
+   to other pages that also use .section, .container, or .hero. */
+.contact-page .contact-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    align-items: flex-start;
+}
+
+/* Form column — comfortable reading width on desktop */
+.contact-form-column {
+    width: 100%;
+    max-width: 560px;
+}
+
+/* ==========================================================================
+   20a. FORM PRIMITIVES
+   ========================================================================== */
+
+/* Individual field wrapper — label + input + error in a vertical stack */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+}
+
+.form-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    line-height: var(--line-height-snug);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    /* WHY: Minimum 44px height matches WCAG 2.5.5 touch target for inputs */
+    min-height: 44px;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+}
+
+/* WHY: aria-invalid="true" provides a red border as a redundant visual cue
+   for validation errors — color alone is not sufficient (WCAG 1.4.1), but
+   the inline error text already satisfies that; the border reinforces it. */
+.form-input[aria-invalid="true"],
+.form-textarea[aria-invalid="true"] {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12);
+}
+
+.form-textarea {
+    resize: vertical;
+    /* WHY: Prevent horizontal resize which would break the column layout */
+    min-height: 140px;
+}
+
+/* Inline validation error message */
+.form-error {
+    font-size: var(--font-size-sm);
+    color: #dc2626;
+    line-height: var(--line-height-snug);
+    /* WHY: The element is hidden via the `hidden` HTML attribute (toggled by JS),
+       not via CSS display:none, so AT always queries the live DOM correctly. */
+}
+
+/* ==========================================================================
+   20b. FORM STATUS (generic error / Turnstile load-failure messages)
+   ========================================================================== */
+
+/* WHY: .form-status is rendered empty at page-load so the browser registers
+   the aria-live region before any content is injected. The visible styles
+   only kick in when the JS populates it (the empty state is invisible). */
+.form-status {
+    /* Empty state — invisible but in the DOM */
+    margin-bottom: 0;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+}
+
+.form-status:not(:empty) {
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.form-status--error:not(:empty) {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.form-status--error a {
+    color: #991b1b;
+    font-weight: var(--font-weight-semibold);
+}
+
+.form-status--warning:not(:empty) {
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.form-status--warning a {
+    color: #92400e;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================================
+   20c. HONEYPOT — off-screen, not display:none (IG-7)
+   ========================================================================== */
+
+/* WHY: position:absolute off-screen (not display:none or visibility:hidden) —
+   naive bots detect and skip fields that are invisible via CSS display/visibility
+   properties. Off-screen positioning keeps the field in the normal DOM flow
+   for bots while aria-hidden="true" and tabindex="-1" exclude it from real
+   user interactions. */
+.honeypot-field {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   20d. TURNSTILE WIDGET SLOT (IG-5)
+   ========================================================================== */
+
+/* WHY: min-height reserves the widget's space before the Turnstile iframe
+   loads, preventing cumulative layout shift (CLS). width:300px matches the
+   widget's natural render width; max-width:100% ensures it shrinks on narrow
+   viewports (320px) instead of triggering horizontal scroll (S-6). */
+.turnstile-slot {
+    min-height: 65px;
+    width: 300px;
+    max-width: 100%;
+    margin-bottom: var(--space-6);
+}
+
+/* ==========================================================================
+   20e. SUBMIT BUTTON
+   ========================================================================== */
+
+.contact-submit-btn {
+    margin-bottom: var(--space-4);
+}
+
+.contact-submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   20f. PRIVACY NOTE
+   ========================================================================== */
+
+.form-privacy-note {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+    margin-top: var(--space-2);
+}
+
+.form-privacy-note a {
+    color: var(--text-muted);
+}
+
+.form-privacy-note a:hover {
+    color: var(--primary-color);
+}
+
+/* ==========================================================================
+   20g. SUCCESS STATE
+   ========================================================================== */
+
+/* WHY: .success-state replaces the form element entirely (not just hides it)
+   so the heading prominence and visual treatment signal clearly that the form
+   interaction is complete, not paused. */
+.success-state {
+    max-width: 560px;
+    padding: var(--space-10) var(--space-8);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+    border-radius: var(--border-radius-lg);
+}
+
+.success-heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+    margin-bottom: var(--space-4);
+    line-height: var(--line-height-tight);
+}
+
+/* WHY: outline:none on success-state because it receives programmatic focus
+   (focus() in JS) not user-initiated focus — visible ring would be confusing. */
+.success-state:focus {
+    outline: none;
+}
+
+.success-body {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-6);
+}
+
+.success-nudge {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-6);
+}
+
+/* ==========================================================================
+   20h. ALTERNATE CHANNELS
+   ========================================================================== */
+
+.alt-channels {
+    width: 100%;
+}
+
+.alt-channels-heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+    margin-bottom: var(--space-6);
+    line-height: var(--line-height-tight);
+}
+
+.alt-channels-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.alt-channel-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.alt-channel-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.alt-channel-link {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.alt-channel-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Email container and its decoded anchor share the same visual style as .alt-channel-link */
+.alt-channel-email-container {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+.alt-channel-email-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.alt-channel-email-container a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.alt-channel-email-fallback {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ==========================================================================
+   20i. CONTACT PAGE — Responsive (768px desktop)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+    .contact-page .contact-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: var(--space-16);
+    }
+
+    .contact-form-column {
+        flex: 0 0 560px;
+        max-width: 560px;
+    }
+
+    .alt-channels {
+        flex: 1;
+        max-width: 320px;
+    }
+
+    /* Side-by-side alt-channel items on desktop */
+    .alt-channels-list {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+}
+
+/* ==========================================================================
+   20j. CONTACT PAGE — Responsive (480px small mobile)
+   ========================================================================== */
+
+@media (max-width: 480px) {
+    .contact-form-column {
+        max-width: 100%;
+    }
+
+    .success-state {
+        padding: var(--space-6) var(--space-5);
+    }
+
+    .alt-channel-item {
+        padding: var(--space-4) var(--space-5);
+    }
+}
