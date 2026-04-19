@@ -40,3 +40,7 @@
 - When in doubt, use the higher tier
 - Any gate review can escalate upward
 - Tier can only be reduced with documented rationale and re-check of triggers
+
+## PII Handling — Processor Distinction
+
+The "PII handling" mandatory escalation trigger (Critical minimum tier) applies when the site stores, analyzes, or authenticates against user data locally. A thin processor relationship — where a third-party service such as Formspree receives form submissions and delivers them off-site with no local storage, no analytics, and no auth — does not automatically trigger Critical; Complex is defensible and was accepted for SPEC-004. Escalate to Critical the moment any of those conditions change: if submission data is stored locally, analyzed in our systems, or tied to an authenticated session. SPEC-004 is the established precedent for the processor-only PII exception.
