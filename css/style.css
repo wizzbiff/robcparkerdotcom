@@ -704,6 +704,138 @@ p {
 }
 
 /* ==========================================================================
+   12a. ENGAGEMENT CARDS (SPEC-005)
+   ========================================================================== */
+
+/* WHY: .engagement-card is a composition on .service-card, not a fork (SPEC-005 AG-1).
+   Base card chrome — padding, background, border-radius, border, shadow, hover lift —
+   is inherited from .service-card. This block defines only sub-element styles specific
+   to the engagement card (description spacing, meta list). Do not duplicate base chrome
+   here; any visual identity change to the card shell should be made on .service-card. */
+
+/* WHY: descendant selector (specificity 0,2,0) is required to override
+   .service-card p { flex: 1; margin-bottom: var(--space-8); } (specificity 0,1,1),
+   which exists to push the service-card CTA button to the card footer. Engagement
+   cards have no footer CTA — without this neutralization, the description paragraph
+   would stretch and leave trailing whitespace before the meta dl. */
+.engagement-card .engagement-card-desc {
+    flex: initial;
+    margin-bottom: var(--space-6);
+}
+
+.engagement-card-meta {
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--space-5);
+}
+
+.engagement-card-meta dt {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-1);
+}
+
+.engagement-card-meta dt:first-child {
+    margin-top: 0;
+}
+
+.engagement-card-meta dd {
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+    line-height: var(--line-height-relaxed);
+    margin-left: 0;
+}
+
+/* ==========================================================================
+   12b. ENGAGEMENTS GRID (SPEC-005)
+   ========================================================================== */
+
+/* WHY: .engagements-grid is a new modifier separate from .services-grid (SPEC-005 IG-4).
+   .services-grid must not be altered — it controls the home-page 2-up layout. This grid
+   adds a third column breakpoint at 1024px to accommodate 5 engagement cards cleanly
+   (3+2 trailing row at desktop is intentional and visually acceptable). */
+.engagements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+}
+
+/* ==========================================================================
+   12c. PROCESS STEPS — Lighter counter-list variant (SPEC-005)
+   ========================================================================== */
+
+/* WHY: .process-steps is the lighter variant of the CSS-counter numbered-list
+   pattern established in .ai-framework-list (SPEC-005 AG-5). The counter and
+   ::before pseudo-element are reused, but the heavy card chrome (background,
+   border, box treatment) is omitted — this section is a simple intake process,
+   not a feature showcase, and heavy chrome would read as overselling. Steps stack
+   vertically at all breakpoints for consistent reading order and a11y. */
+.process-steps {
+    counter-reset: step-counter;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.process-steps li {
+    counter-increment: step-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.process-steps li:last-child {
+    border-bottom: none;
+}
+
+/* WHY: ::before renders the step number in accent color — visually distinct
+   but not the primary-color circle used in .ai-framework-list, keeping
+   visual weight lighter per AG-5. aria-hidden is not needed here; the <ol>
+   element provides ordering semantics and the counter is decorative
+   reinforcement matching the same trade-off accepted in .ai-framework-list. */
+.process-steps li::before {
+    content: counter(step-counter);
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--accent-color);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.process-steps li h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    margin-bottom: var(--space-2);
+}
+
+.process-steps li p {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 0;
+}
+
+.process-steps-body {
+    flex: 1;
+}
+
+/* ==========================================================================
    13. ABOUT TEASER
    ========================================================================== */
 
@@ -1335,6 +1467,10 @@ a.resume-contact-item:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .engagements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .about-teaser {
         flex-direction: row;
         align-items: flex-start;
@@ -1404,6 +1540,10 @@ a.resume-contact-item:hover {
 @media (min-width: 1024px) {
     .highlights-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .engagements-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
