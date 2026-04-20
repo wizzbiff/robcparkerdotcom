@@ -6,16 +6,22 @@
 
     <!-- SEO -->
     <title>Technical Advisory — Rob Parker</title>
-    <meta name="description" content="Rob Parker offers technical advisory services for technology companies and startups that need senior engineering perspective without a full-time executive commitment.">
+    <meta name="description" content="Selective advisory engagements alongside a Director/VP search — AI platform strategy, architecture reviews, M&amp;A integration, and engineering org assessments.">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
+    <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers. -->
     <meta property="og:url" content="https://www.robcparker.com/services/tech-advisory.html">
     <meta property="og:title" content="Technical Advisory — Rob Parker">
-    <meta property="og:description" content="Rob Parker offers technical advisory services for technology companies and startups that need senior engineering perspective without a full-time executive commitment.">
+    <meta property="og:description" content="Selective advisory engagements alongside a Director/VP search — AI platform strategy, architecture reviews, M&amp;A integration, and engineering org assessments.">
+    <!-- WHY: og:image must be absolute — relative paths are not resolved by social crawlers
+         (Open Graph protocol requirement). Reusing validated headshot asset from SPEC-002. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
 
-    <!-- WHY: Placeholder page — prevent indexing of thin content until SPEC-005 builds the real page -->
-    <meta name="robots" content="noindex">
+    <!-- WHY: noindex removed — this is now a real, fully-built page (SPEC-005 IG-9).
+         The placeholder version had noindex to prevent thin content from being indexed. -->
+
+    <link rel="canonical" href="https://www.robcparker.com/services/tech-advisory.html">
 
     <!-- WHY: ../css/ path — this page lives one directory level deeper than root -->
     <link rel="stylesheet" href="../css/style.css">
@@ -57,11 +63,175 @@
     </header>
 
     <main id="main-content">
-        <div class="placeholder-content container">
-            <h1>Technical Advisory</h1>
-            <p>Full technical advisory page coming soon — see SPEC-005.</p>
-            <a href="../index.html" class="btn btn-primary">Back to Home</a>
-        </div>
+
+        <!-- ================================================================
+             SECTION 1: HERO
+             ================================================================ -->
+        <section class="hero" aria-labelledby="advisory-heading">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-eyebrow">Selective Engagements</span>
+                    <h1 id="advisory-heading">Technical Advisory</h1>
+                    <p class="hero-subheadline">I take on a small number of advisory engagements alongside my primary focus on full-time Director and VP of Engineering roles. The work is hands-on and specific: AI-native platform strategy, architecture and modernization reviews, M&A technical due diligence and integration, and engineering organization assessments. If you're working through one of those problems at the executive level, I'm worth a conversation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 2: WHO I WORK WITH
+             ================================================================ -->
+        <section class="section section-alt" aria-labelledby="who-heading">
+            <div class="container">
+                <h2 id="who-heading" class="section-heading-standalone">Who I Work With</h2>
+                <p>I work best with leadership teams at seed-through-growth-stage SaaS companies facing a specific inflection point: a planned AI platform investment, a recent acquisition to integrate, an engineering organization scaling past the point where informal processes still work, or a cloud modernization with real cost and performance stakes.</p>
+                <p>This is not general-purpose consulting work. I'm not a good fit for staff augmentation, role backfill, or broad "help us improve engineering" mandates without a defined problem at the center. The engagements that go well are ones where the leadership team has a clear question and wants senior engineering judgment applied to it.</p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 3: ENGAGEMENT TYPES
+             ================================================================ -->
+        <section class="section" aria-labelledby="engagements-heading">
+            <div class="container">
+                <h2 id="engagements-heading" class="section-heading-standalone">Engagement Types</h2>
+                <div class="engagements-grid">
+
+                    <article class="service-card engagement-card">
+                        <h3>AI Platform &amp; Adoption Strategy</h3>
+                        <p class="engagement-card-desc">I've built a multi-tenant AI platform on AWS Bedrock from the ground up — RAG pipelines, agent orchestration, prompt management, and LLM observability — for a production SaaS environment at scale. I also built the organizational side: a three-tier AI adoption framework (Baseline, Accelerator, Champion) that drove a measured 20% increase in developer velocity across the engineering team. If you're making the architectural and organizational decisions about how your platform and your team engage with AI, I can help you make them with more clarity and less rework.</p>
+                        <dl class="engagement-card-meta">
+                            <dt>Typical cadence</dt>
+                            <dd>4-8 week engagement, or ongoing monthly advisory if the work warrants it.</dd>
+                            <dt>Primary outcome</dt>
+                            <dd>A documented AI platform architecture and adoption strategy aligned to your team's current state — including the governance and tooling decisions you'll need to make before you scale.</dd>
+                        </dl>
+                    </article>
+
+                    <article class="service-card engagement-card">
+                        <h3>Architecture &amp; Modernization Review</h3>
+                        <p class="engagement-card-desc">I led the migration of a production SaaS platform from a monolithic .NET architecture to containerized Python microservices and AWS serverless infrastructure — ECS, Lambda, Step Functions — resulting in a 350% increase in system throughput and a 25% reduction in infrastructure cost. That experience informs how I assess modernization decisions: not just whether the architecture is technically sound, but whether the migration path is realistic given the team's capacity and the business's tolerance for risk. I focus on the trade-offs that tend to be underweighted in these decisions — migration sequencing, operational complexity, and cost at scale.</p>
+                        <dl class="engagement-card-meta">
+                            <dt>Typical cadence</dt>
+                            <dd>2-4 week discrete engagement with a written deliverable report.</dd>
+                            <dt>Primary outcome</dt>
+                            <dd>A prioritized modernization roadmap ranking your architecture options by ROI, risk, and migration complexity — written for both the engineering team and the leadership team reading it.</dd>
+                        </dl>
+                    </article>
+
+                    <article class="service-card engagement-card">
+                        <h3>M&amp;A Technical Due Diligence &amp; Integration</h3>
+                        <p class="engagement-card-desc">I've navigated M&amp;A from both sides of the table: as CTO of an acquired B2B SaaS company, and then as Director of Engineering at the acquirer leading the full technical integration. That integration completed in 12 weeks with zero customer churn and 92% employee retention — in an environment where both outcomes were genuinely at risk. I understand what technical due diligence actually needs to surface, what post-acquisition integration planning consistently underestimates, and how to keep an engineering team functional through the ambiguity that M&amp;A creates.</p>
+                        <dl class="engagement-card-meta">
+                            <dt>Typical cadence</dt>
+                            <dd>Due diligence is typically 1-2 weeks; post-acquisition integration planning and oversight spans weeks to months depending on scope.</dd>
+                            <dt>Primary outcome</dt>
+                            <dd>For due diligence: a technical risk assessment covering architecture, team, debt, and operational readiness. For integration: a sequenced integration roadmap with dependency mapping and retention risk flags.</dd>
+                        </dl>
+                    </article>
+
+                    <article class="service-card engagement-card">
+                        <h3>Engineering Organization Assessment</h3>
+                        <p class="engagement-card-desc">At SugarCRM, I scaled the engineering organization by 150% — from a team that had outgrown its informal structures to a 26-person global organization with five distinct teams, a functioning management layer, and 90% retention through that entire growth period. That required deliberate work on team structure, career laddering, promotion pipelines, engineering process maturity, and how the organization communicated across time zones. I bring that same framework to assessments: I'm looking at whether your org is structured for the scale it's heading toward, not just the scale it's at.</p>
+                        <dl class="engagement-card-meta">
+                            <dt>Typical cadence</dt>
+                            <dd>2-3 week assessment with a recommendations deliverable.</dd>
+                            <dt>Primary outcome</dt>
+                            <dd>A written assessment of your engineering organization's current state against the scale you're targeting — covering team structure, process maturity, retention risk, and the specific changes that will have the most leverage.</dd>
+                        </dl>
+                    </article>
+
+                    <article class="service-card engagement-card">
+                        <h3>Ongoing Advisory</h3>
+                        <p class="engagement-card-desc">Some of the most useful advisory work isn't a discrete project — it's having a senior engineering leader available to think through decisions before they get made. I work with a small number of CEOs, CTOs, and engineering leaders on a standing basis: quarterly planning, architecture decisions, team and hiring strategy, difficult leadership situations. This is judgment work, not implementation work — the value is in the perspective and the conversation, not in deliverables.</p>
+                        <dl class="engagement-card-meta">
+                            <dt>Typical cadence</dt>
+                            <dd>Monthly or quarterly retainer, with sessions scheduled as needed.</dd>
+                            <dt>Primary outcome</dt>
+                            <dd>A consistent senior engineering sounding board for the decisions your leadership team is working through — available before the decision is made, not after.</dd>
+                        </dl>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 4: WHY THIS BACKGROUND MATTERS
+             ================================================================ -->
+        <section class="section section-alt" aria-labelledby="why-heading">
+            <div class="container">
+                <h2 id="why-heading" class="section-heading-standalone">Why This Background Matters</h2>
+                <p>The engagements above are grounded in work I've actually done — not adjacent experience, not advisory extrapolated from a single job. The full career record is on <a href="../about.html" class="body-link">Rob's About page</a> and <a href="../resume.html" class="body-link">Rob's resume</a>. The short version: 25 years of engineering experience, the last decade in senior leadership at B2B SaaS companies, with a consistent track record of building teams and platforms that hold up at scale.</p>
+                <div class="highlights-grid">
+
+                    <article class="highlight-card">
+                        <div class="highlight-metric" role="img" aria-label="One hundred million dollars plus">$100M+</div>
+                        <h3 class="highlight-label">SaaS AI Platform Led to Beta</h3>
+                        <p class="highlight-desc">At SugarCRM, I directed the engineering teams that built and shipped a multi-tenant AI platform on AWS Bedrock — RAG pipelines, agent orchestration, and LLM observability — for a $100M+ SaaS CRM business. That platform went from concept to beta release under my leadership.</p>
+                    </article>
+
+                    <article class="highlight-card">
+                        <div class="highlight-metric" role="img" aria-label="12 weeks">12-week</div>
+                        <h3 class="highlight-label">M&amp;A Integration, Zero Customer Churn</h3>
+                        <p class="highlight-desc">I led the full technical integration of Salesfusion into SugarCRM — code repositories, CI/CD pipelines, infrastructure, and team — in 12 weeks, completing 100% of integration milestones on schedule with no customer churn.</p>
+                    </article>
+
+                    <article class="highlight-card">
+                        <div class="highlight-metric" role="img" aria-label="150 percent">150%</div>
+                        <h3 class="highlight-label">Engineering Organization Growth</h3>
+                        <p class="highlight-desc">I scaled the SugarCRM engineering organization by 150%, building five teams across AI/ML, Data Platform, and Identity Management — and promoted 8 engineers into senior and staff roles and 3 into engineering management during that same period.</p>
+                    </article>
+
+                    <article class="highlight-card">
+                        <div class="highlight-metric" role="img" aria-label="90 percent">90%</div>
+                        <h3 class="highlight-label">Engineering Retention Through Scale</h3>
+                        <p class="highlight-desc">Across that 150% growth period at SugarCRM — which included an M&amp;A consolidation — I sustained 90% engineering retention. That number reflects deliberate investment in career development, clear communication through ambiguity, and team structures people wanted to stay in.</p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 5: HOW IT WORKS
+             ================================================================ -->
+        <section class="section" aria-labelledby="process-heading">
+            <div class="container">
+                <h2 id="process-heading" class="section-heading-standalone">How It Works</h2>
+                <ol class="process-steps">
+                    <li>
+                        <div class="process-steps-body">
+                            <h3>Reach Out</h3>
+                            <p>Send a note through the contact form with a brief description of what you're working through. I read every message and respond personally — usually within a few business days.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="process-steps-body">
+                            <h3>30-Minute Scoping Call (Free)</h3>
+                            <p>If the problem sounds like a fit, I'll schedule a 30-minute call to understand the situation in more depth and confirm whether there's a real engagement here. No commitment on either side.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="process-steps-body">
+                            <h3>Written Proposal</h3>
+                            <p>If we both want to move forward, I'll put scope, cadence, and terms in writing before any work begins. No ambiguity about what's included, what the deliverable is, or how long it runs.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 6: CTA
+             ================================================================ -->
+        <section class="section section-dark cta-section" aria-labelledby="cta-heading">
+            <div class="container">
+                <h2 id="cta-heading">Start a Conversation</h2>
+                <p>If you're working through one of these problems and want a senior engineering perspective, the contact form is the right first step.</p>
+                <a href="../contact.html" class="btn btn-white">Get in Touch</a>
+            </div>
+        </section>
+
     </main>
 
     <footer class="site-footer">
