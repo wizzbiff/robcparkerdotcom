@@ -50,8 +50,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="resume.html">Resume</a></li>
-                    <li><a href="services/tech-advisory.html">Advisory</a></li>
-                    <li><a href="services/guitar-playing.html">Guitar</a></li>
+                    <li><a href="advisory.html">Advisory</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -142,35 +141,25 @@
                         thought partner, Rob brings executive-level judgment to the table.
                     </p>
                 </div>
-                <div class="services-grid">
-
-                    <article class="service-card">
-                        <h3>Technical Advisory</h3>
+                <!-- WHY: Second use of `.about-teaser` on this page (already used for the
+                     "About Rob" block below). Composition reuses the existing two-column
+                     flex primitive; no new CSS class introduced. See SPEC-006 AG-1 / IG-3. -->
+                <div class="about-teaser">
+                    <div class="about-teaser-text">
                         <p>
-                            Rob works with technology companies and startups that need senior
-                            engineering perspective without a full-time executive commitment.
-                            Engagements range from architecture reviews and team assessments to
-                            ongoing advisory relationships — tailored to where your organization
-                            is and where it needs to go.
+                            Rob works with growth-stage SaaS companies, leadership teams navigating
+                            an AI platform investment, and organizations facing the complexity of
+                            M&amp;A integration or engineering org scaling. Engagements are grounded
+                            in direct experience — building a multi-tenant AI platform on AWS
+                            Bedrock, leading a 12-week acquisition integration with zero customer
+                            churn, and scaling an engineering org 150% while holding 90% retention.
+                            The work ranges from a focused architecture review to an ongoing senior
+                            sounding board, shaped around what you're actually working through.
                         </p>
-                        <a href="services/tech-advisory.html" class="btn btn-secondary">
-                            Explore Technical Advisory
-                        </a>
-                    </article>
-
-                    <article class="service-card">
-                        <h3>Guitar Playing</h3>
-                        <p>
-                            Engineering is what Rob does. Guitar is who he is. This page offers
-                            a look at Rob's life outside the terminal — because the best
-                            engineering leaders bring the same creativity, patience, and attention
-                            to craft to both.
-                        </p>
-                        <a href="services/guitar-playing.html" class="btn btn-secondary">
-                            Take a Look
-                        </a>
-                    </article>
-
+                    </div>
+                    <div class="about-teaser-action">
+                        <a href="advisory.html" class="btn btn-primary">Explore Advisory Engagements</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -226,8 +215,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About</a></li>
                         <li><a href="resume.html">Resume</a></li>
-                        <li><a href="services/tech-advisory.html">Advisory</a></li>
-                        <li><a href="services/guitar-playing.html">Guitar</a></li>
+                        <li><a href="advisory.html">Advisory</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </nav>
