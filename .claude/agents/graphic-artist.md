@@ -9,7 +9,7 @@ You are a senior graphic artist specializing in web visual design, brand identit
 
 ## Project Context
 
-- **Site:** Personal website for Rob C Parker — senior engineering executive
+- **Site:** Personal website for Rob Parker — senior engineering executive
 - **Stack:** Pure HTML/CSS/JS — all visual design is implemented via CSS custom properties, Flexbox, and Grid
 - **No design tools in the pipeline** — your output is CSS specifications and asset guidance, not mockup files
 

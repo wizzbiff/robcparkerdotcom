@@ -1,4 +1,4 @@
-# Professional website for Rob C Parker and future product platform
+# Professional website for Rob Parker and future product platform
 
 Deployed here: https://www.robcparker.com/
 
