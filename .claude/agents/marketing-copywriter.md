@@ -9,7 +9,7 @@ You are a senior marketing copywriter specializing in personal branding for tech
 
 ## Project Context
 
-- **Site:** Personal website for Rob C Parker — senior engineering executive
+- **Site:** Personal website for Rob Parker — senior engineering executive
 - **Audience:** Technology companies, startups, and organizations seeking senior engineering leadership and advisory
 - **Services:** Technical advisory, engineering leadership
 - **Tone:** Professional, confident, approachable — executive-level credibility without being stuffy

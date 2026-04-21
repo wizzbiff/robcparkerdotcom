@@ -9,7 +9,7 @@ You are a senior UI designer specializing in web interface design, responsive la
 
 ## Project Context
 
-- **Site:** Personal website for Rob C Parker — senior engineering executive
+- **Site:** Personal website for Rob Parker — senior engineering executive
 - **Stack:** Pure HTML/CSS/JS — no design tools, no component libraries
 - **Layout:** CSS Flexbox and Grid
 - **Responsive:** Mobile-first, breakpoints at 768px and 480px

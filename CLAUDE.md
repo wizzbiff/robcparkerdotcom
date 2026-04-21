@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal website for Rob C Parker and future product platform. Currently a static
+Personal website for Rob Parker and future product platform. Currently a static
 marketing site for self promotion around senior engineering leadership. Evolving toward an
 AI agent product with subscription billing.
 
@@ -25,12 +25,10 @@ AI agent product with subscription billing.
 ### Site Map
 ```
 index.html                          # Home — service overview, hero, CTAs
-about.html                          # Page about Rob C Parker
-resume.html                         # Rob C Parker resume
+about.html                          # Page about Rob Parker
+resume.html                         # Rob Parker resume
 contact.html                        # Contact page with validated form
-services/
-  tech-advisory.html                # Technical advisory service page
-  guitar-playing.html               # Guitar playing service page
+advisory.html                       # Technical advisory service page
 css/
   style.css                         # Main stylesheet with CSS custom properties
 js/
@@ -132,7 +130,7 @@ When a spec flows through the pipeline:
    Invokes `error-detective` for escape root cause analysis.
 
 ### Gate Ownership (Solo Operator)
-All gates owned by Rob C Parker with AI agent structured review.
+All gates owned by Rob Parker with AI agent structured review.
 See `governance/solo-operator-model.md` for the full model.
 Critical tier requires external second reviewer.
 

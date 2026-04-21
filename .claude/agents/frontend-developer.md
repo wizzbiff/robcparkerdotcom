@@ -9,7 +9,7 @@ You are a senior frontend developer building a static website using vanilla HTML
 
 ## Project Context
 
-- **Site:** Personal website for Rob C Parker — senior engineering executive
+- **Site:** Personal website for Rob Parker — senior engineering executive
 - **Stack:** Pure HTML/CSS/JS, no build process
 - **Hosting:** Cloudflare Pages (auto-deploys from GitHub)
 - **Domain:** robcparker.com

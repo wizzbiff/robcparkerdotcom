@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Rob Parker</title>
+  <desc>Primary brand mark — a shield-form emblem with a horizontal accent bar and centered note-head. Two-tone blue on white.</desc>
+
+  <!-- Outer shield form — secondary blue -->
+  <path
+    d="
+      M 256 440
+      Q 256 440 96 308
+      Q 72 284 72 248
+      L 72 140
+      Q 72 100 112 100
+      L 400 100
+      Q 440 100 440 140
+      L 440 248
+      Q 440 284 416 308
+      Q 256 440 256 440
+      Z
+    "
+    fill="#1e40af"
+  />
+
+  <!-- Inner shield form — primary blue, inset to create two-tone depth -->
+  <path
+    d="
+      M 256 400
+      Q 256 400 122 290
+      Q 104 270 104 242
+      L 104 152
+      Q 104 128 128 128
+      L 384 128
+      Q 408 128 408 152
+      L 408 242
+      Q 408 270 390 290
+      Q 256 400 256 400
+      Z
+    "
+    fill="#2563eb"
+  />
+
+  <!-- Horizontal accent bar across the body -->
+  <rect x="138" y="230" width="236" height="36" rx="18" fill="#ffffff" opacity="0.92"/>
+
+  <!-- Note-head above the bar — secondary focal point / small-size legibility anchor -->
+  <circle cx="256" cy="176" r="28" fill="#ffffff" opacity="0.88"/>
+</svg>
