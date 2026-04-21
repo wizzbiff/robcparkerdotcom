@@ -305,8 +305,8 @@ const initContactForm = () => {
         );
         // Email link assembled inline — same obfuscation approach as initEmailObfuscation
         const emailLink = document.createElement('a');
-        emailLink.href = 'mailto:rob.c.parker@gmail.com';
-        emailLink.textContent = 'rob.c.parker@gmail.com';
+        emailLink.href = 'mailto:contact@robcparker.com';
+        emailLink.textContent = 'contact@robcparker.com';
         statusEl.appendChild(emailLink);
         statusEl.appendChild(document.createTextNode('.'));
         statusEl.classList.remove('form-status--warning', 'form-status--success');
@@ -488,8 +488,8 @@ const initTurnstileLoadTimeout = () => {
 
             // Assemble email address — same approach as initEmailObfuscation
             const emailLink = document.createElement('a');
-            emailLink.href = 'mailto:rob.c.parker@gmail.com';
-            emailLink.textContent = 'rob.c.parker@gmail.com';
+            emailLink.href = 'mailto:contact@robcparker.com';
+            emailLink.textContent = 'contact@robcparker.com';
             formStatus.appendChild(emailLink);
 
             formStatus.appendChild(document.createTextNode('.'));
