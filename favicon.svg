@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Rob Parker — Concept 2 Token-Grid (Magenta)</title>
+  <desc>3x3 generative token grid. Accent cells trace an implied diagonal — a prompt/matrix cue. Magenta variant.</desc>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="10" fill="#111318"/>
+
+  <!-- Row 1 -->
+  <rect x="7"  y="7"  width="14" height="14" rx="2.5" fill="#F7F6F2" opacity="0.18"/>
+  <rect x="25" y="7"  width="14" height="14" rx="2.5" fill="#E8449B"/>
+  <rect x="43" y="7"  width="14" height="14" rx="2.5" fill="#E8449B"/>
+
+  <!-- Row 2 -->
+  <rect x="7"  y="25" width="14" height="14" rx="2.5" fill="#F7F6F2" opacity="0.18"/>
+  <rect x="25" y="25" width="14" height="14" rx="2.5" fill="#E8449B"/>
+  <rect x="43" y="25" width="14" height="14" rx="2.5" fill="#F7F6F2" opacity="0.18"/>
+
+  <!-- Row 3 -->
+  <rect x="7"  y="43" width="14" height="14" rx="2.5" fill="#E8449B"/>
+  <rect x="25" y="43" width="14" height="14" rx="2.5" fill="#F7F6F2" opacity="0.18"/>
+  <rect x="43" y="43" width="14" height="14" rx="2.5" fill="#F7F6F2" opacity="0.18"/>
+</svg>

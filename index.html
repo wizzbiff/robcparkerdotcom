@@ -16,10 +16,16 @@
     <meta property="og:description" content="Senior engineering leader with 25+ years of experience. AI/ML platform strategy, team scaling, and engineering leadership across SaaS, healthcare tech, and enterprise software.">
 
     <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" type="image/svg+xml" href="/images/favicon/favicon.svg">
-    <link rel="apple-touch-icon" href="/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111318">
     <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#111318">
+
+    <!-- Preload body font (Inter). WHY: crossorigin required even for same-origin or the
+         preload is discarded (IG-12). Fraunces intentionally not preloaded — display-only,
+         font-display:swap handles FOUT acceptably. -->
+    <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -69,20 +75,26 @@
     <main id="main-content">
 
         <!-- HERO -->
+        <!-- WHY: SPEC-008 R3.1 Concept A — two-column 58/42 bottom-aligned grid.
+             Diverges from AP-3 centered-hero-with-stacked-dual-CTAs template. -->
         <section class="hero" aria-labelledby="hero-headline">
             <div class="container">
-                <div class="hero-content">
-                    <span class="hero-eyebrow">Senior Engineering Executive</span>
-                    <h1 id="hero-headline">Engineering Teams That Ship&nbsp;— at Scale</h1>
-                    <p class="hero-subheadline">
-                        Rob Parker is a senior engineering executive with 25+ years of engineering
-                        experience and 10+ years of leadership experience building high-performing
-                        teams. Currently driving AI platform strategy, and turning engineering into
-                        a competitive advantage.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="resume.html" class="btn btn-white">View My Resume</a>
-                        <a href="about.html" class="btn btn-outline-white">Learn More About Rob</a>
+                <div class="hero-grid">
+                    <div class="hero-headline-col">
+                        <span class="hero-eyebrow">Senior Engineering Executive</span>
+                        <h1 id="hero-headline">Engineering Teams That Ship&nbsp;— at Scale</h1>
+                    </div>
+                    <div class="hero-copy-col">
+                        <p class="hero-subheadline">
+                            Rob Parker is a senior engineering executive with 25+ years of engineering
+                            experience and 10+ years of leadership experience building high-performing
+                            teams. Currently driving AI platform strategy, and turning engineering into
+                            a competitive advantage.
+                        </p>
+                        <div class="hero-cta-stack">
+                            <a href="resume.html" class="btn btn-primary">View My Resume</a>
+                            <a href="about.html" class="btn-textlink">Learn More About Rob <span class="arrow" aria-hidden="true">→</span></a>
+                        </div>
                     </div>
                 </div>
             </div>
