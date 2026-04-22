@@ -4,42 +4,107 @@
    ========================================================================== */
 
 /* ==========================================================================
+   0. TYPOGRAPHY — @font-face (SPEC-008: self-hosted Fraunces + Inter)
+   ========================================================================== */
+
+/* WHY: fonts are self-hosted to eliminate the Google Fonts third-party
+   dependency (per SPEC-008 A-5). Served from /fonts/ with long-lived
+   immutable Cache-Control (_headers rule). font-display: swap prevents
+   blocking the first paint — fallback serif/sans render immediately. */
+
+@font-face {
+    font-family: "Inter";
+    src: url("/fonts/inter-variable.woff2") format("woff2-variations"),
+         url("/fonts/inter-variable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fraunces";
+    src: url("/fonts/fraunces-variable.woff2") format("woff2-variations"),
+         url("/fonts/fraunces-variable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
    1. CUSTOM PROPERTIES (Design Tokens)
    ========================================================================== */
 
 :root {
-    /* Color Palette
-       All values verified against WCAG AA:
-       --primary-color on white: 4.54:1 (passes AA normal text)
-       --secondary-color on white: 7.33:1 (passes AAA)
-       --text-color on white: 16.1:1 (passes AAA)
-       --text-muted on white: 4.6:1 (passes AA normal text)
-       --text-light on --color-surface-dark: 12.6:1 (passes AAA)
+    /* Color Palette — SPEC-008 design system reset (replaces Tailwind-blue template palette)
+       All text/background combinations verified against WCAG 2.1 using relative luminance formula.
+
+       Core:
+         --color-charcoal (#111318) on --color-cream (#F7F6F2):   17.2:1  — AAA
+         --color-text-muted (#5C5854) on --color-cream:            6.54:1 — AA  (normal text)
+         --color-text-subtle (#8A8480) on --color-cream:           3.41:1 — AA large only; no normal body copy (WHY at callsite)
+         --color-text-on-dark (#F7F6F2) on --color-charcoal:      17.2:1  — AAA
+         --color-magenta-text (#A51D65) on --color-cream:          6.56:1 — AA  (inline text links)
+         --color-charcoal (#111318) on --color-magenta (#E8449B):  5.07:1 — AA  (primary button label)
+         --color-magenta (#E8449B) on --color-charcoal (#111318):  5.07:1 — AA  (accent on dark surfaces)
+
+       Non-text UI contrast (WCAG 1.4.11, 3:1 minimum):
+         --color-border-hairline (#8E8A84) on --color-cream:       3.18:1 — passes 1.4.11
+
+       Large-text-only / decorative (not for normal body copy):
+         --color-magenta (#E8449B) on --color-cream:               3.39:1 — AA large only; use for
+           display headings (>=24px bold), button fills, icon accents, and focus rings. NOT for inline text.
+         --color-magenta-hover (#CC3A88) on --color-cream:         4.29:1 — AA large; button hover context.
+
+       WHY: --color-cream (#F7F6F2) replaces pure white (#ffffff) per SPEC-008 AP-2.
+       WHY: Charcoal label on magenta button (#111318 on #E8449B, 5.07:1) is required —
+            cream on magenta (#F7F6F2 on #E8449B, 3.39:1) fails AA normal text.
     */
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
-    /* WHY: accent-color is 3.6:1 on white — passes AA for large text only.
-       Safe on dark backgrounds (e.g., hero eyebrow). Do not use for normal
-       text on white backgrounds without a darker alternative. */
-    --accent-color: #3b82f6;
 
-    --text-color: #111827;
-    --text-muted: #4b5563;
-    --text-light: #f9fafb;
+    /* Core palette — SPEC-008 */
+    --color-charcoal: #111318;
+    --color-cream: #F7F6F2;
+    --color-magenta: #E8449B;
 
-    --background-color: #ffffff;
-    --surface-color: #f3f4f6;
-    --surface-dark: #1e293b;
-    --border-color: #e5e7eb;
+    /* Derived text shades on cream */
+    --color-text-primary: #111318;
+    --color-text-muted: #5C5854;
+    --color-text-subtle: #8A8480;
 
-    /* Dark surface palette — used in footer and dark sections */
-    --text-muted-dark: #9ca3af;
-    --text-subtle-dark: #6b7280;
-    --text-on-dark: #cbd5e1;
-    --border-dark: #374151;
+    /* Surfaces on cream */
+    --color-surface-elevated: #F3F1EB;
+    --color-border-hairline: #8E8A84;
 
-    /* Typography */
-    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    /* Magenta variants */
+    --color-magenta-hover: #CC3A88;
+    --color-magenta-muted: #F7BBDB;
+    --color-magenta-text: #A51D65;
+
+    /* Dark-surface derivatives (for text/borders on --color-charcoal) */
+    --color-text-on-dark: #F7F6F2;
+    --color-text-muted-on-dark: #B8B4AE;
+    --color-text-subtle-on-dark: #8E8A84;
+    --color-border-dark: #2E2F36;
+
+    /* Legacy token aliases — preserved names, new values (R1 semantic layer).
+       --secondary-color and --accent-color have been removed per SPEC-008 A-7;
+       their callsites migrated to explicit new tokens. --primary-color maps
+       to magenta for codebase stability. */
+    --primary-color: #E8449B;
+    --text-color: #111318;
+    --text-muted: #5C5854;
+    --text-light: #F7F6F2;
+    --background-color: #F7F6F2;
+    --surface-color: #F3F1EB;
+    --surface-dark: #111318;
+    --border-color: #8E8A84;
+    --text-muted-dark: #B8B4AE;
+    --text-subtle-dark: #8E8A84;
+    --text-on-dark: #F7F6F2;
+    --border-dark: #2E2F36;
+
+    /* Typography — SPEC-008: self-hosted Fraunces (display) + Inter (body) */
+    --font-family-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --font-family-mono: ui-monospace, "SFMono-Regular", Consolas,
         "Liberation Mono", Menlo, monospace;
@@ -158,12 +223,12 @@ ol {
 }
 
 a {
-    color: var(--primary-color);
+    color: var(--color-magenta-text);
     text-decoration: underline;
 }
 
 a:hover {
-    color: var(--secondary-color);
+    color: var(--color-magenta-text);
 }
 
 /* ==========================================================================
@@ -192,11 +257,11 @@ a:hover {
     left: var(--space-4);
     z-index: 9999;
     padding: var(--space-3) var(--space-6);
-    background-color: var(--primary-color);
-    color: #ffffff;
+    background-color: var(--color-magenta);
+    color: var(--color-charcoal);
     font-weight: var(--font-weight-semibold);
     text-decoration: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-sm);
     transition: top var(--transition-fast);
 }
 
@@ -204,9 +269,11 @@ a:hover {
     top: var(--space-4);
 }
 
-/* Visible focus styles for keyboard navigation */
+/* WHY (SPEC-008 QA-B2): Use the canonical new token --color-magenta rather
+   than the legacy --primary-color alias. Focus rings are WCAG-critical —
+   aliasing risks silent breakage if the alias is ever remapped. */
 :focus-visible {
-    outline: 3px solid var(--primary-color);
+    outline: 3px solid var(--color-magenta);
     outline-offset: 2px;
 }
 
@@ -236,8 +303,15 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-color);
 }
 
-h1 { font-size: var(--font-size-3xl); }
-h2 { font-size: var(--font-size-2xl); }
+/* WHY: H1/H2 use Fraunces display serif per SPEC-008. H3–H6 stay in Inter
+   (via body inheritance) — display serif at smaller sizes reduces legibility. */
+h1, h2 {
+    font-family: var(--font-family-display);
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--font-size-4xl); line-height: 1.05; }
+h2 { font-size: var(--font-size-3xl); line-height: 1.1; }
 h3 { font-size: var(--font-size-xl); }
 h4 { font-size: var(--font-size-lg); }
 h5 { font-size: var(--font-size-base); }
@@ -257,8 +331,11 @@ p {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
+    letter-spacing: 0.02em;
     text-decoration: none;
-    border-radius: var(--border-radius);
+    /* WHY: R3.3 — sharp button corners (≤4px) diverge from pill/heavily-rounded
+       template pattern (AP-5). */
+    border-radius: var(--border-radius-sm);
     border: 2px solid transparent;
     cursor: pointer;
     transition: background-color var(--transition-base),
@@ -272,50 +349,55 @@ p {
     justify-content: center;
 }
 
+/* WHY: btn-primary uses charcoal label (#111318 on #E8449B = 5.07:1 AA).
+   Cream/white on magenta is 3.39:1 — fails AA normal text. See contrast
+   verification block in :root. */
 .btn-primary {
-    background-color: var(--primary-color);
-    color: #ffffff;
-    border-color: var(--primary-color);
+    background-color: var(--color-magenta);
+    color: var(--color-charcoal);
+    border-color: var(--color-magenta);
 }
 
 .btn-primary:hover {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: #ffffff;
+    background-color: var(--color-magenta-hover);
+    border-color: var(--color-magenta-hover);
+    color: var(--color-charcoal);
 }
 
+/* WHY: Split 1 — text uses --color-magenta-text (AA normal, 6.56:1 on cream),
+   border uses --color-magenta (decorative UI, passes 1.4.11). */
 .btn-secondary {
     background-color: transparent;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
+    color: var(--color-magenta-text);
+    border-color: var(--color-magenta);
 }
 
 .btn-secondary:hover {
-    background-color: var(--primary-color);
-    color: #ffffff;
+    background-color: var(--color-magenta);
+    color: var(--color-charcoal);
 }
 
 .btn-white {
-    background-color: #ffffff;
-    color: var(--secondary-color);
-    border-color: #ffffff;
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    border-color: var(--color-cream);
 }
 
 .btn-white:hover {
-    background-color: var(--surface-color);
-    border-color: var(--surface-color);
-    color: var(--secondary-color);
+    background-color: var(--color-surface-elevated);
+    border-color: var(--color-surface-elevated);
+    color: var(--color-charcoal);
 }
 
 .btn-outline-white {
     background-color: transparent;
-    color: #ffffff;
-    border-color: #ffffff;
+    color: var(--color-text-on-dark);
+    border-color: var(--color-text-on-dark);
 }
 
 .btn-outline-white:hover {
-    background-color: #ffffff;
-    color: var(--secondary-color);
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
 }
 
 /* ==========================================================================
@@ -368,13 +450,15 @@ p {
     transition: color var(--transition-base), border-color var(--transition-base);
 }
 
+/* WHY: R3.5 — nav hover is underline-only, not a text color change.
+   Active state gets magenta border-bottom; text color unchanged from default.
+   Preserves main.js initActiveNav() behavior (class toggle only, no inline styles). */
 .nav-links a:hover {
-    color: var(--primary-color);
+    border-bottom-color: var(--color-magenta);
 }
 
 .nav-links a.active {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
+    border-bottom-color: var(--color-magenta);
 }
 
 /* Hamburger button — hidden by default (no-JS baseline: plain list is shown)
@@ -462,7 +546,7 @@ p {
 
     .js-enabled .nav-links a:hover,
     .js-enabled .nav-links a.active {
-        border-left-color: var(--primary-color);
+        border-left-color: var(--color-magenta);
         background-color: var(--surface-color);
     }
 }
@@ -497,7 +581,7 @@ p {
 }
 
 .footer-logo:hover {
-    color: var(--accent-color);
+    color: var(--color-magenta);
 }
 
 .footer-tagline {
@@ -549,48 +633,167 @@ p {
 }
 
 /* ==========================================================================
-   9. HERO SECTION
+   9. HERO SECTION — SPEC-008 Concept A (Two-Column Asymmetric)
    ========================================================================== */
 
+/* WHY: R3.1 Concept A — cream hero with charcoal text, 12-col grid with
+   58/42 asymmetric split, bottom-aligned. Diverges from AP-3 template
+   centered-with-stacked-dual-CTAs pattern. */
 .hero {
-    background-color: var(--surface-dark);
-    color: var(--text-light);
-    padding: var(--space-20) 0;
+    background-color: var(--color-cream);
+    color: var(--color-text-primary);
+    padding: var(--space-20) 0 var(--space-16);
+    border-bottom: 1px solid var(--color-border-hairline);
 }
 
+/* Legacy .hero-content wrapper retained for subpage compatibility (resume
+   document-style header, about hero-profile variant). Single-column fallback
+   when the Concept A grid markup is not applied. */
 .hero-content {
-    max-width: 740px;
+    max-width: 860px;
 }
 
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-8);
+    align-items: end;
+    min-height: 320px;
+}
+
+.hero-headline-col {
+    grid-column: 1 / 8;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.hero-copy-col {
+    grid-column: 8 / 13;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-8);
+    padding-bottom: 0.25rem;
+}
+
+/* WHY: AP-8 — eyebrow on cream is charcoal-muted at hairline weight,
+   NOT magenta (magenta fails AA at small eyebrow scale and reads as
+   color-block template accent). On dark surfaces (e.g. .cta-section),
+   a separate eyebrow variant would use magenta. */
 .hero-eyebrow {
-    display: inline-block;
+    display: block;
+    font-family: var(--font-family-base);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent-color);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-4);
 }
 
 .hero h1 {
-    color: var(--text-light);
-    font-size: var(--font-size-4xl);
-    line-height: var(--line-height-tight);
-    margin-bottom: var(--space-6);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-display);
+    font-size: clamp(3rem, 5vw, 4.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 0;
 }
 
 .hero-subheadline {
+    font-family: var(--font-family-base);
     font-size: var(--font-size-lg);
-    line-height: var(--line-height-relaxed);
-    color: var(--text-on-dark);
-    margin-bottom: var(--space-10);
-    max-width: 620px;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+    max-width: none;
 }
 
+/* Legacy horizontal CTA stack — preserved for subpage use during propagation */
 .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
+}
+
+/* Concept A: vertical CTA stack inside .hero-copy-col */
+.hero-cta-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+}
+
+/* Editorial text-link CTA variant (R3.3) — magenta underline + arrow glyph.
+   Use for secondary hero CTAs and inline editorial affordances where a
+   filled button would be visually heavy. */
+.btn-textlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-magenta);
+    padding-bottom: 1px;
+    transition: color var(--transition-base);
+}
+
+.btn-textlink:hover {
+    color: var(--color-magenta-text);
+}
+
+.btn-textlink:focus-visible {
+    outline: 2px solid var(--color-magenta);
+    outline-offset: 3px;
+}
+
+.btn-textlink .arrow {
+    display: inline-block;
+    transition: transform var(--transition-base);
+}
+
+.btn-textlink:hover .arrow {
+    transform: translateX(3px);
+}
+
+/* Hero grid collapse at tablet + mobile */
+@media (max-width: 1023px) {
+    .hero-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+    }
+    .hero-headline-col { grid-column: 1 / 2; }
+    .hero-copy-col { grid-column: 2 / 3; }
+    .hero h1 {
+        font-size: clamp(2.25rem, 4vw, 3.25rem);
+    }
+}
+
+@media (max-width: 767px) {
+    .hero {
+        padding: var(--space-16) 0 var(--space-12);
+    }
+    .hero-grid {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+    .hero-headline-col,
+    .hero-copy-col {
+        grid-column: 1 / -1;
+    }
+    .hero h1 {
+        font-size: 2.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
 }
 
 /* ==========================================================================
@@ -637,12 +840,13 @@ p {
     gap: var(--space-6);
 }
 
+/* WHY: R3.2 — thin-hairline border on tinted elevated surface; no drop-shadow
+   (AP-4 diverge from template SaaS card grammar). */
 .highlight-card {
     padding: var(--space-8);
-    background-color: var(--background-color);
-    border-radius: var(--border-radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    background-color: var(--color-surface-elevated);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-hairline);
 }
 
 .highlight-metric {
@@ -676,19 +880,21 @@ p {
     gap: var(--space-6);
 }
 
+/* WHY: R3.2 — thin-hairline border on tinted elevated surface; no drop-shadow.
+   Hover affordance preserved via border-color darken + translateY lift
+   (AG-2 option b). Applies to .engagement-card via composition (SPEC-005 AG-1). */
 .service-card {
     display: flex;
     flex-direction: column;
     padding: var(--space-8);
-    background-color: var(--background-color);
-    border-radius: var(--border-radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-base), transform var(--transition-base);
+    background-color: var(--color-surface-elevated);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-hairline);
+    transition: border-color var(--transition-base), transform var(--transition-base);
 }
 
 .service-card:hover {
-    box-shadow: var(--shadow-lg);
+    border-color: var(--color-charcoal);
     transform: translateY(-2px);
 }
 
@@ -797,17 +1003,18 @@ p {
     border-bottom: none;
 }
 
-/* WHY: ::before renders the step number in accent color — visually distinct
-   but not the primary-color circle used in .ai-framework-list, keeping
-   visual weight lighter per AG-5. aria-hidden is not needed here; the <ol>
-   element provides ordering semantics and the counter is decorative
-   reinforcement matching the same trade-off accepted in .ai-framework-list. */
+/* WHY: ::before renders the step number in magenta for visual emphasis but
+   without the filled-circle chrome used in .ai-framework-list — keeping visual
+   weight lighter per AG-5. Post-SPEC-008 both contexts use --color-magenta;
+   weight distinction is delivered by geometry (filled circle vs bare numeral),
+   not by color. aria-hidden is not needed here; the <ol> element provides
+   ordering semantics and the counter is decorative reinforcement. */
 .process-steps li::before {
     content: counter(step-counter);
     flex-shrink: 0;
     width: 2.5rem;
     height: 2.5rem;
-    color: var(--accent-color);
+    color: var(--color-magenta);
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     line-height: 1;
@@ -897,15 +1104,17 @@ p {
    while the CSS pixel values control rendered display size. Do not change
    to a single dimension without updating CLS reasoning.
    WHY (I-5): background-color reserves a visible placeholder circle while
-   the JPEG downloads — prevents a brief "hole" in the dark hero. */
+   the JPEG downloads — prevents a brief "hole" in the hero.
+   WHY (SPEC-008 CR-1): Hero background is now cream, not charcoal. Border is
+   a hairline (AP-4 forbids drop-shadows), placeholder tint is the elevated
+   cream surface so it blends rather than flashing dark on load. */
 .hero-profile-photo img {
     width: 160px;
     height: 160px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-lg);
-    background-color: var(--border-dark);
+    border: 1px solid var(--color-border-hairline);
+    background-color: var(--color-surface-elevated);
 }
 
 .hero-profile-text {
@@ -919,14 +1128,17 @@ p {
 /* WHY (I-4): No font-size override — let the cascade apply base .hero h1
    rules (4xl base, 5xl at 768px, 3xl at <=480px) for responsive parity
    with the home page hero. */
+/* WHY (SPEC-008 CR-1): Colors flipped from dark-hero (text-light / text-on-dark)
+   to cream-hero tokens. Previous values rendered cream-on-cream (invisible) after
+   the hero surface switched to --color-cream. */
 .hero-profile-text h1 {
-    color: var(--text-light);
+    color: var(--color-text-primary);
     margin-bottom: var(--space-3);
 }
 
 .hero-profile-text .hero-positioning {
     font-size: var(--font-size-base);
-    color: var(--text-on-dark);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-6);
     line-height: var(--line-height-snug);
 }
@@ -934,7 +1146,7 @@ p {
 .hero-profile-text .hero-bio p {
     font-size: var(--font-size-lg);
     line-height: var(--line-height-relaxed);
-    color: var(--text-on-dark);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-4);
 }
 
@@ -1008,15 +1220,17 @@ p {
     gap: var(--space-4);
 }
 
+/* WHY (SPEC-008 R3.2 / QA N-2): Sharp card treatment — hairline border on
+   elevated surface, no large radius, no shadow. */
 .ai-framework-list li {
     counter-increment: tier-counter;
     display: flex;
     align-items: flex-start;
     gap: var(--space-5);
     padding: var(--space-6);
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius-lg);
-    border: 1px solid var(--border-color);
+    background-color: var(--color-surface-elevated);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-hairline);
 }
 
 /* WHY (I-3): CSS counter renders tier number visually. Since the <ol> already
@@ -1030,8 +1244,8 @@ p {
     flex-shrink: 0;
     width: 2rem;
     height: 2rem;
-    background-color: var(--primary-color);
-    color: #ffffff;
+    background-color: var(--color-magenta);
+    color: var(--color-charcoal);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     border-radius: 50%;
@@ -1060,14 +1274,14 @@ p {
     align-items: center;
     gap: var(--space-6);
     padding: var(--space-6) var(--space-8);
-    background-color: var(--primary-color);
+    background-color: var(--color-magenta);
     border-radius: var(--border-radius-lg);
     margin: var(--space-6) 0;
     flex-wrap: wrap;
 }
 
 .ai-framework-outcome .highlight-metric {
-    color: #ffffff;
+    color: var(--color-charcoal);
     margin-bottom: 0;
 }
 
@@ -1076,7 +1290,7 @@ p {
 }
 
 .ai-framework-outcome-text p {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--color-charcoal);
     font-size: var(--font-size-sm);
     line-height: var(--line-height-relaxed);
     margin-bottom: 0;
@@ -1122,8 +1336,8 @@ p {
 }
 
 .body-link:hover {
-    color: var(--primary-color);
-    text-decoration-color: var(--primary-color);
+    color: var(--color-magenta-text);
+    text-decoration-color: var(--color-magenta-text);
 }
 
 /* ==========================================================================
@@ -1197,8 +1411,8 @@ a.resume-contact-item {
 }
 
 a.resume-contact-item:hover {
-    color: var(--primary-color);
-    text-decoration-color: var(--primary-color);
+    color: var(--color-magenta-text);
+    text-decoration-color: var(--color-magenta-text);
 }
 
 /* ==========================================================================
@@ -1283,9 +1497,9 @@ a.resume-contact-item:hover {
    ========================================================================== */
 
 /* WHY (IG-4): .resume-metrics is a 3-up flex strip placed between the role
-   header and the bullet list. Color is --accent-color per Rob's override —
-   deliberate visual distinction from home-page .highlight-metric numbers
-   which use --primary-color. */
+   header and the bullet list. Color is --color-magenta, unified with the
+   home-page .highlight-metric treatment post-SPEC-008 (A-7 Split 3) — the
+   old blue-family micro-distinction had no semantic value in the new palette. */
 .resume-metrics {
     display: flex;
     gap: var(--space-6);
@@ -1309,7 +1523,7 @@ a.resume-contact-item:hover {
 .resume-metric-number {
     font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
-    color: var(--accent-color);
+    color: var(--color-magenta);
     line-height: 1;
 }
 
@@ -1440,10 +1654,6 @@ a.resume-contact-item:hover {
         padding: var(--space-24) 0;
     }
 
-    .hero h1 {
-        font-size: var(--font-size-5xl);
-    }
-
     .hero-profile .hero-content {
         flex-direction: row;
         align-items: flex-start;
@@ -1558,10 +1768,6 @@ a.resume-contact-item:hover {
 
     .hero {
         padding: var(--space-16) 0;
-    }
-
-    .hero h1 {
-        font-size: var(--font-size-3xl);
     }
 
     .hero-subheadline {
@@ -1773,16 +1979,18 @@ a.resume-contact-item:hover {
 .form-textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+    box-shadow: 0 0 0 3px rgb(232 68 155 / 0.15);
 }
 
-/* WHY: aria-invalid="true" provides a red border as a redundant visual cue
+/* WHY: aria-invalid="true" provides a magenta border as a redundant visual cue
    for validation errors — color alone is not sufficient (WCAG 1.4.1), but
-   the inline error text already satisfies that; the border reinforces it. */
+   the inline error text already satisfies that; the border reinforces it.
+   WHY (SPEC-008 R3.6 / QA-B1): Magenta is the sole accent and error-signal
+   color in the SPEC-008 palette — there is no separate red. */
 .form-input[aria-invalid="true"],
 .form-textarea[aria-invalid="true"] {
-    border-color: #dc2626;
-    box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12);
+    border-color: var(--color-magenta);
+    box-shadow: 0 0 0 3px rgb(232 68 155 / 0.15);
 }
 
 .form-textarea {
@@ -1794,10 +2002,13 @@ a.resume-contact-item:hover {
 /* Inline validation error message */
 .form-error {
     font-size: var(--font-size-sm);
-    color: #dc2626;
+    color: var(--color-magenta-text);
     line-height: var(--line-height-snug);
     /* WHY: The element is hidden via the `hidden` HTML attribute (toggled by JS),
-       not via CSS display:none, so AT always queries the live DOM correctly. */
+       not via CSS display:none, so AT always queries the live DOM correctly.
+       WHY (SPEC-008 R3.6): --color-magenta-text (#A51D65) is the AA-compliant
+       inline-text magenta on cream (6.56:1); base --color-magenta fails AA at
+       small text sizes and must not be used for body-level copy. */
 }
 
 /* ==========================================================================
@@ -1820,6 +2031,13 @@ a.resume-contact-item:hover {
     margin-bottom: var(--space-6);
 }
 
+/* WHY (SPEC-008 Arch Gate AG-3): Banner-level error/warning palette retains
+   red (`#dc2626` family) and yellow (`#fffbeb` family) as a semantic layer
+   OUTSIDE the SPEC-008 identity system. Magenta applies only to the
+   inline-level `.form-input[aria-invalid]` border + `.form-error` text, per
+   R3.6. This banner is a form-submit failure surface — red signals "blocked"
+   more unambiguously than the brand magenta and avoids accent-as-alarm
+   conflation. Do not migrate these to magenta without reopening AG-3. */
 .form-status--error:not(:empty) {
     background-color: #fef2f2;
     border: 1px solid #fecaca;
@@ -1904,7 +2122,7 @@ a.resume-contact-item:hover {
 }
 
 .form-privacy-note a:hover {
-    color: var(--primary-color);
+    color: var(--color-magenta-text);
 }
 
 /* ==========================================================================
@@ -1914,13 +2132,16 @@ a.resume-contact-item:hover {
 /* WHY: .success-state replaces the form element entirely (not just hides it)
    so the heading prominence and visual treatment signal clearly that the form
    interaction is complete, not paused. */
+/* WHY (SPEC-008 R3.2 / QA N-7): Sharp corners + canonical magenta token for
+   the left accent. Radius reduced from --border-radius-lg to --border-radius-sm
+   to conform to the card grammar. */
 .success-state {
     max-width: 560px;
     padding: var(--space-10) var(--space-8);
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-left: 4px solid var(--primary-color);
-    border-radius: var(--border-radius-lg);
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-hairline);
+    border-left: 4px solid var(--color-magenta);
+    border-radius: var(--border-radius-sm);
 }
 
 .success-heading {
@@ -1973,15 +2194,16 @@ a.resume-contact-item:hover {
     gap: var(--space-5);
 }
 
+/* WHY (SPEC-008 R3.2 / QA N-3): Hairline on elevated cream, sharp corners,
+   no shadow per AP-4. Drop-shadow card grammar is retired site-wide. */
 .alt-channel-item {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
     padding: var(--space-5) var(--space-6);
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-sm);
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--border-radius-sm);
 }
 
 .alt-channel-label {
@@ -1995,13 +2217,13 @@ a.resume-contact-item:hover {
 .alt-channel-link {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
-    color: var(--primary-color);
+    color: var(--color-magenta-text);
     text-decoration: none;
     transition: color var(--transition-base);
 }
 
 .alt-channel-link:hover {
-    color: var(--secondary-color);
+    color: var(--color-magenta-text);
     text-decoration: underline;
 }
 
@@ -2012,13 +2234,13 @@ a.resume-contact-item:hover {
 }
 
 .alt-channel-email-container a {
-    color: var(--primary-color);
+    color: var(--color-magenta-text);
     text-decoration: none;
     transition: color var(--transition-base);
 }
 
 .alt-channel-email-container a:hover {
-    color: var(--secondary-color);
+    color: var(--color-magenta-text);
     text-decoration: underline;
 }
 
@@ -2070,5 +2292,36 @@ a.resume-contact-item:hover {
 
     .alt-channel-item {
         padding: var(--space-4) var(--space-5);
+    }
+}
+
+/* ==========================================================================
+   21. REDUCED-MOTION OVERRIDES
+   ========================================================================== */
+
+/* WHY (SPEC-008 NFR accessibility / QA N-5): The redesign introduced hover
+   transitions on .btn-textlink arrow glide, .service-card / .highlight-card
+   translateY lift, and nav underline fade-in. WCAG 2.3.3 (AAA) plus the spec
+   require that any motion introduced have an instant-state fallback under
+   `prefers-reduced-motion: reduce`. Blanket-neutralizing transitions is the
+   simplest correct approach for a site this small — we do not rely on
+   transition completion for any state correctness. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .btn-textlink:hover .arrow {
+        transform: none;
+    }
+
+    .highlight-card:hover,
+    .service-card:hover {
+        transform: none;
     }
 }
