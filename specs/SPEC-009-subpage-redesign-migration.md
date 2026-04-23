@@ -1,6 +1,6 @@
 # SPEC-009: Subpage Redesign Migration
 
-**Status:** Arch Gate approved — Implementer-Tester pending
+**Status:** QA Gate approved — ready to commit
 **Tier:** Standard
 **Author:** PM-Spec Agent (auto-queued from SPEC-008 QA Review deferrals)
 **Date:** 2026-04-22
@@ -332,4 +332,46 @@ All 8 IG items (IG-1 through IG-8) accepted as-written.
 
 ---
 
-*Queued 2026-04-22 from SPEC-008 QA Review deferred-items list. Architect-Review delivered and approved 2026-04-22.*
+## QA Review (2026-04-22)
+
+Two reviewers ran the QA Gate: `code-reviewer` (quality/security/correctness) and `qa-expert` (acceptance criteria + WCAG + anti-pattern divergence). Initial verdicts: `code-reviewer` APPROVE with one in-pass note; `qa-expert` REQUEST CHANGES with two block findings. After fixes below, the implementation meets acceptance.
+
+### Block findings (resolved)
+
+| # | Finding | File:Line | Resolution |
+|---|---------|-----------|------------|
+| BF-1 | Orphaned `.hero-profile .hero-content` flex rule lingered inside `@media (min-width: 768px)` block — IG-3 cleanup missed the responsive block. Dead code (about.html has zero `.hero-content` elements post-migration) but contradicts the cleanup WHY comment. | `css/style.css:1646-1650` (pre-fix) | Five-line flex rule deleted. `.hero-profile-photo img` sizing rule at the same breakpoint retained (still valid — photo exists in new `.hero-headline-col` structure). |
+| BF-2 | `about.html` `.hero-positioning` element had zero CSS rules defined anywhere in the stylesheet — the IG-3 deletion removed the old `.hero-profile-text .hero-positioning` color-override, and no base `.hero-positioning` rule existed to replace it. Positioning text on about.html would have fallen through to plain body styles, losing the expected subheadline treatment. `advisory.html:88` uses `class="hero-subheadline"` for the equivalent role and gets proper styling via `.hero-subheadline` rule. | `about.html:109` | Changed `class="hero-positioning"` to `class="hero-subheadline"` — one-character-semantic fix, unifies subpage heros against the established token. |
+
+### Notes resolved in this pass
+
+- **N-1 (code-reviewer)** — `.hero-profile-photo { margin-bottom: var(--space-6) }` was added by `frontend-developer` as a cascade-preservation fix but carried no WHY comment. Added WHY block at `css/style.css:1118-1120` explaining that the margin formerly inherited from the deleted `.hero-profile .hero-content` flex gap.
+
+### Notes flagged for future visual-QA (non-blocking)
+
+- **N-2 (qa-expert)** — `.philosophy-quote` on about.html now sits on `--surface-color` inside a `.section-alt` band that is also `--surface-color`. Quote-bg equals band-bg post-R4; differentiation collapses to the 4px magenta left-border accent. Flagged in Arch Review D1 findings table and intentionally accepted. Worth a visual sanity check when Rob views about.html in-browser.
+- **N-3 (qa-expert)** — `--color-text-subtle` (3.09:1) and `--color-magenta` (3.07:1) margins on `#EDEBE4` are near-floor. No active normal-text usage on the band surface was confirmed during review, so the "AA-large only" constraint in the refreshed `:root` comment is sufficient guardrail. Tracked as a hard constraint on any future `--surface-color` darkening.
+
+### Acceptance criteria — final status
+
+| AC | Verdict | Notes |
+|----|---------|-------|
+| R1 — Subpage hero migration | PASS | about.html Concept A with photo-in-headline-col, advisory.html standard 58/42, contact.html left-aligned single-column variant. Hero-subheadline class unified across about + advisory (BF-2 fix). Orphaned cascade rules cleaned per IG-3 (BF-1 fix). |
+| R2 — Canonical magenta migration + alias retirement | PASS | `grep -c 'var(--primary-color)' css/style.css` = 0. Declaration deleted. Legacy comment block at `:88-91` retired. Historical WHY mentions at `:281`, `:1472` retained (read correctly post-retirement). |
+| R3 — Resume section rhythm | PASS | Single `.section-alt` on Summary; three `.section-rule-top` dividers on Earlier Experience, Education, Skills. `.section-rule-top` utility class added with WHY comment. |
+| R4 — Surface elevation differentiation | PASS | `--surface-color` = `#EDEBE4`. `--color-border-hairline` and legacy `--border-color` both = `#7E7A74` (AG-1). `:root` contrast-pair comment block refreshed with full D4 table. `index.html` inherited the token changes as an improvement (no regression per qa-expert analysis). |
+| R5 — Font byte-budget documentation | PASS | `fonts/SOURCE.md` "## Byte Budget" section added with actuals, budget reference, and three-reason rationale for no tooling introduction. |
+| R6 — Warning banner AG-3 pin | PASS | WHY block at `css/style.css:2041-2045` mirrors AG-3 error-banner pattern. |
+| AP-1..AP-8 | PASS | No anti-pattern reintroductions. AP-3 (centered hero) specifically verified — contact hero is genuinely left-aligned via `margin-left: 0; text-align: left`. |
+| SPEC-008 CR-1/CR-2 preservation | PASS | `.hero h1` cascade single-source-of-truth maintained. No colliding rule re-introductions. |
+
+### QA Gate approval
+
+**Decision:** Approved
+**Approved by:** Rob Parker
+**Reviewers run:** `code-reviewer` (initial: APPROVE with 1 in-pass note → resolved), `qa-expert` (initial: REQUEST CHANGES with 2 block findings → both resolved in-pass)
+**Date:** 2026-04-22
+
+---
+
+*Queued 2026-04-22 from SPEC-008 QA Review deferred-items list. Architect-Review delivered and approved 2026-04-22. QA Gate approved 2026-04-22.*
