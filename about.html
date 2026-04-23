@@ -74,34 +74,39 @@
         <!-- ================================================================
              SECTION 1: HERO / PROFESSIONAL BIO
              ================================================================ -->
+        <!-- WHY: SPEC-009 R1 AG-2 Option A — Concept A 58/42 hero adopted for about.html.
+             Photo placed in 58-col (.hero-headline-col) above eyebrow and H1, per D1.1.
+             Positioning subtitle and bio paragraphs move to 42-col (.hero-copy-col). -->
         <section class="hero hero-profile" aria-labelledby="hero-name">
             <div class="container">
-                <div class="hero-content">
+                <div class="hero-grid">
 
-                    <div class="hero-profile-photo">
-                        <!-- WHY (IG-13): Alt text is intentionally informative ("Professional headshot of
-                             Rob Parker") even though the adjacent H1 names Rob. The headshot conveys
-                             visual context (professional presentation, approachability) that "Rob Parker"
-                             alone does not communicate for screen reader users forming a mental image. -->
-                        <!-- WHY (IG-3): Explicit width/height prevent cumulative layout shift (CLS)
-                             by reserving space before the image loads. -->
-                        <!-- WHY (IG-4): loading="eager" + fetchpriority="high" because this image is
-                             above the fold — lazy-loading would delay the largest contentful paint. -->
-                        <img
-                            srcset="images/rob-parker-headshot.jpg 1x, images/rob-parker-headshot@2x.jpg 2x"
-                            src="images/rob-parker-headshot.jpg"
-                            alt="Professional headshot of Rob Parker"
-                            width="400"
-                            height="400"
-                            loading="eager"
-                            fetchpriority="high"
-                        >
-                    </div>
-
-                    <div class="hero-profile-text">
+                    <div class="hero-headline-col">
+                        <div class="hero-profile-photo">
+                            <!-- WHY (IG-13): Alt text is intentionally informative ("Professional headshot of
+                                 Rob Parker") even though the adjacent H1 names Rob. The headshot conveys
+                                 visual context (professional presentation, approachability) that "Rob Parker"
+                                 alone does not communicate for screen reader users forming a mental image. -->
+                            <!-- WHY (IG-3): Explicit width/height prevent cumulative layout shift (CLS)
+                                 by reserving space before the image loads. -->
+                            <!-- WHY (IG-4): loading="eager" + fetchpriority="high" because this image is
+                                 above the fold — lazy-loading would delay the largest contentful paint. -->
+                            <img
+                                srcset="images/rob-parker-headshot.jpg 1x, images/rob-parker-headshot@2x.jpg 2x"
+                                src="images/rob-parker-headshot.jpg"
+                                alt="Professional headshot of Rob Parker"
+                                width="400"
+                                height="400"
+                                loading="eager"
+                                fetchpriority="high"
+                            >
+                        </div>
                         <span class="hero-eyebrow">Senior Engineering Executive</span>
                         <h1 id="hero-name">Rob Parker</h1>
-                        <p class="hero-positioning">Director/VP of Engineering — AI-Native Platforms, Scaling Engineering Organizations</p>
+                    </div>
+
+                    <div class="hero-copy-col">
+                        <p class="hero-subheadline">Director/VP of Engineering — AI-Native Platforms, Scaling Engineering Organizations</p>
                         <div class="hero-bio">
                             <p>I build engineering organizations that ship — and keep shipping — at scale. With 25 years of engineering experience and a decade in senior leadership, I've led teams through the full arc of organizational complexity: building from scratch, scaling through hypergrowth, surviving M&amp;A, and modernizing platforms that couldn't afford to stand still.</p>
                             <p>Most recently, I served as Senior Director of Engineering at SugarCRM, where I directed a 26-person global organization across AI/ML, Data Platform, and Identity Management. My team built a multi-tenant AI platform on AWS Bedrock and delivered 17 or more major product releases annually — all while maintaining 99.95% uptime and sustaining a $100M+ SaaS CRM business.</p>
