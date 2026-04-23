@@ -35,29 +35,38 @@
    ========================================================================== */
 
 :root {
-    /* Color Palette — SPEC-008 design system reset (replaces Tailwind-blue template palette)
-       All text/background combinations verified against WCAG 2.1 using relative luminance formula.
+    /* Color Palette — SPEC-008 / SPEC-009 design system
+       All text/background combinations verified against WCAG 2.1 via relative-luminance formula.
 
-       Core:
-         --color-charcoal (#111318) on --color-cream (#F7F6F2):   17.2:1  — AAA
-         --color-text-muted (#5C5854) on --color-cream:            6.54:1 — AA  (normal text)
-         --color-text-subtle (#8A8480) on --color-cream:           3.41:1 — AA large only; no normal body copy (WHY at callsite)
-         --color-text-on-dark (#F7F6F2) on --color-charcoal:      17.2:1  — AAA
-         --color-magenta-text (#A51D65) on --color-cream:          6.56:1 — AA  (inline text links)
-         --color-charcoal (#111318) on --color-magenta (#E8449B):  5.07:1 — AA  (primary button label)
-         --color-magenta (#E8449B) on --color-charcoal (#111318):  5.07:1 — AA  (accent on dark surfaces)
+       On --color-cream (#F7F6F2) — page background:
+         --color-charcoal (#111318) on --color-cream:                 17.2:1  — AAA
+         --color-text-muted (#5C5854) on --color-cream:                6.54:1 — AA normal text
+         --color-text-subtle (#8A8480) on --color-cream:               3.41:1 — AA large only
+         --color-magenta-text (#A51D65) on --color-cream:              6.56:1 — AA normal text (inline links)
+         --color-charcoal (#111318) on --color-magenta (#E8449B):      5.07:1 — AA (primary button label)
+         --color-magenta (#E8449B) on --color-charcoal (#111318):      5.07:1 — AA (accent on dark)
+         --color-magenta (#E8449B) on --color-cream:                   3.39:1 — AA large only (display/buttons/focus)
+         --color-magenta-hover (#CC3A88) on --color-cream:             4.29:1 — AA large (button hover)
+         --color-border-hairline (#7E7A74) on --color-cream:           3.95:1 — passes 1.4.11
 
-       Non-text UI contrast (WCAG 1.4.11, 3:1 minimum):
-         --color-border-hairline (#8E8A84) on --color-cream:       3.18:1 — passes 1.4.11
+       On --surface-color (#EDEBE4) — section-alt band (SPEC-009 R4, darkened from #F3F1EB):
+         --color-charcoal on --surface-color:                         15.57:1 — AAA
+         --color-text-muted on --surface-color:                        5.91:1 — AA normal text
+         --color-text-subtle on --surface-color:                       3.09:1 — AA large only; NEAR FLOOR
+         --color-magenta-text on --surface-color:                      5.94:1 — AA normal text
+         --color-magenta on --surface-color:                           3.07:1 — AA large only; NEAR FLOOR
+         --color-magenta-hover on --surface-color:                     3.89:1 — AA large
+         --color-border-hairline (#7E7A74) on --surface-color:         3.58:1 — passes 1.4.11
 
-       Large-text-only / decorative (not for normal body copy):
-         --color-magenta (#E8449B) on --color-cream:               3.39:1 — AA large only; use for
-           display headings (>=24px bold), button fills, icon accents, and focus rings. NOT for inline text.
-         --color-magenta-hover (#CC3A88) on --color-cream:         4.29:1 — AA large; button hover context.
+       On --color-surface-elevated (#F3F1EB) — card surface (unchanged):
+         --color-border-hairline (#7E7A74) on --color-surface-elevated: 3.78:1 — passes 1.4.11
 
-       WHY: --color-cream (#F7F6F2) replaces pure white (#ffffff) per SPEC-008 AP-2.
-       WHY: Charcoal label on magenta button (#111318 on #E8449B, 5.07:1) is required —
-            cream on magenta (#F7F6F2 on #E8449B, 3.39:1) fails AA normal text.
+       WHY: --color-cream (#F7F6F2) replaces pure white per SPEC-008 AP-2.
+       WHY: Charcoal label on magenta button (5.07:1) is required — cream on magenta fails AA normal.
+       WHY: --color-text-subtle and --color-magenta margins above 3:1 are narrow on --surface-color
+            (0.09 and 0.07 respectively). Do not darken --surface-color further without re-verifying.
+       WHY (SPEC-009 AG-1): --color-border-hairline darkened from #8E8A84 to #7E7A74 so hairlines
+            pass WCAG 1.4.11 on the new --surface-color band. All three surfaces now compliant.
     */
 
     /* Core palette — SPEC-008 */
@@ -72,7 +81,7 @@
 
     /* Surfaces on cream */
     --color-surface-elevated: #F3F1EB;
-    --color-border-hairline: #8E8A84;
+    --color-border-hairline: #7E7A74;
 
     /* Magenta variants */
     --color-magenta-hover: #CC3A88;
@@ -86,17 +95,16 @@
     --color-border-dark: #2E2F36;
 
     /* Legacy token aliases — preserved names, new values (R1 semantic layer).
-       --secondary-color and --accent-color have been removed per SPEC-008 A-7;
-       their callsites migrated to explicit new tokens. --primary-color maps
-       to magenta for codebase stability. */
-    --primary-color: #E8449B;
+       --primary-color, --secondary-color, --accent-color all removed (SPEC-008
+       A-7 + SPEC-009 R2). Remaining aliases below are retained because their
+       callsites have not yet been migrated to explicit tokens. */
     --text-color: #111318;
     --text-muted: #5C5854;
     --text-light: #F7F6F2;
     --background-color: #F7F6F2;
-    --surface-color: #F3F1EB;
+    --surface-color: #EDEBE4;
     --surface-dark: #111318;
-    --border-color: #8E8A84;
+    --border-color: #7E7A74;
     --text-muted-dark: #B8B4AE;
     --text-subtle-dark: #8E8A84;
     --text-on-dark: #F7F6F2;
@@ -430,7 +438,7 @@ p {
 }
 
 .nav-logo:hover {
-    color: var(--primary-color);
+    color: var(--color-magenta);
 }
 
 /* Navigation links — visible by default (no-JS baseline) */
@@ -796,6 +804,17 @@ p {
     }
 }
 
+/* WHY (SPEC-009 R1): Contact hero uses a left-aligned single-column variant
+   rather than the Concept A 58/42 grid. The page has no second-column content
+   candidate (no photo, no CTA, no secondary block) — a grid here would produce
+   an empty right column reading as a template slot. Left-aligned asymmetry on
+   cream still carries SPEC-008 editorial language. Do not migrate to .hero-grid. */
+.contact-page-hero .hero-content {
+    max-width: 640px;
+    margin-left: 0;      /* left-align, not centered */
+    text-align: left;
+}
+
 /* ==========================================================================
    10. SECTION UTILITIES
    ========================================================================== */
@@ -806,6 +825,13 @@ p {
 
 .section-alt {
     background-color: var(--surface-color);
+}
+
+/* WHY (SPEC-009 R3 / AG-3): .section-rule-top — hairline rule above a section
+   in lieu of alternating band treatment. Used on document-dense pages (resume)
+   where editorial dividers read better than band alternation per SPEC-008 R3.4. */
+.section-rule-top {
+    border-top: 1px solid var(--color-border-hairline);
 }
 
 .section-dark {
@@ -852,7 +878,7 @@ p {
 .highlight-metric {
     font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
-    color: var(--primary-color);
+    color: var(--color-magenta);
     line-height: 1;
     margin-bottom: var(--space-2);
 }
@@ -1084,19 +1110,17 @@ p {
    15. ABOUT PAGE — Hero Profile Variant
    ========================================================================== */
 
-/* WHY (IG-8): .hero-profile is an additive modifier on .hero — it does not
-   fork or override base .hero styles, only extends the layout for the
-   photo+text side-by-side treatment needed on the About page. */
-.hero-profile .hero-content {
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-10);
-    align-items: flex-start;
-}
+/* WHY (SPEC-009 R1 IG-3): .hero-profile .hero-content flex rules deleted —
+   about.html migrated to .hero-grid (AG-2 Option A); .hero-content no longer
+   exists inside .hero-profile. .hero-profile-photo retained below — the photo
+   element is present in the new .hero-headline-col structure. */
 
+/* WHY (SPEC-009 R1 AG-2): margin-bottom formerly inherited from the deleted
+   .hero-profile .hero-content flex gap. Now explicit — spacing between the
+   photo and the eyebrow/H1 that follow it inside .hero-headline-col. */
 .hero-profile-photo {
     flex-shrink: 0;
+    margin-bottom: var(--space-6);
 }
 
 /* WHY (I-1): Both width and height are explicit here; the HTML width/height
@@ -1117,49 +1141,17 @@ p {
     background-color: var(--color-surface-elevated);
 }
 
-.hero-profile-text {
-    flex: 1;
-}
-
-.hero-profile-text .hero-eyebrow {
-    margin-bottom: var(--space-3);
-}
-
-/* WHY (I-4): No font-size override — let the cascade apply base .hero h1
-   rules (4xl base, 5xl at 768px, 3xl at <=480px) for responsive parity
-   with the home page hero. */
-/* WHY (SPEC-008 CR-1): Colors flipped from dark-hero (text-light / text-on-dark)
-   to cream-hero tokens. Previous values rendered cream-on-cream (invisible) after
-   the hero surface switched to --color-cream. */
-.hero-profile-text h1 {
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-3);
-}
-
-.hero-profile-text .hero-positioning {
-    font-size: var(--font-size-base);
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
-    line-height: var(--line-height-snug);
-}
-
-.hero-profile-text .hero-bio p {
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-4);
-}
-
-.hero-profile-text .hero-bio p:last-child {
-    margin-bottom: 0;
-}
+/* WHY (SPEC-009 R1 IG-3): .hero-profile-text rules deleted — no .hero-profile-text
+   element remains after the about.html markup migration to .hero-grid. Color and
+   typography for the about hero now fall through to base .hero h1, .hero-subheadline,
+   and .hero-eyebrow rules, which carry the correct SPEC-008 tokens. */
 
 /* ==========================================================================
    15b. ABOUT PAGE — Leadership Philosophy
    ========================================================================== */
 
 .philosophy-quote {
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid var(--color-magenta);
     padding: var(--space-6) var(--space-8);
     margin-bottom: var(--space-10);
     background-color: var(--surface-color);
@@ -1654,12 +1646,6 @@ a.resume-contact-item:hover {
         padding: var(--space-24) 0;
     }
 
-    .hero-profile .hero-content {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: var(--space-12);
-    }
-
     .hero-profile-photo img {
         width: 200px;
         height: 200px;
@@ -1978,7 +1964,7 @@ a.resume-contact-item:hover {
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--color-magenta);
     box-shadow: 0 0 0 3px rgb(232 68 155 / 0.15);
 }
 
@@ -2049,6 +2035,11 @@ a.resume-contact-item:hover {
     font-weight: var(--font-weight-semibold);
 }
 
+/* WHY (SPEC-008 AG-3 / SPEC-009 R6): Warning banner retains amber palette as a
+   semantic layer OUTSIDE the SPEC-008 identity system — identical reasoning to
+   the `.form-status--error` AG-3 retention above. Yellow signals "caution/degraded"
+   at banner scale more unambiguously than brand magenta and avoids accent-as-alarm
+   conflation. Do not migrate to magenta without reopening AG-3. */
 .form-status--warning:not(:empty) {
     background-color: #fffbeb;
     border: 1px solid #fde68a;

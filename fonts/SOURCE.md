@@ -30,6 +30,28 @@ The Google Fonts API serves `woff2` when the `User-Agent` identifies as a modern
 
 Other subsets (cyrillic, greek, vietnamese, latin-ext) are not included — the site's content is English-only and these subsets would add ~200KB without benefit.
 
+## Byte Budget
+
+**Actual file sizes (as committed):**
+
+| File | Size |
+|------|------|
+| `inter-variable.woff2` | 48 KB |
+| `fraunces-variable.woff2` | 67 KB |
+| Combined | 115 KB |
+
+**Budget ceiling:** SPEC-008 R2 sets a combined hard target of 120 KB. The actual payload of 115 KB meets this ceiling with 5 KB of headroom.
+
+**Pre-implementation estimates vs. actuals:** SPEC-008 Arch Gate AG-5 cited approximate per-font targets of ~40 KB (Inter) and ~80 KB (Fraunces), derived from Google Fonts latin-subset size estimates at review time. These were planning approximations, not enforced sub-budgets. Inter came in at 48 KB (8 KB over estimate); Fraunces at 67 KB (13 KB under). The combined ceiling governs, and it is met.
+
+**Decision: no subsetting tooling introduced** (SPEC-009 R5, 2026-04-22). Three reasons:
+
+1. **Ceiling met.** The combined 120 KB NFR is satisfied. There is no compliance gap that tooling needs to close.
+2. **Dependency and glyph-coverage risk.** Introducing `pyftsubset` (or equivalent) adds a build-time dependency to a zero-dependency stack, requires ongoing maintenance, and creates glyph-coverage risk if the subset drifts from actual content needs.
+3. **CDN layer does not benefit from further woff2 reduction.** Cloudflare Pages serves woff2 with brotli/gzip at the edge. Since woff2 is internally brotli-compressed, CDN-layer compression yields negligible additional savings.
+
+Revisit if a combined payload ceiling is tightened in a future spec, or if font family additions push the total above 120 KB.
+
 ## License Notice
 
 Both fonts are redistributed under the SIL Open Font License 1.1. The OFL permits bundling and redistribution with applications and websites provided the OFL file is included with the font files if distributed separately. Since these files are served as part of the website and not distributed as standalone font packages, the per-font OFL.txt files are not required to be bundled. The OFL text is retrievable from the upstream repositories:
