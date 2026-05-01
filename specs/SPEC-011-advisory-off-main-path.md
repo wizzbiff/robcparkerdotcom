@@ -582,4 +582,153 @@ A recruiter scanning the home page top-to-bottom hits LOCK-1 first ("Open to Sen
 
 ---
 
-*Drafted 2026-04-25 from `robcparker_com_audit.md` Prioritized Action #2 (audit lines 286-294). R7 added 2026-05-01 to capture repo hygiene surfaced during SPEC-010 close-out. Architecture Review appended 2026-05-01. Arch Gate approved 2026-05-01 with AG-1 / AG-2 amendments locked. Pre-Implementation String Lock appended 2026-05-01.*
+## QA Checklist (QA-SPEC-011)
+
+**Reviewer:** code-reviewer + qa-expert specialists via sdd/implementer-tester pipeline agent
+**Date:** 2026-05-01
+**Recommendation:** Ready for Rob's manual QA (static-review verifications passed; 5 implementation commits landed on `spec/SPEC-011-advisory-off-main-path`; manual browser walk-through is the remaining gate)
+
+### Pattern-based verification checks and results
+
+All eight Implementation Guidance items from the Architecture Review verified as implemented:
+
+| ID | Check | Result |
+|---|---|---|
+| IG-1 | No inline `style="justify-content:center"` on `.cta-actions` (`.cta-actions` already centers via `css/style.css:1343`) | PASS — `rg -n 'cta-actions.*style='` index.html returns zero hits; `<div class="cta-actions">` clean at index.html:158 |
+| IG-2 | Heading id `ft-cta-heading` (no collision with existing `cta-heading` on index.html bottom CTA) | PASS — both ids present and distinct (lines 155 and 188 respectively) |
+| IG-3 | Nav and footer byte-equality across 5 files | PASS — all 5 `<ul class="nav-links">` blocks identical four-item lists (resume.html legitimately retains `class="active" aria-current="page"` on its self-link as established active-page treatment); all 5 `<ul class="footer-nav">` blocks byte-equal |
+| IG-4 | No `js/main.js` edit | PASS — `git diff main..HEAD --stat js/main.js` returns no entry; `initActiveNav` matches by href generically and no-ops cleanly with the `<li>` removed |
+| IG-5 | R7 secrets re-grep returns zero hits before `git add` | PASS — re-run at implementation time on all three reference docs; zero hits for `password\|secret\|token\|api_key\|BEGIN PRIVATE KEY\|aws_access_key\|bearer` |
+| IG-6 | `git ls-files specs/scratch/` returns empty before `.gitignore` rule lands | PASS — empty output confirmed; `.gitignore` rule lands cleanly with no orphan tracked files |
+| IG-7 | Q7 alt-band rhythm preserved (`class="section"` for R3, no `-alt` modifier) | PASS — home page sequence is `hero → section-alt (Experience Highlights) → section (LOCK-1, cream) → section-alt (About teaser) → section-dark (Let's Talk)`; pattern maintained |
+| IG-8 | PR commit ordering: spec → R7 → R1/R2 → R3+AG-1 → R4 | PASS — five commits in spec-recommended ordering; per-file commits for index.html and contact.html where R3+AG-1 / R4 edits overlap nav/footer changes; pure-nav-edit pages bundled |
+
+### Locked-string verification (R3a / R4 / AG-1)
+
+| Slot | Location | Result |
+|---|---|---|
+| LOCK-1 (R3a H2 + paragraph + CTA) | `index.html:155-159` | Character-exact match against String Lock section |
+| LOCK-2 (R4 hero subheadline) | `contact.html:83` | Character-exact match against String Lock section |
+| LOCK-3 (AG-1 Let's Talk paragraph) | `index.html:189-193` | Character-exact match against String Lock section (multi-line indented format preserved per locked-string allowance) |
+
+### Forbidden-language sweep (R3b)
+
+`rg -ni 'fractional|consult|advise[^d]'` across `index.html`, `about.html`, `resume.html`, `contact.html` returns zero hits. The single `Advisory` token in `contact.html:83` is the in-spec demoted Q4 sentence ("Advisory inquiries by direct introduction only.") and is not a violation. The two remaining "advisory" hits at `contact.html:9` (meta description) and `contact.html:19` (og:description) are the AG-2 handoff items intentionally out of scope for SPEC-011.
+
+### Out-of-Scope verification
+
+`contact.html:9` and `contact.html:19` confirmed unchanged from pre-spec state (`git diff main..HEAD -- contact.html` shows the meta-description and og:description lines untouched). AG-2 handoff to SPEC-013 preserved; QA does NOT flag these as defects.
+
+### Code-reviewer findings
+
+**Recommendation:** APPROVE FOR QA. Convention fidelity, pattern fidelity, locked-string fidelity, IG-1/2/3/4/5/6/7/8, R3b sweep, AG-2 preservation, security baseline, reversibility, diff hygiene, and WHY-comment handling all PASS. Zero blocking findings.
+
+**Suggestion-tier note (non-blocking, deferred):** the new R3 paragraph at `index.html:156` is rendered as a single long source line, while the surviving CTA paragraph at `index.html:189-193` retains the multi-line indented format. Both are valid; consistency would marginally improve diff readability for future edits but is not load-bearing. The locked-string verification is also easier with the single-line form. Deferred — no action.
+
+### Scenarios tested beyond acceptance criteria
+
+The qa-expert pass identified six regression risks not explicitly covered by the spec's AC blocks. All are routed into the manual-QA plan below as additional verification steps:
+
+1. **Mobile hamburger menu (Medium risk)** — nav dropped from 5 to 4 items; toggle JS depends on `<ul id="nav-links">` structure being intact. Verify at 480px on at least one page.
+2. **`aria-current="page"` auto-application via JS** — confirm `initActiveNav` does not produce a false-positive active state on `advisory.html` (where the page's own item is no longer in the nav).
+3. **Home page visual rhythm (IG-7)** — visual eyes-on confirmation that the LOCK-1 section reads as cream/white between two alt bands.
+4. **No inline style on `.cta-actions` (IG-1)** — view-source confirm the static-review finding holds at runtime.
+5. **Console errors on each page** — any residual `advisory.html` JS path would manifest as a console error; check each page's DevTools Console.
+6. **Contact form still functional** — no SPEC-011 edit touched form logic, but contact.html received two edits; quick form-validation regression test (~60 seconds).
+
+### Regression assessment
+
+**Risk:** Low. SPEC-011 is a copy + nav-structure change with zero new CSS, zero new JS, zero new tokens, no third-party integration touched, no data migration. The five implementation commits net byte-reduction the codebase. The only theoretical regressions are (a) hand-copy drift across 5 nav files (mitigated by IG-3 byte-equality check; PASS) and (b) accidental JS or form-logic regression (none expected; covered by manual-QA Steps 3 and 5).
+
+### Manual-QA plan for Rob
+
+**Setup:** From repo root, `python3 -m http.server 8000`. Open `http://localhost:8000` in Chrome with DevTools (F12) Console tab visible.
+
+**Step 1 — R7 repository hygiene (terminal, ~2 min):**
+- `git ls-files OPERATOR-TODOS.md robcparker_com_audit.md website_audit_prompt.md` returns all three.
+- `git status` shows no `specs/scratch/` entries.
+- `.gitignore` lines 19-21 contain the `specs/scratch/` entry with `# WHY:` comment.
+
+**Step 2 — `index.html` critical path (~5 min):**
+- Console: zero errors.
+- Nav: `Home · About · Resume · Contact` (4 items, no "Advisory"). Footer: same.
+- LOCK-1 section: H2 reads "Open to Senior Engineering Leadership Roles." verbatim; paragraph matches LOCK-1 verbatim; `<div class="cta-actions">` has no inline style (Inspect element).
+- Click "Get in Touch" CTA → lands on `contact.html`. Press Back.
+- LOCK-3 paragraph: matches verbatim at bottom CTA section.
+- `Ctrl+F` searches: zero hits for "advisory" and "fractional" in body content.
+
+**Step 3 — `contact.html` critical path (~3 min):**
+- Console: zero errors.
+- Nav and footer: 4 items each, no "Advisory".
+- Hero subheadline: matches LOCK-2 verbatim.
+- Form regression: tab through form fields with empty values; confirm inline error messages render (Submit button starts disabled per Turnstile — submit attempt via keyboard or temporarily verify validateField logic via Inspect).
+
+**Step 4 — `about.html` and `resume.html` spot-check (~2 min):**
+- Console clean on each.
+- Nav and footer: 4 items each, no "Advisory".
+- `resume.html`: Resume nav link retains `class="active" aria-current="page"`.
+
+**Step 5 — `advisory.html` direct-URL check (~2 min):**
+- Console: zero errors.
+- Nav: 4 items, no "Advisory" item; no false-positive `aria-current="page"` on any nav-listed item (the page's own listing is removed).
+- Footer: 4 items.
+- Page renders fully — no broken styles, no missing sections.
+
+**Step 6 — mobile responsive (~4 min):**
+- DevTools viewport at 768px and 480px.
+- Reload `index.html` at each width: nav collapses to hamburger; tap hamburger → menu opens with 4 items; LOCK-1 wraps cleanly without overflow.
+- At 480px, briefly load `contact.html`: hero subheadline wraps without overflow.
+
+**Step 7 — cross-browser (Firefox + Safari) (~8 min, OPTIONAL given no live site):**
+- Repeat Steps 2-5 critical paths in each. The spec introduces no new CSS or JS patterns; cross-browser is a regression guard only and may be deferred to the Cloudflare Pages go-live milestone if Rob prefers.
+
+**Step 8 — accessibility spot-checks (~2 min):**
+- On `index.html`: Tab from address bar; skip-to-content link appears and focuses `#main-content`.
+- Tab traversal reaches the LOCK-1 "Get in Touch" CTA in logical order.
+- On `contact.html`: Tab reaches form fields in document order.
+
+**Total time:** ~18 min Chrome-only; ~26 min with two additional browsers.
+
+### Stop-the-line items (failures that halt merge)
+
+1. Nav shows any "Advisory" item on any of the 5 pages.
+2. Footer shows any "Advisory" item on any of the 5 pages.
+3. `index.html` body contains "advisory" (anywhere) or "fractional" (anywhere).
+4. LOCK-1, LOCK-2, or LOCK-3 text does not match the locked strings verbatim.
+5. LOCK-1 "Get in Touch" CTA does not navigate to `contact.html`.
+6. `advisory.html` fails to render via direct URL (broken styles, broken nav, JS errors).
+7. Any new console error on any page introduced by these commits.
+8. R7 reference docs not tracked in `git ls-files`.
+
+### Production verification plan
+
+**Deferred.** Per `MEMORY.md` (`project_deployment_deferred.md`), the repo builds on every main merge but no live Cloudflare Pages project is attached yet — go-live is a one-time Cloudflare connection by Rob. SPEC-011 ships to `main` via PR merge with manual QA on `localhost`; production verification follows the eventual Cloudflare Pages connection. No spec-specific production verification gates this PR.
+
+### Effort Comparison
+
+| | AI-Assisted | Mid-Level Developer (Solo) |
+|---|---|---|
+| Implementer-Tester pipeline | ~30 min wall-clock (branch creation + pre-modification scan + marketing-copywriter pass for 3 locked strings + String Lock spec append + frontend-developer 5-file edit + IG-3/4/5/6 verifications + 5 commits + code-reviewer + qa-expert + QA Checklist compile) | ~3.5–5 hours total — see breakdown |
+| Coding (mechanical edits across 5 HTML files + .gitignore) | included | ~45–60 min — careful per-file editing of nav and footer; section deletion + replacement; copy substitutions in 3 places; .gitignore append |
+| Copy authoring (R3a/R4/AG-1 strings without locked anchors) | included | ~30–45 min — copy drafts plus voice-fidelity passes against existing site language |
+| Static verification (R6 grep, IG-3 byte-equality, IG-5 secrets grep, IG-6 ls-files) | included | ~20–30 min — running each check, interpreting results, documenting in PR description |
+| Manual QA (per Manual-QA plan above) | N/A (Rob's gate) | ~25 min — same plan, executed manually |
+| Code review (self-review pass for a solo dev) | included | ~30 min — convention fidelity, security baseline, diff hygiene |
+| PR description + commit topology | included | ~20 min — drafting commit messages reflecting the IG-8 ordering and stop-the-line scope |
+| Test automation | N/A | N/A — no test infrastructure in this project |
+| Assumptions | Pipeline lead operated with full repo access, gate-approved spec, locked strings, the 8 IG conditions, and the AG-2 out-of-scope handoff. Frontend-developer applied edits character-for-character; lead verified via diff inspection and grep. Code-reviewer and qa-expert specialists ran in parallel after edits landed. Cross-browser deferred per spec context (no live site yet). | A mid-level developer with full project context but without locked strings would need to author copy from spec PM-anchors and run a self-review pass. The estimate assumes the spec is read once and understood; debugging a misplaced edit could add 30–60 min. |
+
+### Areas requiring manual verification by Rob
+
+1. **Steps 2-8 of the Manual-QA plan above** — no automated test substitutes for browser walk-through.
+2. **Cross-browser scope decision:** Step 7 is OPTIONAL given no live site; Rob's call to run now or defer to Cloudflare Pages connection.
+3. **AC-7 LOCK-1 CTA navigation (browser click-through)** — the only AC that requires a runtime check.
+4. **AC-12 advisory.html direct-URL render** — confirms the page is reachable and intact for referral sharing.
+
+### Concerns discovered during implementation
+
+None. Spec was unambiguous; locked strings were ready by the time frontend-developer started; gate amendments (R6 enumeration via AG-1, SPEC-013 handoff via AG-2) carried into String Lock cleanly. The only suggestion-tier note (R3 paragraph single-line vs surrounding multi-line format) is non-blocking and deferred.
+
+---
+
+*Drafted 2026-04-25 from `robcparker_com_audit.md` Prioritized Action #2 (audit lines 286-294). R7 added 2026-05-01 to capture repo hygiene surfaced during SPEC-010 close-out. Architecture Review appended 2026-05-01. Arch Gate approved 2026-05-01 with AG-1 / AG-2 amendments locked. Pre-Implementation String Lock appended 2026-05-01. QA Checklist appended 2026-05-01.*
