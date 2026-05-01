@@ -15,3 +15,7 @@ additional-context/
 *.secret
 secrets/
 *.key
+
+# WHY: Working-area scratch for spec drafts (e.g., arch-review notes, design
+# concept dumps). Tracked artifacts go under specs/ proper.
+specs/scratch/
