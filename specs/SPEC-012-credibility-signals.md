@@ -422,19 +422,48 @@ All questions resolved at Spec Gate on 2026-04-26.
 
 **Stage owner:** sdd/implementer-tester pipeline agent
 **Specialist invocations:** marketing-copywriter, frontend-developer, code-reviewer
-**Date:** 2026-05-01
+**Date:** 2026-05-01 (R2 scope-reduction amendment 2026-05-02)
 **Code-review verdict:** PASS WITH NOTES (2 suggestion-tier items, no blockers)
-**HTTP smoke verdict:** PASS (all 5 HTML pages, 7 new logo assets, CSS, fonts return 200; all expected DOM markers present)
-**Pipeline status:** Implementation complete; ready for Rob's manual QA Gate.
+**HTTP smoke verdict:** PASS (R1+R3 final state: 5 HTML pages, CSS, fonts return 200; testimonials and education line markers present)
+**Pipeline status:** Implementation complete (R1+R3 only after R2 drop); ready for Rob's manual QA Gate.
 
-### Implementation summary
+### Scope Reduction — R2 dropped (2026-05-02)
+
+**Decision:** R2 (the seven-logo "Where I've Built" strip on Home) is dropped from SPEC-012's shipping scope. Rob's call at QA Gate review.
+
+**Rationale (Rob, 2026-05-02):**
+- Logo strips work on *instant recognition*. Two of the seven sources are visual-only marks (SugarCRM's "S" letterform; Salesfusion's flame mark) that require the reader to already know the company before the logo communicates anything. If a logo requires lookup, it has failed at its job and added cognitive friction without adding credibility.
+- Rob's career path is in mid-tier SaaS / healthcare-tech / enterprise software brands (SugarCRM, Salesfusion, athenahealth, M2SYS, Q-Cept, Radiant Systems, Cisco). None carries the "wow factor" of FAANG-tier brands where the logo-strip pattern works because instant recognition is assumed. The audience for this site spans general executive recruiters and hiring managers in adjacent industries — the logo strip optimizes for an in-industry reader at the cost of the broader audience.
+- At the Director/VP/CTO audience level, evaluators are past "is this person legitimate" and into "what did this person accomplish." Logos answer the first question; metrics and testimonials answer the second. The site is positioned for the second question. R2 pulled visual weight back toward question one — a step backward in the audience's evaluation flow.
+- The credibility gap the original audit flagged (`robcparker_com_audit.md` Dimension 7, lines 219-244) is already addressed by R1 (testimonials shipping in this spec) plus R3 (education) plus the existing metrics throughout (25 years, 26 engineers, 150% scale, 350% throughput, 99.95% uptime, 17+ releases/year, $100M+ SaaS) plus the company names appearing in context in the hero subheadline and about-page paragraphs.
+- AG-2's Option A first-impression risk goes away with R2 dropped. No more dark-square/white-square seam clash, no Q-Cept aspect anomaly, no deferred follow-on polish spec.
+
+**What this changes:**
+- `index.html`: logo strip section reverted (former lines 151-167 deleted). Testimonials section flipped from `class="section section-alt"` to `class="section"` (cream) — see band-rhythm note below.
+- `css/style.css`: `.logos-strip` / `.logo-mono` ruleset (former section 23) removed. `.testimonials-grid` / `.testimonial` rules retained (R1 still ships).
+- `images/logos/`: all 7 optimized JPEGs removed via `git rm`. Source files at `images/source/logos/` left in place (gitignored; harmless if Rob wants them later).
+- Scheduled routine `trig_0165SWkrHQeh3AUjg9T7e3WK` (the auto-drafter for the "logo-strip polish" follow-on spec) is **disabled** — with R2 dropped, the polish follow-on is moot.
+
+**Band-rhythm note (post-R2):** the home page now sequences hero → highlights(`section-alt`) → **testimonials(`section`, cream)** → "Open to Senior"(`section`, cream) → about-teaser(`section-alt`) → contact(`section-dark`). The two consecutive cream bands (testimonials → "Open to Senior") are accepted as a *narrative pair*: "what former colleagues say about Rob → what Rob is looking for next." The band-switch cue is partially compensated by layout differentiation — testimonials is a 1→2→3 column card grid, "Open to Senior" is a centered single-CTA section. AG-1's variant-α band rhythm (alt → cream → alt → cream → alt → dark) is superseded by the post-R2 rhythm (cream → alt → cream → cream → alt → dark) per Rob's R2 drop.
+
+**AGs superseded by the R2 drop:**
+- **AG-1** (R1/R2 placement, variant α) — partially superseded. R1's placement holds (between highlights and "Open to Senior"); R2's placement is moot.
+- **AG-2** (logo treatment Option A vs. B vs. D) — fully moot. No logos to treat.
+
+**IGs that become N/A** (originally binding for R2 only):
+- IG-5, IG-7, IG-8, IG-9, IG-11, IG-14 — all R2-related; no longer apply.
+
+**IGs that remain binding** (R1 + R3):
+- IG-1 (citation drift documentation), IG-2 (R3 inside `.hero-bio`), IG-3 (`<cite>` for testimonial speaker), IG-4 (no JSON-LD/microdata), IG-6 (`.testimonials-grid` is new primitive), IG-10 (section ordering — amended per band-rhythm note above), IG-12 (1→2→3 column grid), IG-13 (`.testimonial` chrome via tokens).
+
+### Implementation summary (post-R2 drop)
 
 | File | Lines changed | Net effect |
 |---|---|---|
-| `index.html` | +45 | New logo strip section (lines 151-167, cream `section`, 7 logos, `<ul role="list">`) and new testimonials section (lines 169-194, `section section-alt`, 3 `.testimonial` cards with `<cite>` for speaker names). Section order: hero → highlights-alt → logos-cream → testimonials-alt → "Open to Senior"-cream → about-teaser-alt → contact-dark (AG-1 variant α). |
+| `index.html` | +28 | New testimonials section (`<section class="section">`, cream band — flipped from `section-alt` after R2 drop to avoid consecutive alt with the highlights band above). 3 `.testimonial` cards with `<cite>` for speaker names. R2 logo-strip section removed in scope-reduction commit. |
 | `about.html` | +1 | Education line at line 113 inside `.hero-bio` (R3, IG-2). Inherits `.hero-bio p` styling; no new class. |
-| `css/style.css` | +123 | Two new sections appended (22, 23) for `.testimonials-grid` / `.testimonial` (1→2→3 col grid; chrome via tokens; semibold `<cite>`) and `.logos-strip` / `.logo-mono` (mobile-first wrap → tablet 4-up → desktop 7-up; sizing-only `.logo-mono` placeholder, no grayscale filter per IG-11/AG-2). |
-| `images/logos/{sugarcrm,salesfusion,athenahealth,m2sys,q-cept,radiant-systems,cisco}.jpg` | +7 files | 16.6 KB total. Pillow recipe: `convert("RGB")` (EXIF strip) + `quality=82, progressive=True, optimize=True`. **Deviation from IG-14:** sources are 100×100 (Q-Cept 250×100); IG-14 specified 80px (1x) + 160px (2x) outputs, but the source resolution is below the 2x target. Outputs ship at native source resolution (100×100 / 250×100). On a 2× retina display at 48 CSS-px max-height, the browser downscales 100→96 device-px which renders sharply. No `srcset`/`@2x` file needed. |
+| `css/style.css` | +58 | One new section appended (22) for `.testimonials-grid` / `.testimonial` (1→2→3 col grid; chrome via tokens; semibold `<cite>`). Former section 23 (`.logos-strip` / `.logo-mono`) removed in scope-reduction commit. |
+| `images/logos/` | 0 (was +7) | Removed in scope-reduction commit. The 7 source JPEGs still live at `images/source/logos/` (gitignored, untracked) for potential future use; no committed assets remain. |
 
 ### Content lock (marketing-copywriter pass)
 
@@ -445,7 +474,7 @@ All questions resolved at Spec Gate on 2026-04-26.
 - **Selected quotes (verbatim, no editorial rewriting):** all three are SugarCRM 2026 colleagues, covering strategy/execution (Gonzalez), people-and-technical leadership (Sprackett), and tech-business bridging (Arroyo)
 - **Audit-theme flag:** the audit (line 224) called out architecture-judgment and legacy-refactoring testimonials as the highest-leverage themes to surface; Rob's selection covers different themes (strategy, leadership, business). Per AC line 235, this is Rob's call and is recorded here as a flag, not a defect
 
-### IG verification (binding from Arch Gate)
+### IG verification (post-R2; binding items only)
 
 | ID | Status | Evidence |
 |---|---|---|
@@ -453,64 +482,40 @@ All questions resolved at Spec Gate on 2026-04-26.
 | IG-2 | ✓ | `about.html:113` inside `.hero-bio` div, before `</div>` at 114 |
 | IG-3 | ✓ | `<cite>` wraps each speaker name; scoped `.testimonial cite` rule mirrors `.philosophy-quote` precedent without modifying it |
 | IG-4 | ✓ | Site-wide grep for `ld+json`, `itemtype`, `itemprop` returns zero hits |
-| IG-5 | ✓ | `<ul role="list">` at `index.html:157` with WHY comment at lines 155-156 |
+| IG-5 | n/a (R2 dropped) | `.logos-strip` removed |
 | IG-6 | ✓ | `.testimonials-grid` and `.testimonial` are new primitives; `.philosophy-quote` rules untouched |
-| IG-7 | ✓ | 7 source files at `images/source/logos/` (gitignored, verified empty in `git ls-files`); Q-Cept renamed to `q-cept_logo.jpeg` |
-| IG-8 | n/a | AG-2 = Option A; no new asset class introduced; existing Pillow recipe sufficient |
-| IG-9 | ✓ | All 7 `<img>` tags have explicit `width`/`height` attrs reflecting intrinsic source dimensions (100/250 × 100) |
-| IG-10 | ✓ | Section ordering on home page matches AG-1 variant α exactly |
-| IG-11 | ✓ | No `filter: grayscale` rule (zero CSS hits); only mention is inside the explanatory WHY comment block |
+| IG-7 | n/a (R2 dropped) | No committed logo assets |
+| IG-8 | n/a | No new asset class introduced |
+| IG-9 | n/a (R2 dropped) | No `<img>` tags introduced |
+| IG-10 | ✓ amended | Post-R2 ordering: hero → highlights(`section-alt`) → testimonials(`section`, cream) → "Open to Senior"(`section`, cream) → about-teaser(`section-alt`) → contact(`section-dark`). Two consecutive cream bands accepted as a narrative pair per Scope Reduction rationale |
+| IG-11 | n/a (R2 dropped) | No `.logo-mono` rule remains |
 | IG-12 | ✓ | Grid: 1col mobile-first → 2col @768px → 3col @1024px |
 | IG-13 | ✓ | `.testimonial` chrome uses `--color-surface-elevated`, `--color-border-hairline`, `--border-radius-sm`, `--space-8` — exact token mirror of `.highlight-card` |
-| IG-14 | ✓ with documented deviation | Source-resolution outputs (100×100 / 250×100) instead of 80px/160px; rationale: source files lack the resolution to upscale to 2x without blur. Outputs cover retina at the chosen 48px display height. Total payload 16.6 KB, well under any per-file or per-page budget |
+| IG-14 | n/a (R2 dropped) | No logo assets to optimize |
 
 ### Code-reviewer findings (suggestion-tier; no blockers)
 
-- **Q1 — Empty `.logo-mono` rule.** `css/style.css:2412-2414` declares `.logo-mono { /* Sizing-only — no monochrome treatment in SPEC-012. */ }` with no properties. Some CSS linters flag empty rulesets, but this is intentional per IG-11 to reserve the class name for the future "logo-strip polish" follow-on spec without requiring a markup change later. **Recommendation: leave as-is.** The architectural intent is clearer with the empty body and the dedicated WHY comment block at lines 2378-2386.
-- **A5 — Color contrast spot-check at sighted QA.** Computed values pass: testimonial body charcoal-on-elevated-surface ≈ 17.2:1 (AAA); footer muted-on-elevated-surface ≥ 5.91:1 (AA normal text); card sits on `.section-alt` band — elevated surface is fractionally lighter than band, no inversion. Confirm visually at QA Gate that the card chrome reads as elevated above the band rather than blending into it.
+- **Q1 — Empty `.logo-mono` rule.** Resolved by R2 drop (rule removed entirely with the rest of section 23).
+- **A5 — Color contrast spot-check at sighted QA.** Re-evaluated for the post-R2 cream band: testimonial body charcoal-on-elevated-surface ≈ 17.2:1 (AAA); footer muted-on-elevated-surface on a cream `.section` band (`--color-cream` #F7F6F2) is even higher contrast than on the alt-band evaluated originally — comfortably above AA. The card's elevated surface (`#F3F1EB`) is now slightly *darker* than the page cream (`#F7F6F2`) instead of slightly lighter than the alt surface, so the card reads as a *recessed-and-tinted* block rather than an *elevated-and-tinted* block on the alt band. Confirm visually at QA Gate that the card chrome still reads as a distinct unit (it should — the hairline border carries it).
 
-### HTTP smoke test results (local server, 2026-05-01)
+### HTTP smoke test results (local server, 2026-05-01 pre-R2-drop, 2026-05-02 post-R2-drop)
 
-```
-=== HTML pages ===
-200  index.html, about.html, resume.html, contact.html, advisory.html (all 200)
+Original pass (R1+R2+R3): all 5 HTML pages 200, all 7 logo assets 200, CSS/fonts 200, all DOM markers present. Recorded for audit trail.
 
-=== Logo assets ===
-200  1979 bytes  sugarcrm.jpg
-200  2335 bytes  salesfusion.jpg
-200  1986 bytes  athenahealth.jpg
-200  1915 bytes  m2sys.jpg
-200  4479 bytes  q-cept.jpg
-200  2337 bytes  radiant-systems.jpg
-200  1918 bytes  cisco.jpg
+Post-R2-drop expected state (re-run at QA Gate): 5 HTML pages 200, CSS 200, **zero requests for `images/logos/*.jpg`** (404 expected if cached browser tab still tries to fetch — clear cache before QA), structural markers on index.html `testimonials-heading` (1 hit), `testimonials-grid` (1 hit), `.testimonial` (3 hits), `logos-heading` (0 hits), `logos-strip` (0 hits); on about.html `education-line` (1 hit).
 
-=== Structural markers (index.html) ===
-1 testimonials-heading hits (expect 1)  ✓
-1 logos-heading hits         (expect 1)  ✓
-1 logos-strip hits           (expect 1)  ✓
-1 testimonials-grid hits     (expect 1)  ✓
-3 .testimonial hits          (expect 3)  ✓
+### Manual QA items for Rob (post-R2; browser-based — pipeline cannot verify)
 
-=== Structural markers (about.html) ===
-1 education-line hits        (expect 1)  ✓
-```
-
-### Manual QA items for Rob (browser-based — pipeline cannot verify)
-
-These are the items that require Rob's eyes-and-hands at the QA Gate. The pipeline cannot drive a browser; everything below needs sighted/AT/cross-browser confirmation.
+R2-related items removed (logo strip cross-browser, breakpoints, Q-Cept aspect, color clash, screen-reader on logo strip — all moot).
 
 | # | Item | Why |
 |---|---|---|
-| 1 | Open `http://127.0.0.1:<port>/index.html` in Chrome, Firefox, and Safari at desktop width (≥1024px). Confirm 7 logos render as a single horizontal row, no wrap, no horizontal scroll, no broken images | IG-9 / IG-11 / Option A visual check |
-| 2 | Resize the browser through tablet (768-1023px) and mobile (<768px). Confirm the strip reflows cleanly to ~4-up at tablet and to a free-wrap at mobile; no logo gets cut off | ui-designer breakpoint calibration |
-| 3 | Visually confirm Q-Cept's wider 2.5:1 aspect ratio renders at ~120×48 next to the six 48×48 squares without dominating or destabilizing row rhythm | AG-2 Option A acceptance criterion |
-| 4 | Visually confirm logo color clash on the cream band is acceptable for ship (dark-fill Cisco/SugarCRM/Radiant Systems vs. white-fill athenahealth/M2SYS/Salesfusion) | AG-2 first-impression check; reinforces case for follow-on polish spec |
-| 5 | With VoiceOver (Safari) or NVDA (Firefox), navigate into a `.testimonial` blockquote. Confirm quote + name + title + company + year announce as a coherent unit | IG-3 / WCAG semantic blockquote pattern |
-| 6 | With the same screen reader, navigate the logo `<ul>`. Confirm each `<img>` announces as the company name via `alt` text and that list semantics are restored under Safari/VoiceOver | IG-5 / list-semantics fix |
-| 7 | Run Lighthouse on the home page. Confirm CLS = 0 and that other scores have not regressed from the pre-SPEC-012 baseline | IG-9 image dimensions intent |
-| 8 | Open `about.html` and confirm the education line "MS Computer Science, Georgia Tech. BS, Clemson University." renders as a standalone single-line `<p>` with `.hero-bio p` rhythm matching the paragraphs above | R3 / IG-2 acceptance criterion |
-| 9 | Walk the home page top-to-bottom (hero → highlights → logos → testimonials → "Open to Senior" CTA → about-teaser → contact CTA). Confirm the band rhythm reads as alt → cream → alt → cream → alt → dark with no two consecutive same-band sections | IG-10 / SPEC-008/009 R3.4 |
-| 10 | Sighted check on testimonial card chrome — elevated surface should read as a card lifted above the `.section-alt` band, not flush with it | A5 (suggestion-tier); confirms `--color-surface-elevated` vs. `--surface-color` tonal step |
+| 1 | With VoiceOver (Safari) or NVDA (Firefox), navigate into a `.testimonial` blockquote. Confirm quote + name + title + company + year announce as a coherent unit | IG-3 / WCAG semantic blockquote pattern |
+| 2 | Run Lighthouse on the home page. Confirm scores have not regressed from the pre-SPEC-012 baseline | Performance/CLS regression sanity check; less load-bearing post-R2 since no new images |
+| 3 | Open `about.html` and confirm the education line "MS Computer Science, Georgia Tech. BS, Clemson University." renders as a standalone single-line `<p>` with `.hero-bio p` rhythm matching the paragraphs above | R3 / IG-2 acceptance criterion |
+| 4 | Walk the home page top-to-bottom (hero → highlights → testimonials → "Open to Senior" CTA → about-teaser → contact CTA). Confirm the testimonials → "Open to Senior" cream→cream pairing reads as a cohesive narrative pair (testimonials about Rob, then Rob's stated next role) rather than as a missed band-switch | IG-10 amended; band-rhythm note in Scope Reduction |
+| 5 | Sighted check on testimonial card chrome — the card should read as a distinct unit on the cream band (the hairline border carries the boundary even though `--color-surface-elevated` is now slightly *darker* than the page cream) | A5 (re-evaluated post-R2) |
+| 6 | Cross-browser check (Chrome, Firefox, Safari) at desktop, tablet, mobile widths. Confirm testimonials grid reflows cleanly: 3-up desktop → 2-up tablet → stacked mobile | IG-12 grid breakpoint behavior |
 
 ### Effort Comparison
 
@@ -528,27 +533,27 @@ These are the items that require Rob's eyes-and-hands at the QA Gate. The pipeli
 
 Assumptions: mid-level developer with existing project familiarity but no prior SPEC-012 context. Includes context-gathering, debugging, breakpoint hand-testing, attribution-line proofing, and one PR cycle. Excludes manual visual QA on Rob's side (parallel cost in both columns). Excludes the scheduled-routine setup for the polish-spec drafter (one-time, not part of normal implementer flow).
 
-### Regression risk assessment
+### Regression risk assessment (post-R2)
 
 | Risk | Severity | Mitigation status |
 |---|---|---|
-| Cross-browser CSS Grid `repeat(N, 1fr)` differences | Low | Pattern is widely supported (matches existing `.highlights-grid` precedent at `style.css:863-868`); QA item #1 covers Chrome/Firefox/Safari visual check |
-| Logo CLS regression | Low | `width`/`height` on every `<img>`; `loading="lazy"` is below-fold; QA item #7 (Lighthouse) verifies |
-| Q-Cept aspect-ratio breaking row uniformity at mid breakpoints | Low-Medium | `flex-basis: calc(25% - var(--space-8))` + `max-width: 160px` at tablet breakpoint accommodates wider mark via `object-fit: contain`; QA item #3 verifies visually |
-| Screen-reader regression on the new `<ul role="list">` | Low | Matches existing `index.html:59-61` pattern proven on the site since SPEC-001; QA item #6 spot-checks |
-| Empty `.logo-mono` rule causing CSS linter noise | Very low | Intentional placeholder; documented in WHY comment; no runtime impact |
+| Cross-browser CSS Grid `repeat(N, 1fr)` differences for the testimonials grid | Low | Pattern is widely supported (matches existing `.highlights-grid` precedent at `style.css:863-868`); QA item #6 covers Chrome/Firefox/Safari visual check |
+| Screen-reader regression on the new `.testimonial` `<blockquote>` + `<footer>` semantic pattern | Low | Matches existing `.philosophy-quote` precedent at `about.html:129-134`; QA item #1 verifies via VoiceOver/NVDA |
+| Consecutive cream bands (testimonials → "Open to Senior") read as "missed a break" rather than "narrative pair" | Low-Medium | Layout differentiation (card-grid vs. centered-CTA) compensates for missing band-switch cue; QA item #4 verifies sighted scan |
+| Testimonial card chrome blends into cream band (now slightly darker than `--color-surface-elevated`) | Low | Hairline border carries the boundary; A5 / QA item #5 verifies sighted |
+| Education line on About reads as appended afterthought rather than credential statement | Very low | Inherits `.hero-bio p` rhythm; standalone single-line treatment per Spec Gate Q3 default |
 
 ### Production verification plan
 
-1. Rob runs through the 10 manual QA items above in his preferred browser environment.
+1. Rob runs through the 6 manual QA items above in his preferred browser environment.
 2. Any failures get logged to `specs/SPEC-012-credibility-signals.md` under a new "QA Findings" sub-section, then fed back to the implementer-tester for fix.
 3. Once QA Gate passes, advance to Deployment stage (`sdd/deployment.md`).
 4. Per `project_deployment_deferred.md`, the repo builds on every main merge but no live Cloudflare Pages project is currently attached — Rob's go-live is a separate one-time Cloudflare connect. SPEC-012 lands on main when QA passes; live verification happens at go-live time.
 
 ### Pipeline-complete
 
-Pipeline-side work for SPEC-012 is complete. **Awaiting Rob's QA Gate.**
+Pipeline-side work for SPEC-012 is complete (R1 + R3 only after R2 scope reduction). **Awaiting Rob's QA Gate.**
 
 ---
 
-*Drafted 2026-04-25 from `robcparker_com_audit.md` Prioritized Action #3 (audit lines 296-301) + Dimension 7 (lines 219-244). Architecture Review appended 2026-05-01 by sdd/architect-review pipeline agent (specialist invocations: architect-reviewer, ui-designer, graphic-artist; pen-tester not invoked). QA Checklist appended 2026-05-01 by sdd/implementer-tester pipeline agent (specialist invocations: marketing-copywriter, frontend-developer, code-reviewer).*
+*Drafted 2026-04-25 from `robcparker_com_audit.md` Prioritized Action #3 (audit lines 296-301) + Dimension 7 (lines 219-244). Architecture Review appended 2026-05-01 by sdd/architect-review pipeline agent (specialist invocations: architect-reviewer, ui-designer, graphic-artist; pen-tester not invoked). QA Checklist appended 2026-05-01 by sdd/implementer-tester pipeline agent (specialist invocations: marketing-copywriter, frontend-developer, code-reviewer). R2 scope reduction appended 2026-05-02 per Rob's call at QA Gate review.*
