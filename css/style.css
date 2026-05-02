@@ -2316,3 +2316,61 @@ a.resume-contact-item:hover {
         transform: none;
     }
 }
+
+/* ==========================================================================
+   22. SPEC-012 — TESTIMONIALS GRID (Home, .section-alt band)
+   WHY: New primitive (.testimonials-grid + .testimonial), not an extension of
+   .philosophy-quote — that pattern is full-width single-quote with magenta-left
+   border; testimonials are a multi-card grid (IG-6).
+   ========================================================================== */
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .testimonials-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* WHY (IG-13): card chrome mirrors .highlight-card token-by-token (no class
+   extension because <blockquote> is the root, not <article>). */
+.testimonial {
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-8);
+    margin: 0;
+}
+
+.testimonial p {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+    color: var(--text-color);
+    font-style: italic;
+    margin-bottom: var(--space-4);
+}
+
+.testimonial footer {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+/* WHY (IG-3): extends the .philosophy-quote blockquote cite precedent at
+   style.css:1176 — speaker name renders as semibold, normal-style. */
+.testimonial cite {
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+}
+
