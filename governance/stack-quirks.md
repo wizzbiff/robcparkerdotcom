@@ -72,3 +72,13 @@ img.resize((800, 800), Image.LANCZOS).save(
 - `convert("RGB")` is the EXIF-strip mechanism — PIL does not carry EXIF through a mode conversion.
 - Source PNG lives in `images/source/` (gitignored). Only optimized outputs are committed.
 - Serving via `srcset` means mobile gets 1x (21.7KB), retina gets 2x (61.8KB) — budget applies per-request.
+
+**Pillow PNG output differs from the JPEG recipe.** Use `Image.save(path, "PNG", optimize=True)`. Do NOT pass `quality=` or `progressive=` to a PNG save call — `quality` is silently ignored by Pillow for PNG, and `progressive` raises a `KeyError`. Established in SPEC-013.
+
+**Variable WOFF2 fonts can't be loaded by Pillow directly.** Pillow's `ImageFont.truetype()` requires TTF/OTF, not WOFF2. To render text in the project's Inter / Fraunces variable fonts (e.g., for the SPEC-013 OG card), convert in-memory via `fontTools.ttLib.TTFont` (`font.flavor = None; font.save(buf)`) and pass the resulting bytes to `ImageFont.truetype()`. Set the variable axes via `font.set_variation_by_axes([...])` — Inter takes `[wght]`, Fraunces takes `[wght, opsz]`. Run via `uv run --with fonttools --with brotli --with pillow python3 <script>` to keep dependencies out of the repo. Established in SPEC-013.
+
+## SEO
+
+**Cloudflare Pages does NOT automatically generate `sitemap.xml` or `robots.txt`.** Static sites on Cloudflare Pages must commit both files at project root (or generate them at build time, but this site has no build). Cloudflare Pages adds an `X-Robots-Tag: noindex` header on preview URLs only — production deploys are crawlable by default. Verified via Cloudflare docs (`https://developers.cloudflare.com/pages/configuration/serving-pages/`) plus the community thread "Sitemap not available through Cloudflare Pages" (`https://community.cloudflare.com/t/sitemap-not-available-through-cloudflare-pages/384330`). Established in SPEC-013.
+
+**`_headers` rules for sitemap.xml and robots.txt are defensive, not strictly required.** Cloudflare Pages auto-assigns `application/xml` to `.xml` and `text/plain` to `.txt` by file extension. Explicit `Content-Type` rules in `_headers` are added defensively (matching the `/site.webmanifest` precedent) to remove a class of silent failure modes when XML parsers strictly validate the sitemap protocol. Established in SPEC-013 AG-1.
