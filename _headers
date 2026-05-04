@@ -3,3 +3,14 @@
 
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
+
+# WHY (SPEC-013 AG-1): explicit Content-Type for sitemap.xml and robots.txt.
+# Cloudflare Pages auto-assigns these by extension, but explicit-over-implicit
+# matches the precedent set by the /site.webmanifest rule above and removes a
+# class of silent failure modes (XML parsers are strict about Content-Type
+# when validating the sitemap protocol).
+/sitemap.xml
+  Content-Type: application/xml
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
