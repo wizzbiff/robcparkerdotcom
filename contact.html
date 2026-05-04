@@ -5,26 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
-    <title>Contact Rob Parker — Senior Engineering Executive</title>
-    <meta name="description" content="Reach Rob Parker to discuss Director or VP of Engineering roles or advisory engagements. He replies to relevant inquiries within a few business days.">
+    <title>Contact Rob Parker &mdash; Director &amp; VP Engineering Roles, Atlanta</title>
+    <meta name="description" content="Reach Rob Parker about Director, VP, or CTO of Engineering roles at AI-forward SaaS companies. Replies within a few business days. Atlanta-based.">
 
     <!-- Referrer policy — limits referrer header data sent to third-party endpoints (SD-8) -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <link rel="canonical" href="https://www.robcparker.com/contact.html">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers. -->
     <meta property="og:url" content="https://www.robcparker.com/contact.html">
-    <meta property="og:title" content="Contact Rob Parker — Senior Engineering Executive">
-    <meta property="og:description" content="Rob Parker is actively exploring Director and VP of Engineering roles at AI-forward SaaS companies. Advisory inquiries are welcome. Reach out via the contact form or LinkedIn.">
-    <!-- WHY: og:image must be absolute — relative paths are not resolved by social crawlers
-         (Open Graph protocol requirement). Reusing validated headshot asset from SPEC-002. -->
-    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
+    <meta property="og:title" content="Contact Rob Parker &mdash; Director &amp; VP Engineering Roles, Atlanta">
+    <meta property="og:description" content="Reach Rob Parker about Director, VP, or CTO of Engineering roles at AI-forward SaaS companies. Replies within a few business days. Atlanta-based.">
+    <!-- WHY (SPEC-013 R3): branded 1200×630 OG card replaces the headshot reuse — squares crop badly as summary_large_image. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- Twitter Card (SPEC-013 R4) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Contact Rob Parker &mdash; Director &amp; VP Engineering Roles, Atlanta">
+    <meta name="twitter:description" content="Reach Rob Parker about Director, VP, or CTO of Engineering roles at AI-forward SaaS companies. Replies within a few business days. Atlanta-based.">
+    <meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta name="twitter:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- WHY (SPEC-013 R5): Person schema disambiguates Rob from other Rob Parkers via sameAs LinkedIn signal.
+         Block is byte-identical across all five pages; Person.url is the homepage canonical (not the per-page URL). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Rob Parker",
+      "jobTitle": "Senior Engineering Executive",
+      "description": "Senior engineering executive with 25+ years of experience building AI-native platforms and scaling high-performing teams.",
+      "image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",
+      "url": "https://www.robcparker.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Atlanta",
+        "addressRegion": "GA",
+        "addressCountry": "US"
+      },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "Georgia Institute of Technology" },
+        { "@type": "CollegeOrUniversity", "name": "Clemson University" }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/robcparker/"
+      ]
+    }
+    </script>
 
     <!-- WHY: noindex removed — this is now a real, fully-built page (SPEC-004 IG-12).
          The placeholder version had noindex to prevent thin content from being indexed. -->
 
-    <link rel="canonical" href="https://www.robcparker.com/contact.html">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
