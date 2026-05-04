@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
-    <title>Rob Parker Resume &mdash; Senior Engineering Executive</title>
-    <meta name="description" content="Senior engineering executive. 25+ years building AI-native platforms and scaling teams. Targeting Director/VP at AI-forward SaaS companies.">
+    <title>Rob Parker Resume &mdash; Senior Engineering Executive, Atlanta</title>
+    <meta name="description" content="Engineering executive resume — 25+ years building AI-native platforms and scaling teams. SugarCRM, Salesfusion, athenahealth. Targeting Director, VP, CTO.">
 
     <!-- WHY: canonical tag prevents duplicate-content penalties if the page is
          ever reached via a tracking suffix or alternate host. SPEC-003 S-1. -->
@@ -17,11 +17,47 @@
     <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers
          (Open Graph protocol requirement). Pattern from SPEC-002. -->
     <meta property="og:url" content="https://www.robcparker.com/resume.html">
-    <meta property="og:title" content="Rob Parker Resume &mdash; Senior Engineering Executive">
-    <meta property="og:description" content="Senior engineering executive. 25+ years building AI-native platforms and scaling teams. Targeting Director/VP at AI-forward SaaS companies.">
-    <!-- WHY: og:image must be an absolute URL — relative paths are not resolved by social
-         crawlers (Open Graph protocol requirement). Reusing SPEC-002 headshot per IG-12. -->
-    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
+    <meta property="og:title" content="Rob Parker Resume &mdash; Senior Engineering Executive, Atlanta">
+    <meta property="og:description" content="Engineering executive resume — 25+ years building AI-native platforms and scaling teams. SugarCRM, Salesfusion, athenahealth. Targeting Director, VP, CTO.">
+    <!-- WHY (SPEC-013 R3): branded 1200×630 OG card replaces the headshot reuse — squares crop badly as summary_large_image. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- Twitter Card (SPEC-013 R4) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rob Parker Resume &mdash; Senior Engineering Executive, Atlanta">
+    <meta name="twitter:description" content="Engineering executive resume — 25+ years building AI-native platforms and scaling teams. SugarCRM, Salesfusion, athenahealth. Targeting Director, VP, CTO.">
+    <meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta name="twitter:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- WHY (SPEC-013 R5): Person schema disambiguates Rob from other Rob Parkers via sameAs LinkedIn signal.
+         Block is byte-identical across all five pages; Person.url is the homepage canonical (not the per-page URL). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Rob Parker",
+      "jobTitle": "Senior Engineering Executive",
+      "description": "Senior engineering executive with 25+ years of experience building AI-native platforms and scaling high-performing teams.",
+      "image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",
+      "url": "https://www.robcparker.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Atlanta",
+        "addressRegion": "GA",
+        "addressCountry": "US"
+      },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "Georgia Institute of Technology" },
+        { "@type": "CollegeOrUniversity", "name": "Clemson University" }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/robcparker/"
+      ]
+    }
+    </script>
 
     <!-- WHY: noindex removed — this is a real, fully-built page (SPEC-003 IG-11).
          The placeholder version had noindex to prevent thin content from being indexed. -->

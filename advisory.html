@@ -5,23 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
-    <title>Technical Advisory — Rob Parker</title>
-    <meta name="description" content="Selective advisory engagements alongside a Director/VP search — AI platform strategy, architecture reviews, M&amp;A integration, and engineering org assessments.">
+    <title>Technical Advisory &mdash; Rob Parker, Senior Engineering Executive</title>
+    <meta name="description" content="Selective advisory engagements alongside a Director or VP search — AI platform strategy, architecture reviews, M&amp;A integration, engineering org assessments.">
+
+    <link rel="canonical" href="https://www.robcparker.com/advisory.html">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <!-- WHY: og:url must be absolute — relative paths aren't resolved by social crawlers. -->
     <meta property="og:url" content="https://www.robcparker.com/advisory.html">
-    <meta property="og:title" content="Technical Advisory — Rob Parker">
-    <meta property="og:description" content="Selective advisory engagements alongside a Director/VP search — AI platform strategy, architecture reviews, M&amp;A integration, and engineering org assessments.">
-    <!-- WHY: og:image must be absolute — relative paths are not resolved by social crawlers
-         (Open Graph protocol requirement). Reusing validated headshot asset from SPEC-002. -->
-    <meta property="og:image" content="https://www.robcparker.com/images/rob-parker-headshot@2x.jpg">
+    <meta property="og:title" content="Technical Advisory &mdash; Rob Parker, Senior Engineering Executive">
+    <meta property="og:description" content="Selective advisory engagements alongside a Director or VP search — AI platform strategy, architecture reviews, M&amp;A integration, engineering org assessments.">
+    <!-- WHY (SPEC-013 R3): branded 1200×630 OG card replaces the headshot reuse — squares crop badly as summary_large_image. -->
+    <meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- Twitter Card (SPEC-013 R4) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Technical Advisory &mdash; Rob Parker, Senior Engineering Executive">
+    <meta name="twitter:description" content="Selective advisory engagements alongside a Director or VP search — AI platform strategy, architecture reviews, M&amp;A integration, engineering org assessments.">
+    <meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">
+    <meta name="twitter:image:alt" content="Rob Parker — Senior Engineering Executive, AI Platforms, Atlanta — 25+ Years">
+
+    <!-- WHY (SPEC-013 R5): Person schema disambiguates Rob from other Rob Parkers via sameAs LinkedIn signal.
+         Block is byte-identical across all five pages; Person.url is the homepage canonical (not the per-page URL). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Rob Parker",
+      "jobTitle": "Senior Engineering Executive",
+      "description": "Senior engineering executive with 25+ years of experience building AI-native platforms and scaling high-performing teams.",
+      "image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",
+      "url": "https://www.robcparker.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Atlanta",
+        "addressRegion": "GA",
+        "addressCountry": "US"
+      },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "Georgia Institute of Technology" },
+        { "@type": "CollegeOrUniversity", "name": "Clemson University" }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/robcparker/"
+      ]
+    }
+    </script>
 
     <!-- WHY: noindex removed — this is now a real, fully-built page (SPEC-005 IG-9).
          The placeholder version had noindex to prevent thin content from being indexed. -->
 
-    <link rel="canonical" href="https://www.robcparker.com/advisory.html">
 
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
