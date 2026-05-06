@@ -1946,7 +1946,8 @@ a.resume-contact-item:hover {
 }
 
 .form-input,
-.form-textarea {
+.form-textarea,
+.form-select {
     width: 100%;
     padding: var(--space-3) var(--space-4);
     font-size: var(--font-size-base);
@@ -1962,7 +1963,8 @@ a.resume-contact-item:hover {
 }
 
 .form-input:focus,
-.form-textarea:focus {
+.form-textarea:focus,
+.form-select:focus {
     outline: none;
     border-color: var(--color-magenta);
     box-shadow: 0 0 0 3px rgb(232 68 155 / 0.15);
@@ -1974,9 +1976,19 @@ a.resume-contact-item:hover {
    WHY (SPEC-008 R3.6 / QA-B1): Magenta is the sole accent and error-signal
    color in the SPEC-008 palette — there is no separate red. */
 .form-input[aria-invalid="true"],
-.form-textarea[aria-invalid="true"] {
+.form-textarea[aria-invalid="true"],
+.form-select[aria-invalid="true"] {
     border-color: var(--color-magenta);
     box-shadow: 0 0 0 3px rgb(232 68 155 / 0.15);
+}
+
+/* WHY (SPEC-014 R5): .form-select inherits .form-input visual treatment above.
+   appearance:auto is declared defensively in case a future reset removes the
+   native dropdown chrome; cursor:pointer matches the affordance of a clickable
+   control. No custom dropdown — native OS dropdown is touch-friendly by default. */
+.form-select {
+    appearance: auto;
+    cursor: pointer;
 }
 
 .form-textarea {
