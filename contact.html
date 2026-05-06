@@ -186,6 +186,26 @@
                                 <span id="email-error" class="form-error" hidden></span>
                             </div>
 
+                            <!-- Intent field (SPEC-014 R1) -->
+                            <div class="form-field">
+                                <label class="form-label" for="intent">Type of inquiry</label>
+                                <select
+                                    class="form-select"
+                                    id="intent"
+                                    name="intent"
+                                    required
+                                    aria-describedby="intent-error"
+                                >
+                                    <option value="" disabled selected>Choose an option&hellip;</option>
+                                    <option value="hiring">Hiring opportunity</option>
+                                    <option value="advisory">Advisory inquiry</option>
+                                    <option value="networking">Networking</option>
+                                    <option value="press_or_speaking">Press or speaking</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <span id="intent-error" class="form-error" hidden></span>
+                            </div>
+
                             <!-- Message field -->
                             <div class="form-field">
                                 <label class="form-label" for="message">Message</label>
