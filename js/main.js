@@ -181,6 +181,9 @@ const VALIDATION_MESSAGES = {
         empty: 'Please enter your email address.',
         invalid: 'That doesn\'t look like a valid email address.',
     },
+    intent: {
+        empty: 'Please select a type of inquiry.',
+    },
     message: {
         empty: 'Please include a message.',
         tooShort: 'Your message is a bit short — please add a few more words.',
@@ -242,6 +245,29 @@ const initContactForm = () => {
     form.querySelectorAll('input, textarea, select').forEach((field) => {
         field.addEventListener('blur', () => validateField(field));
     });
+
+    // -------------------------------------------------------------------------
+    // DYNAMIC _subject BY INTENT (SPEC-014 R7)
+    // WHY: Gmail filters key off subject lines, so we vary the _subject hidden
+    // input by selected intent. Falls back to the static value baked into the
+    // HTML if JS is disabled — Formspree still delivers with the default subject.
+    // -------------------------------------------------------------------------
+    const SUBJECT_BY_INTENT = {
+        hiring: 'New hiring opportunity from robcparker.com',
+        advisory: 'New advisory inquiry from robcparker.com',
+        networking: 'New networking message from robcparker.com',
+        press_or_speaking: 'New press/speaking inquiry from robcparker.com',
+        other: 'New message from robcparker.com',
+    };
+
+    const intentSelect = form.querySelector('#intent');
+    const subjectInput = form.querySelector('input[name="_subject"]');
+    if (intentSelect && subjectInput) {
+        intentSelect.addEventListener('change', () => {
+            const next = SUBJECT_BY_INTENT[intentSelect.value];
+            if (next) subjectInput.value = next;
+        });
+    }
 
     // -------------------------------------------------------------------------
     // SUCCESS STATE BUILDER
