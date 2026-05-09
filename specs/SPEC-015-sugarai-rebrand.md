@@ -965,4 +965,35 @@ Performed 2026-05-09 by the deployment pipeline agent against the live apex URL:
 
 ---
 
+## Post-Completion Retro (2026-05-09)
+
+Per CLAUDE.md SDD experimental mechanisms — a 2–3 minute capture of what went well, what surprised, and process observations from this run.
+
+### What went well
+
+- **SPEC-010 pattern reuse was effortless.** R6's ODT-edit + exiftool-verify + single-branch + reflow-guard pattern bound by reference in IG-3 without re-explaining. Five months and one spec since SPEC-010 codified it; the pattern is already compounding. The SDD bet on writing patterns down is paying.
+- **Pre-Implementation String Lock prevented every cross-artifact drift mode** that the SPEC-010 retrospective worried about. 21 LOCKs in one document; implementer + ODT-edit script ran straight through with zero re-wording.
+
+### What surprised
+
+- **The spec's R5 char count was wrong by 12 characters AND claimed a 1-char tolerance that doesn't exist.** Spec line 131: *"exactly 161 characters — within the 160-character convention used elsewhere in SPEC-013, with a 1-character tolerance acceptable per SPEC-013's tolerance."* Actual: 173 chars. SPEC-013 has no tolerance; its implementation log explicitly documents trimming 161 → 154 on this exact ground. Both halves of the spec's claim survived Spec Gate without anyone running `len()`. Caught at Arch Gate by independent verification — exactly the kind of catch the Arch Gate exists for.
+- **Marketing-copywriter strictly dominated the architect-reviewer's AG-1 option menu.** AR proposed three serious options (drop athenahealth keyword / drop the parenthetical / drop athenahealth + abbreviate). Marketing-copywriter found a fourth — drop the redundant "Engineering executive resume —" prefix — that landed at 154 chars while preserving all four ATS keywords AND the rebrand parenthetical. Pareto-dominant on every axis. AR alone would have shipped a measurably-worse outcome. Reinforces the "invoke specialists in parallel" default at Architecture Review for content specs.
+- **The apex/www host mismatch only surfaced at Deploy Gate.** Spec, Arch, QA all silently assumed `www.robcparker.com` was live because that's what every canonical/OG/sitemap tag says — live verification was the first thing that actually hit the host. Validates the "Deploy Gate is no longer dormant" framing from the `project_site_live.md` memory update earlier in this pipeline.
+
+### Process observations
+
+- **IG residual-count enumerations should be ranges, not singular numbers.** Arch Gate IG-1 predicted 11 expected SugarCRM residual matches; actual was 15. The 4-match gap was real and benign — LOCK-2 second-mention + LOCK-6 Director-migration bullet + 2 LOCK-3/LOCK-4 HTML-comment hygiene additions that AR didn't anticipate when writing IG-1. Code-reviewer caught it without confusion. For future content specs touching many surfaces, IG counts should be ranges (e.g., "11–16") rather than committed singletons that may need amendment at QA.
+- **Per-sentence-judgment delegations work — but only because copywriter actively extended the carve-out at lock-time.** Q3 carved out 3 historical-event sentences explicitly. Marketing-copywriter spotted a 4th (`resume.html:224` Director migration bullet) that fit the same pattern and locked it as no-edit (LOCK-6). Without that extension, the bullet would have shipped as "Migrated the Salesfusion platform to SugarAI infrastructure" — anachronistic. Confirms the SDD bet on giving copywriter judgment authority at the lock stage rather than enumerating exhaustively in the spec; also a reminder that lock-time is a real review pass, not a transcription pass.
+- **Deploy Gate verification needs the apex URL convention codified beyond memory.** Memory now carries the apex-vs-www distinction, but a human reading `governance/stack-quirks.md` would not see it. Worth a small follow-on edit to record there too — flagged as a candidate.
+
+### Counterfactual
+
+If R8 had not been dropped at Spec Gate, this pipeline would have added a publicly-unverifiable claim to the live site that any senior-exec hiring manager taking 90 seconds with the public CEO open letter could have falsified. The Spec Gate Q2 walkthrough caught it. Logged here as a positive data point for the Spec Gate's structured-question discipline (eight Spec-Gate questions, two with `MOOT — superseded` resolutions, none rubber-stamped).
+
+---
+
+*Retro drafted 2026-05-09 by sdd/learning-engine pipeline agent (inline, no separate file). Time-to-write: ~5 minutes (over the 2–3 minute target — first retro on this project, so structure was being figured out alongside the content; future retros should land closer to budget).*
+
+---
+
 *Drafted 2026-05-06 from Rob Parker's natural-language request following the SugarCRM rebrand to SugarAI.*
