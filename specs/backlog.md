@@ -27,6 +27,16 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 - **Status:** Idea — promotion-ready once profile is updated
 - **Date added:** 2026-04-26
 
+### Rebrand-credibility sentence — SugarAI platform attribution
+
+- **Source:** SPEC-015 R8 (originally drafted; dropped at Spec Gate 2026-05-08 per Q2 resolution).
+- **Origin:** Rob's SPEC-015 request asked for "a brief note somewhere within the existing language on the page to state that my AI-Native platform work set the stage for the rebrand to SugarAI." Dropped at Spec Gate because the public framing of the SugarAI rebrand (CEO open letter at `sugarclub.sugarai.com/engage/b/sugar-news/posts/sugarcrm-is-now-sugarai-an-open-letter-from-our-ceo`, published 2026-04-13) attributes the change to no specific platform, leader, or team — making any Rob-attributed credibility sentence publicly unverifiable. Per `feedback_credibility_signals_philosophy.md` memory, the existing capability copy ("directed teams that built and shipped SugarAI's multi-tenant AI platform on AWS Bedrock") is the publicly defensible signal; layering an explicit attribution sentence on top would have legitimacy-signal texture.
+- **Scope:** Single integrated sentence at `about.html:150` bio paragraph (PM-Spec original L2 recommendation), or alternatively at `resume.html:160` Summary as a tight clause. Wording draft (open for marketing-copywriter optimization at promotion): "That platform work set the stage for the company's 2026 rebrand to SugarAI." Avoid first-person possessive overclaim. Capability-signal phrasing only.
+- **Promotion trigger:** SugarAI publishes any of (a) a case study naming the multi-tenant AI platform, (b) a customer quote referencing it, (c) an interview / blog post / press piece naming engineering contributors, or (d) any public material that corroborates the platform-as-foundation framing. Any one of these makes the credibility sentence publicly verifiable to the senior-exec audience that takes 90 seconds to skim public material.
+- **Tier estimate:** Trivial
+- **Status:** Idea — deferred pending SugarAI corroborating public material
+- **Date added:** 2026-05-08
+
 ---
 
 ## How to use this file
