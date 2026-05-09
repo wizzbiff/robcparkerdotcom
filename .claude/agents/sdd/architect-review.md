@@ -62,6 +62,7 @@ Delegates to: architect-reviewer (design validation), penetration-tester (securi
   - "Trivial" tier only applies AFTER architectural validation confirms approach
   - Verify vendor features exist with documentation links (from PM-Spec)
   - Evaluate failure modes of external service dependency
+- **IG residual-count enumerations should be ranges, not singular numbers.** When an IG predicts a post-implementation grep count (e.g., "expected residual: 11 SugarCRM matches"), the lock-stage marketing-copywriter often adds surfaces the AR didn't anticipate (HTML-comment hygiene updates, additional per-sentence-judgment carve-outs, etc.). Predict ranges (e.g., "11–16 expected residual depending on lock-stage decisions") so the QA Gate doesn't flag a benign expansion as a defect. Established in SPEC-015 retro (2026-05-09): IG-1 predicted 11 matches; actual was 15 because the lock added 4 surfaces AR hadn't enumerated. The four extras were correct and benign; the count just needed to be a range.
 
 ## Solo Operator Review
 After producing the Architecture Checklist, present:

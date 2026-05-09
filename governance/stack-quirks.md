@@ -31,6 +31,8 @@ Note: `style-src` may need `'unsafe-inline'` for Turnstile's injected styles —
 
 Cloudflare Turnstile `api.js` can be blocked by corporate proxies or privacy extensions. Always pair the widget with a load-timeout fallback (8s is a reasonable default) so the form doesn't deadlock on a disabled submit button. Established in SPEC-004.
 
+The live URL is the **apex `https://robcparker.com/`**, not `www.robcparker.com` — the www subdomain returns HTTP 522 (Cloudflare connection timeout) and is NOT a working alias. Cloudflare Pages also strips `.html` extensions with 308 redirects (e.g., `/resume.html` → `/resume`); PDF and other non-HTML assets keep their extensions. For live-site verification, hit the apex with clean paths or use `curl -L` to follow the 308. The repo's existing `<link rel="canonical">` and OG/sitemap URLs still point to `www.robcparker.com/...html` — this mismatch is a real SEO concern logged as a `specs/backlog.md` candidate (canonical-tag / live-URL host mismatch). Established in SPEC-015 Deploy Gate (2026-05-09).
+
 ## Static Assets
 
 The `files/` directory at project root is the committed home for downloadable documents (PDFs, etc.), parallel to `images/`. Cloudflare Pages assigns `Content-Type: application/pdf` automatically by file extension — no `_headers` file required. Committed (not gitignored) so assets travel with every deploy. Established in SPEC-003.
