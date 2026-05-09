@@ -815,4 +815,103 @@ Post-export, Rob runs `exiftool files/rob-parker-resume.pdf` and confirms: Autho
 
 ---
 
+## QA Checklist
+
+**Stage owner:** sdd/implementer-tester pipeline agent
+**Specialist invocations:** marketing-copywriter (Pre-Implementation String Lock authorship; LOCK-2 / LOCK-18 judgment calls), code-reviewer (full-scope review). frontend-developer NOT invoked separately — pipeline agent applied HTML edits directly because every string was templated by the 21 LOCKs with no design judgment remaining (mirrors SPEC-013 reasoning).
+**Date:** 2026-05-08
+**Branch:** `spec/SPEC-015-sugarai-rebrand` @ commit `c328f8a`
+**PR:** https://github.com/wizzbiff/robcparkerdotcom/pull/17
+**Code-review verdict:** PASS (no blockers, no deferred notes)
+**Pipeline status:** Implementation complete; Rob's spot-check passed on dev server `127.0.0.1:8080`; ready for QA Gate approval.
+
+### Implementation Summary
+
+All 7 in-scope R-items shipped; R8 dropped at Spec Gate per Q2 (logged to `specs/backlog.md`). AG-1 resolved as recommended (option a, 154-char meta description). IG-6 optional gloss applied at LOCK-18.
+
+| R | Status | Files touched |
+|---|---|---|
+| R1 (naming convention) | Resolved at Spec Gate | Hybrid: Option B for resume role headers + meta tags; Option A for body copy; Q3 historical preserve for 3 acquisition-narrative sentences |
+| R2 (`index.html`) | ✅ Complete | 3 active edits (LOCK-8, LOCK-9, LOCK-11); 3 testimonial citations preserved per LOCK-10/Q4 |
+| R3 (`about.html`) | ✅ Complete | 3 active edits (LOCK-12, LOCK-13, LOCK-14); 1 preserve at LOCK-15 (Q3 carve-out) |
+| R4 (`advisory.html`) | ✅ Complete | 5 active edits (LOCK-16, LOCK-17, LOCK-18 with `(now SugarAI)` gloss, LOCK-19, LOCK-20) |
+| R5 (`resume.html`) | ✅ Complete | LOCK-1 (3 byte-identical meta tags); LOCK-2 Summary (split treatment); LOCK-3 + LOCK-4 role-company spans + matching HTML comments; LOCK-5 Senior Director bullet; LOCK-6 + LOCK-7 preserves |
+| R6 (PDF + ODT) | ✅ Complete | ODT repacked (mimetype-first-uncompressed); PDF regenerated via LibreOffice headless; `pdftotext` confirms 7 expected SugarAI/SugarCRM positions; exiftool baseline preserved (Author "Un-named", Creator "Writer", Producer "LibreOffice 24.2", Page Count 2) |
+| R7 (SPEC-012 coordination) | ✅ Complete | Case A path; one-line `↳ 2026-05-08 (SPEC-015 R7 follow-up)` appended below byte-identical original `OPERATOR-TODOS.md:72` entry |
+| R8 (rebrand-credibility sentence) | Dropped at Spec Gate | `specs/backlog.md` entry added per Q2 deferral |
+
+### Validation Results
+
+- **IG-10 coverage check:** `rg -ni 'sugarcrm' --glob '!specs/**' --glob '!*audit*' --glob '!OPERATOR-TODOS.md' --glob '!specs/backlog.md' --glob '!.git/**' --glob '!files/source/**'` returns **15 matches**, all traced to explicit LOCKs (3 testimonial citations [LOCK-10] + 3 historical-event sentences [LOCK-15, LOCK-6, LOCK-7] + 1 historical with gloss [LOCK-18] + 3 meta-tag parentheticals [LOCK-1] + 2 role-header span parentheticals [LOCK-3/LOCK-4 visible] + 2 role-header HTML-comment parentheticals [LOCK-3/LOCK-4 hygiene] + 1 Summary acquisition mention [LOCK-2 second mention]). No unexpected residual; no missed edits. ✓
+- **IG-2 byte-identity:** all three `resume.html` description tags carry the identical 154-char string (`<meta name="description">`, `<meta property="og:description">`, `<meta name="twitter:description">`). ✓
+- **PDF text content (LOCK-21 / R6):** `pdftotext` extraction confirms — Summary first mention `SugarAI's multi-tenant AI platform`; Summary second mention preserved `acquisition by SugarCRM`; Senior Director role header `SugarAI (formerly SugarCRM)`; Senior Director bullet `SugarAI product suite`; Director role header `SugarAI (formerly SugarCRM)`; Director bullet preserved `Salesfusion platform to SugarCRM infrastructure`; Salesfusion CTO bullet preserved `SugarCRM's acquisition of Salesfusion`. ✓
+- **PDF metadata (IG-4):** exiftool reports Author "Un-named", Creator "Writer", Producer "LibreOffice 24.2", Page Count 2. SPEC-010 baseline preserved. ✓
+- **HTML structural validation:** Python HTMLParser reports OK on all 5 HTML files (index, about, advisory, resume, contact); no leftover open tags. ✓
+- **HTML entity preservation:** `&rsquo;` retained on `resume.html:160` (`SugarAI&rsquo;s`) and `:237` (`SugarCRM&rsquo;s` historical preserve); `&mdash;` retained in 3 testimonial citation prefixes; `&ndash;` and `&middot;` in role-meta date/locality separators untouched. Em-dash on `advisory.html:226` is literal U+2014 per LOCK-18 spec. ✓
+- **OPERATOR-TODOS.md original line 72** is byte-identical to its prior state; new follow-up line appended below at line 77 (`↳ 2026-05-08 (SPEC-015 R7 follow-up)...`). Append-only edit confirmed per Q8. ✓
+- **No JS or CSS files touched.** `_headers`, `js/main.js`, `css/style.css` all return zero `sugar` matches. ✓
+- **`contact.html` not in scope; no edits.** ✓
+
+### Code-Review Notes
+
+**Verdict:** PASS — all 16 active LOCKs land character-for-character; all 5 preserved LOCKs unchanged; cross-artifact (HTML ↔ PDF ↔ ODT) consistency verified; zero security regressions; zero structural HTML changes; zero JS/CSS/`_headers` deltas. **No blockers, no notes to defer.** Mirrors SPEC-013 verdict pattern.
+
+Specific verifications by code-reviewer:
+- **LOCK-3 / LOCK-4 HTML-comment hygiene update** confirmed correctly applied (`<!-- Role 1: Senior Director of Engineering — SugarAI (formerly SugarCRM) -->` and equivalent at line 215). Comments are non-rendered but updated for source-readability per lock note.
+- **LOCK-18 gloss** at `advisory.html:226` preserves sentence rhythm: `Salesfusion into SugarCRM (now SugarAI) — code repositories...`. Em-dash literal (U+2014), not `&mdash;` entity.
+- **LOCK-2 split treatment** at `resume.html:160` correctly applies SugarAI to first mention (`built and shipped SugarAI's multi-tenant AI platform`) and preserves SugarCRM at second mention (`acquisition by SugarCRM`) per Q3 historical carve-out.
+- **WHY-comment audit:** no in-scope WHY-comment requirement missed. The LOCK-3 / LOCK-4 comment edits are role-identifier hygiene, not "why" comments.
+- **Conventions:** vanilla HTML/CSS/JS preserved; no new dependencies; mobile-first preserved; accessibility unchanged (`<cite>` markup, ARIA, focus order all untouched).
+
+### Files Changed
+
+| Type | Path |
+|---|---|
+| Modified | `index.html` |
+| Modified | `about.html` |
+| Modified | `advisory.html` |
+| Modified | `resume.html` |
+| Modified | `files/rob-parker-resume.pdf` (regenerated; metadata posture preserved) |
+| Modified | `files/source/Rob_Parker_Resume.odt` (repacked, mimetype-first-uncompressed) |
+| Modified | `OPERATOR-TODOS.md` (one-line append below byte-identical line 72) |
+| Modified | `specs/backlog.md` (R8 deferred-credibility entry added) |
+| New | `specs/SPEC-015-sugarai-rebrand.md` (this spec) |
+
+### Untouched (by design)
+
+`_headers`, `js/main.js`, `css/style.css`, `contact.html`, `sitemap.xml`, `robots.txt`, `images/`, `favicon*` — all confirmed zero `sugar` matches via grep.
+
+### Rob's QA Gate — Manual Checks
+
+Already completed by Rob on 2026-05-08 via local `python3 -m http.server` session at `127.0.0.1:8080`:
+
+1. ✅ **Browser smoke test on 4 edited pages** — `index.html`, `about.html`, `advisory.html`, `resume.html` rendered without console errors or layout breaks. Spot-check passed.
+2. ✅ **IG-5 mobile reflow check** — `.resume-role-company` `display: block` span wrap on `SugarAI (formerly SugarCRM)` confirmed acceptable at 768px and 480px breakpoints.
+3. ✅ **LOCK-18 adjacency reading** — `advisory.html` LOCK-17 → LOCK-18 sequential read confirmed the `(now SugarAI)` gloss reads naturally and resolves the adjacency tension.
+
+Post-deploy operator-todo (deferred to Deployment stage):
+- LinkedIn Post Inspector / opengraph.xyz preview test on `resume.html` (verifies the new 154-char meta description renders correctly in social shares; new SugarAI keywords picked up).
+- Verify Cloudflare Pages deploy succeeds post-merge; spot-check live URLs match locked text.
+- Update LinkedIn About summary to mirror site rename (out-of-repo; existing OPERATOR-TODOS.md item).
+
+### Effort Comparison
+
+| | AI-Assisted | Human Solo |
+|---|---|---|
+| Implementation + QA | ~25 minutes wall-clock (branch creation; ODT XML edit via Python with 4 string replacements; ODT repack with mimetype-first-uncompressed; LibreOffice headless PDF export; exiftool verification; pdftotext content verification; 16 sequential HTML edits across 4 files via Edit tool with literal em-dash discovery on first attempt at LOCK-18; OPERATOR-TODOS append; backlog entry; coverage-check grep; byte-identity grep; HTMLParser structural validation; commit; push; PR creation; QA Checklist drafting; one specialist invocation in parallel — code-reviewer for full-scope structured review including LOCK-by-LOCK character verification, cross-artifact HTML/PDF/ODT consistency check, security regression audit, WHY-comment audit, conventions audit) | 4-6 hours (read full spec including 21 LOCKs and Architecture Review IGs; learn ODT XML structure if not already familiar; figure out mimetype-first-uncompressed repack pattern from SPEC-010 docs; manually edit ODT or use LibreOffice GUI; export PDF and verify exiftool; manually apply 16 HTML edits across 4 files with copy-paste from locked strings; verify byte-identity of 3 meta tags; run coverage-check grep + reconcile expected residual; visually browser-test 5 pages at 3 breakpoints; review own code; write QA notes; create commit, push, PR) |
+| Test automation | N/A — no automated test suite exists in this project; visual / grep / structural verification only. |
+| Assumptions | Pipeline agent had full repo access, prior SPEC-010 ODT/PDF execution context (the same agent produced SPEC-010's ODT repack pattern), `exiftool` and `libreoffice --headless` installed, `python3` available. Single specialist invocation (code-reviewer); no frontend-developer / qa-expert / test-automator needed because the work was fully templated by the 21 LOCKs and code-reviewer covered the LOCK-verification + cross-artifact + security audit. |
+
+---
+
+*QA Checklist drafted 2026-05-08 by sdd/implementer-tester pipeline agent with marketing-copywriter and code-reviewer specialists. Pipeline complete; ready for Rob's QA Gate approval.*
+
+### QA Gate Approval
+
+**Decision:** Approved 2026-05-08
+**Gate owner:** Rob Parker
+**Approval note:** QA verified. All 7 in-scope R-items implemented; AG-1 honored (option a, 154-char meta description); IG-6 optional gloss applied at LOCK-18; R8 dropped per Spec-Gate Q2 with backlog candidate logged. IG-10 coverage check returns the expected 15 SugarCRM residual matches, all traced to explicit LOCKs (testimonials Q4 + historical preserves Q3 + Option-B parentheticals + LOCK-3/LOCK-4 HTML-comment hygiene). IG-2 byte-identity confirmed across 3 meta tags at 154 chars. R6 cross-artifact (HTML ↔ PDF ↔ ODT) consistency verified via `pdftotext` + exiftool (Author "Un-named" / Creator "Writer" / Producer "LibreOffice 24.2" / Page Count 2 — SPEC-010 baseline preserved). Code-reviewer verdict PASS with no blockers and no deferred notes — all 16 active LOCKs land character-for-character, all 5 preserved LOCKs unchanged, zero security regressions, zero structural HTML changes, zero JS/CSS/`_headers` deltas. Manual browser smoke test, IG-5 mobile reflow check on resume role-company spans (768px / 480px), and LOCK-18 advisory-page adjacency reading all confirmed by Rob via local `python3 -m http.server` session at `127.0.0.1:8080`. Spec advances to Deployment.
+
+---
+
 *Drafted 2026-05-06 from Rob Parker's natural-language request following the SugarCRM rebrand to SugarAI.*
