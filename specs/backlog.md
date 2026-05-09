@@ -27,6 +27,16 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 - **Status:** Idea — promotion-ready once profile is updated
 - **Date added:** 2026-04-26
 
+### Canonical-tag / live-URL host mismatch (apex vs. www)
+
+- **Source:** Discovered during SPEC-015 post-deploy verification 2026-05-09.
+- **Origin:** Live site serves at apex (`https://robcparker.com/`) but every page's `<link rel="canonical">` and OG/Twitter `url` tags point to `https://www.robcparker.com/...html`. The www subdomain returns HTTP 522 (Cloudflare connection timeout) — it is not a working alias. Search engines crawling the live URL see canonical signals pointing at a host that times out, which can suppress indexing or fragment ranking signal between the working apex and the dead www variant.
+- **Pre-existing:** NOT introduced by SPEC-015. Canonicals were established in SPEC-003 (resume), SPEC-004 (contact), SPEC-005 (advisory) and rounded out in SPEC-013 R8 (index, about). All five specs predate the live Cloudflare Pages connection (2026-05-01 through 2026-05-08), so the www framing reflected the original deploy assumption.
+- **Scope:** Two coordinated changes likely needed: (1) update every `<link rel="canonical">`, `<meta property="og:url">`, `<meta property="og:image">`, `<meta name="twitter:image">`, and any other absolute-URL references across `index.html`, `about.html`, `advisory.html`, `resume.html`, `contact.html` from `https://www.robcparker.com/...` to `https://robcparker.com/...`; (2) update `sitemap.xml` `<loc>` entries similarly; (3) decide whether to also strip `.html` from the canonical paths to match Cloudflare's clean-URL behavior (`/resume.html` 308-redirects to `/resume`) or leave `.html` as the canonical form; (4) update Person JSON-LD `image` and `url` to apex; (5) confirm `governance/stack-quirks.md` / SPEC-013 has the apex convention recorded as the source of truth going forward. Alternative: configure Cloudflare to accept both apex and www (DNS / Cloudflare Pages domain config), then keep canonicals as-is — but that is operator work, not a spec.
+- **Tier estimate:** Standard. Multi-component (~10 absolute-URL surfaces across 5 HTML files + sitemap.xml + JSON-LD blocks); SEO-load-bearing; needs a single coherent migration so canonical / OG / sitemap stay consistent.
+- **Status:** Idea — ready to promote (no blocker; Rob's call on whether to fix in code or fix at the Cloudflare DNS layer).
+- **Date added:** 2026-05-09
+
 ### Rebrand-credibility sentence — SugarAI platform attribution
 
 - **Source:** SPEC-015 R8 (originally drafted; dropped at Spec Gate 2026-05-08 per Q2 resolution).
