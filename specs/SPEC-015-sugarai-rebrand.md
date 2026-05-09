@@ -914,4 +914,55 @@ Post-deploy operator-todo (deferred to Deployment stage):
 
 ---
 
+## Deployment
+
+**Stage owner:** sdd/deployment pipeline agent
+**Date:** 2026-05-09
+**Tier:** Standard — brief checklist per `sdd/deployment.md` (no specialist agents invoked; static-site deployment is a merge to `main` triggering Cloudflare Pages auto-deploy).
+
+### Release strategy
+
+Cloudflare Pages auto-deploy on merge to `main`. Deployment = merging PR #17 (https://github.com/wizzbiff/robcparkerdotcom/pull/17). No staged rollout, no feature flags, no database migrations — content + meta + PDF only. Per `project_site_live.md` memory, the site has been live since 2026-05-01–08 and every main merge is a real production deploy.
+
+### Pre-merge checklist
+
+- [x] All prerequisite gates approved (Spec 2026-05-08, Arch 2026-05-08, QA 2026-05-08)
+- [x] Implementation on correct feature branch (`spec/SPEC-015-sugarai-rebrand`, not main, not another spec)
+- [x] PR open at https://github.com/wizzbiff/robcparkerdotcom/pull/17
+- [x] Two commits on the branch — `c328f8a` (implementation R2-R7) + `80d81c7` (QA Checklist + QA Gate approval)
+
+### Rollback procedure
+
+`git revert` the merge commit on `main`, push → Cloudflare Pages auto-deploys the revert. PDF + ODT artifacts revert cleanly because they're committed in-repo.
+
+### Post-deployment verification
+
+Performed 2026-05-09 by the deployment pipeline agent against the live apex URL:
+
+- **HTML meta tags (live `https://robcparker.com/resume`):** all three byte-identical with the locked 154-char SugarAI string. Verified via `curl -sL https://robcparker.com/resume.html | grep -E '"description"|"og:description"|"twitter:description"'`. ✓
+- **PDF text content (live `https://robcparker.com/files/rob-parker-resume.pdf`):** all 7 expected positions match — 4 active SugarAI edits (Summary first mention, both role headers, product suite bullet) + 3 historical SugarCRM preserves (Summary acquisition, Director migration bullet, Salesfusion CTO bullet). Verified via `pdftotext` extraction. ✓
+- **PDF metadata (live):** Author "Un-named" / Creator "Writer" / Producer "LibreOffice 24.2" / Page Count 2 — SPEC-010 baseline preserved through Cloudflare Pages without alteration. ✓
+
+### Findings discovered during verification (logged for future work)
+
+- **`project_site_live.md` memory updated 2026-05-09:** added apex-vs-www distinction (apex `robcparker.com` is the only working host; www returns HTTP 522) and Cloudflare clean-URL behavior (`.html` files 308-redirect to clean paths). These are operational facts that affect every future post-deploy verification.
+- **`specs/backlog.md` candidate added 2026-05-09:** "Canonical-tag / live-URL host mismatch (apex vs. www)" — every page's `<link rel="canonical">` + OG/Twitter `url` tags + sitemap.xml `<loc>` entries point to `https://www.robcparker.com/...html`, but the live host is the apex (`robcparker.com`). Pre-existing (not introduced by SPEC-015), but real SEO concern. Promotion-ready as a Standard-tier follow-on spec.
+
+### Operator-todos (post-deploy, out of repo)
+
+- LinkedIn Post Inspector / opengraph.xyz preview test on live URL `https://robcparker.com/resume` — confirms the new 154-char meta description renders in social shares.
+- Update LinkedIn About summary to mirror the SugarCRM → SugarAI rename for the LinkedIn ↔ resume ↔ site three-artifact alignment audit (existing OPERATOR-TODOS.md item, can now reference SPEC-015 as the codebase precedent).
+
+### Deploy Gate Approval
+
+**Decision:** Approved 2026-05-09
+**Gate owner:** Rob Parker
+**Approval note:** PR #17 merged to main 2026-05-09 (merge commit `d1fc2b4`). Cloudflare Pages auto-deploy completed within ~1-2 minutes (typical propagation per `project_site_live.md`). Live verification confirmed against apex `https://robcparker.com/`: all three resume.html meta tags carry the locked 154-char SugarAI string byte-identically; live PDF text content matches all 7 LOCK-21 surfaces (4 active edits + 3 Q3 preserves); live PDF metadata posture preserved (Author "Un-named", Creator "Writer", Producer "LibreOffice 24.2", Page Count 2). Two findings discovered during verification logged for future work (memory update + backlog candidate per above). SPEC-015 pipeline complete — Spec → Arch → QA → Deploy all approved.
+
+---
+
+*Deployment stage drafted 2026-05-09 by sdd/deployment pipeline agent. Deploy Gate approved 2026-05-09. SPEC-015 complete.*
+
+---
+
 *Drafted 2026-05-06 from Rob Parker's natural-language request following the SugarCRM rebrand to SugarAI.*
