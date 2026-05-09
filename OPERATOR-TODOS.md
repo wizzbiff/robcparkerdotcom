@@ -74,6 +74,7 @@ The audit (lines 207, 308-310) is direct: "two or three inbound links from prope
   - **Priority:** Important (blocking dependency for SPEC-012 R2).
   - **Effort:** ~1 hour if SVG available across the board; multi-day if recreation needed for 1-2 of the older companies.
   - **Note:** if any one logo cannot be sourced cleanly, ship SPEC-012 R2 with five logos rather than six (or defer R2 entirely per Spec-Gate Q8). Do not block the entire spec on a single missing asset.
+  - ↳ **2026-05-08 (SPEC-015 R7 follow-up):** SugarCRM rebranded to SugarAI as of 2026-04-13. When SPEC-012 R2 picks up, source the **SugarAI** brand asset for the most-recent (leftmost) logo slot, not SugarCRM. The SPEC-012 R2 spec text still references `sugarcrm_logo.jpeg` — implementer renames to `sugarai_logo` and updates alt text to "SugarAI" on pickup. Original line above preserved for audit trail per Q8.
 
 - [ ] **Branded OG card design** for SPEC-013 R3.  Already inside SPEC-013 with `graphic-artist` invocation, but production may run multi-day. If the card is not ready by SPEC-013 deploy, the spec ships with the headshot URL placeholder and a follow-on trivial spec swaps the URL once the card is delivered.
   - **Source:** audit line 206; SPEC-013 R3 + Q1.
