@@ -1,9 +1,9 @@
 # SPEC-017: Repo Scrub Pass — Precondition for SPEC-016
 
-**Status:** Arch Gate approved 2026-05-11 — implementation may begin (gated on R0 pre-flight including the new email-verification pre-step)
+**Status:** Implementation complete 2026-05-11 — repo scrubbed; awaiting operator visibility-flip per R11 (tracked in local OPERATOR-TODOS.md)
 **Tier:** Standard (destructive git operation + visibility-change precondition; irreversible without backup; confirmed at Spec Gate; re-confirmed at Arch Gate)
-**Author:** PM-Spec Agent (derived from SPEC-016 Q3 resolution 2026-05-08; decisions resolved with Rob in conversation 2026-05-11; Spec Gate walkthrough 2026-05-11; Arch Gate review 2026-05-11)
-**Date:** 2026-05-11 (Spec Gate approved 2026-05-11; Arch Gate approved 2026-05-11)
+**Author:** PM-Spec Agent (derived from SPEC-016 Q3 resolution 2026-05-08; decisions resolved with Rob in conversation 2026-05-11; Spec Gate walkthrough 2026-05-11; Arch Gate review 2026-05-11; implementation 2026-05-11)
+**Date:** 2026-05-11 (Spec Gate approved 2026-05-11; Arch Gate approved 2026-05-11; Implementation 2026-05-11)
 **Branch:** `spec/SPEC-017-repo-scrub` (to be created at implementation start)
 
 ---
@@ -476,3 +476,50 @@ Architect Review stage invoked `architect-reviewer` (Layer 2 design validation) 
 **Arch Gate Decision:** Approved 2026-05-11 with conditions absorbed — implementation may begin.
 
 **Arch Gate annotation:** Two-reviewer parallel invocation pattern (architect-reviewer + penetration-tester) for a destructive operator-tool spec. Pen-tester independently verified the spec's "no API keys, no PII, no credentials" assertion by reading all three target files — confirmed. Architect-reviewer caught the R8.5-numbering execution-order ambiguity that would have caused R10.7 to execute prematurely. The two reviewers converged on the same conclusion via independent paths: Approve, with mandatory fixes that are mechanical not scope-changing. The two operator decisions (G2 closed-PR audit; G3 author-email normalization target) were resolved with Rob in conversation; the Arch Gate did not surface any decision that required a return to Spec Gate. Per `feedback_ig_residual_counts_as_ranges.md` memory and the stack-quirks rule, R9 outcomes were re-framed as ranges at this gate. The destructive-action protocol from `CLAUDE.md` is fully internalized through three explicit verification layers: R3/R4 backups, R6/R8a verification, R10.7 explicit irreversibility threshold.
+
+## Implementation Notes (2026-05-11)
+
+Implementation executed step-by-step over a single session with operator confirmation at each destructive threshold (R5, R8, R10.7). The procedure ran cleanly; no R4-tarball recovery was needed. Three in-flight findings emerged during execution and were resolved without scope expansion.
+
+### In-flight findings resolved during implementation
+
+**Finding 1 (during R9a.7 spot-check): SPEC-017 itself contained 4 absolute `/home/robparker/...` paths in operator-procedure documentation.** The same kind of operator-private texture the spec was designed to remove. Resolved by sanitizing 3 of the 4 paths to `~/...` form (R4 tar target, R7 restore path, R10.7 recovery `cd`) and updating R9a.7's expected range from "0 matches" to "0–1 matches" to allow the one remaining self-reference (the literal grep pattern description). Required one additional commit-and-push on main (`79a166e`, later amended). Per Rob's decision in R9 walkthrough.
+
+**Finding 2 (during R10.5 verification, retrospectively visible in R9b): R9 raw-match counts substantially exceeded predicted ranges.** Predicted vs. actual: secret-pattern HEAD 5–25 vs. 156; Formspree 1–4 vs. ~15; emails 3–15 vs. ~22; history-wide secrets 30–200 vs. 233. The relevant assertion ("0 true positives") held in every case. The prediction ranges were too narrow for a content-rich documentation repo with extensive policy/security/CSS-token text. **For retro:** the IG-residual-ranges rule worked as intended (asserting on "0 true positives" not raw count), but the predicted raw-count ranges should be wider on docs-heavy repos. Suggest adding to `governance/stack-quirks.md`: "for spec-rich repos, expect R9-style grep counts in the hundreds rather than the dozens; the relevant assertion is true-positive count, not raw count."
+
+**Finding 3 (during final author-email verification): post-R5 commit `79a166e` re-introduced `rob.c.parker@gmail.com` as author email.** The R5 `--email-callback` normalized all PRIOR commits to `contact@robcparker.com`, but the path-sanitization commit made AFTER R5 used the unchanged local `git config user.email`, which still pointed at the gmail address. Resolved by: (a) `git config user.email contact@robcparker.com` to update local config, (b) `git commit --amend --reset-author --no-edit` on the affected commit, (c) `git push origin main --force-with-lease`. Final state: ONE author email (`contact@robcparker.com`) across all history; commit SHAs `79a166e` → `9a81725`. **For retro / stack-quirks:** "after `git filter-repo --email-callback` rewrites history, update local `git config user.email` BEFORE making any new commits, or new commits will re-introduce the previous author identity. Add to operator procedure for any future history-rewrite spec."
+
+### Other implementation notes
+
+**`gh pr edit --body-file` failed silently** when applying R9c PR-body redactions (likely tied to the Projects-classic GraphQL deprecation surfacing as warnings). Direct REST API call via `gh api repos/.../pulls/<N> -X PATCH -F body=@<file>` worked. **For stack-quirks:** "prefer `gh api ... -X PATCH -F body=@<file>` over `gh pr edit --body-file` for programmatic PR body edits; the latter has a fragile dependency on Projects-classic metadata that may fail silently."
+
+**Local `refs/remotes/origin/spec/SPEC-015-sugarai-rebrand` stale tracking ref** existed at R0 but pointed at a server-side branch that had already been deleted at PR-merge time. Harmless (won't push), cleaned via `git remote prune origin` post-R10.7.
+
+**Cloudflare Pages auto-deploy** triggered automatically on every push (R8 force-push, path-sanitization push, amend force-push). No manual no-op-commit fallback needed. Each deploy produced byte-identical site output since no site assets changed. R10.5 verification confirmed `https://robcparker.com/` returns 200 with intact rendering after R8.
+
+### Final implementation state (2026-05-11)
+
+- **Local main HEAD:** `9a81725` (after the amend-and-force-push fix for Finding 3)
+- **Origin main HEAD:** matches local; backup branch deleted (R10.7)
+- **Origin branches:** only `main`
+- **Author email across all history:** `contact@robcparker.com` (single identity)
+- **Three scrubbed files:** absent from HEAD, all history, all server-side refs, all PR bodies, all PR/issue comments
+- **Local-only artifacts:** three files restored to working tree (gitignored); R4 tarball at `~/Documents/robcparkerdotcom-git-backup-2026-05-11.tar.gz` (2.0 MB); off-tree copies at `~/Documents/local-only/robcparker-private/`
+- **Repo visibility:** PRIVATE (per D4; visibility flip is the next operator action, tracked in local OPERATOR-TODOS.md R11 entry)
+- **`.git/filter-repo/` metadata:** cleaned (step 17)
+
+### QA Checklist status (2026-05-11)
+
+All items from the QA Verification section above passed. Notable:
+
+- Pre-flight: ALL 6 checks passed (target-file edit check empty, no open PRs, only `main` server-side, fork count 0, `contact@robcparker.com` GitHub-verified, `git filter-repo --version` returns a version).
+- Backup protocol: 3 backups verified (off-tree copies + origin backup branch + local tarball).
+- History rewrite verification: 3 target-file `git log` calls empty; 73 commits rewritten cleanly; author email normalized; recent SPEC-* messages preserved.
+- Spot-check sweep: R9a/R9b/R9c all clean (0 true positives; 1 known self-reference in R9a.7 documented; 2 PR bodies redacted).
+- Gitignored items: `specs/scratch/` and `.claude/settings.local.json` confirmed never historically committed.
+- Cloudflare integration: site returns 200; rendering intact.
+- Point of no return: backup branch deleted from origin; `gh api .../branches` returns only `main`.
+- Operator follow-on: visibility-flip entry added to local OPERATOR-TODOS.md under new "SDD pipeline preconditions" section.
+- Close state: repo still PRIVATE — as designed per D4.
+
+**QA Gate Decision:** Approved 2026-05-11 — SPEC-017 implementation complete. The next operator action is the visibility flip per R11 (local OPERATOR-TODOS.md), which unblocks SPEC-016 implementation.
