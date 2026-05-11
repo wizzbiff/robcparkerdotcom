@@ -1,8 +1,8 @@
-# Professional website for Rob Parker and future product platform
+# Professional website for Rob Parker
 
-Deployed here: https://www.robcparker.com/
+Deployed here: https://robcparker.com/
 
 ### Methodology
-**Spec-Driven Development** — An AI-native methodology that makes delivery metrics move.
+Built using spec-driven-development
 - `CLAUDE.md` — Complete SDD methodology reference, project conventions, and development workflow
 
