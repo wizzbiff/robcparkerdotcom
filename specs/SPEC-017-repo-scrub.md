@@ -112,7 +112,7 @@ This preserves the pre-rewrite state on the remote as a recoverable reference, i
 ### R4: Local `.git` directory tarball backup
 
 ```
-tar -czf ~/Documents/robcparkerdotcom-git-backup-2026-05-11.tar.gz -C /home/robparker/Documents/dev/robcparkerdotcom .git
+tar -czf ~/Documents/robcparkerdotcom-git-backup-2026-05-11.tar.gz -C ~/Documents/dev/robcparkerdotcom .git
 ```
 
 A complete local backup of the pre-rewrite `.git` directory. If anything goes wrong mid-rewrite, restoring is `tar -xzf` over the corrupted `.git`.
@@ -162,7 +162,7 @@ This confirms the commit graph above is preserved (SPEC-* commit messages, dates
 ### R7: Restore local copies into the working tree
 
 ```
-cp ~/Documents/local-only/robcparker-private/*.md /home/robparker/Documents/dev/robcparkerdotcom/
+cp ~/Documents/local-only/robcparker-private/*.md ~/Documents/dev/robcparkerdotcom/
 git status
 ```
 
@@ -208,7 +208,7 @@ Per SPEC-016 Q3 resolution, the shipped specs (SPEC-001 → SPEC-015), `CLAUDE.m
 - **Tracked secret-file paths:** `git ls-files | grep -E '(\.env|\.secret|\.key|secrets/)'` — expect empty.
 - **Turnstile site key:** `grep -rEn '0x4AAAA[A-Za-z0-9_]+' .` — expect 2–4 matches across `contact.html`, `js/main.js`, SPEC-004; all legitimate (site keys are designed for public exposure). Per Pen-test G3.
 - **AI / cloud API key patterns:** `grep -rEn '(AKIA|sk-[a-zA-Z0-9]{20,}|sk_live_|sk_test_|claude-[a-z0-9])' --include='*.md' --include='*.html' --include='*.js'` — expect 0 matches. Per Pen-test G3.
-- **Absolute home paths:** `grep -rn '/home/robparker' .` — expect 0 matches post-scrub (the few historical instances were in OPERATOR-TODOS.md, removed by R5). Per Pen-test G3.
+- **Absolute home paths:** `grep -rn '/home/robparker' .` — expect 0–1 matches post-scrub (the few historical instances were in OPERATOR-TODOS.md, removed by R5; one allowed self-reference in this very pattern description). Per Pen-test G3.
 
 **R9b — History-wide sweep:**
 
@@ -276,7 +276,7 @@ git push origin --delete backup/pre-scrub-2026-05-11
 
 **Origin-side recovery procedure (if needed post-R10.7):**
 
-1. `cd /home/robparker/Documents/dev/robcparkerdotcom`
+1. `cd ~/Documents/dev/robcparkerdotcom`
 2. `rm -rf .git`
 3. `tar -xzf ~/Documents/robcparkerdotcom-git-backup-2026-05-11.tar.gz -C .`
 4. Verify: `git log -1` shows the pre-rewrite HEAD.
