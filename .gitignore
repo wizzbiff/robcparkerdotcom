@@ -19,3 +19,17 @@ secrets/
 # WHY: Working-area scratch for spec drafts (e.g., arch-review notes, design
 # concept dumps). Tracked artifacts go under specs/ proper.
 specs/scratch/
+
+# WHY: Internal operator + audit docs (SPEC-017). Kept local for reference;
+# removed from public repo per SPEC-017 history rewrite. Local copies live
+# alongside the working tree but are not tracked. These files contain
+# operator-voice notes and candid audit content not intended for public view.
+OPERATOR-TODOS.md
+robcparker_com_audit.md
+website_audit_prompt.md
+
+# WHY: Claude Code per-session settings (approved bash commands, MCP state).
+# Already gitignored at user-global level; moved to repo-level for
+# defense-in-depth so the file cannot be accidentally committed from a
+# different machine or by a future contributor (SPEC-017 Pen-test G5).
+.claude/settings.local.json
