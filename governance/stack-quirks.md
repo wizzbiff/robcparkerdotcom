@@ -93,6 +93,8 @@ img.resize((800, 800), Image.LANCZOS).save(
 
 **`git filter-repo` removes the `origin` remote** as a safety measure during the rewrite. Re-add with `git remote add origin <url>`, then `git fetch origin` to refresh the `--force-with-lease` reference, before the force-push. Established in SPEC-017 R5 → R8.
 
+**`git filter-repo` also strips branch tracking config** along with the origin remote. After R8's `git remote add origin` + `git push --force-with-lease`, the remote URL is back but `branch.main.remote` and `branch.main.merge` are still unset — the next `git pull` will fail with "no tracking information for the current branch." Restore with `git branch --set-upstream-to=origin/main main` (or use `git push -u origin main` on the force-push to set tracking in the same step). Established in SPEC-017 post-implementation (surfaced when `git pull` failed after R10.7).
+
 ## GitHub CLI
 
 **`gh pr edit --body-file` fails silently** on some closed PRs — likely tied to the Projects-classic GraphQL deprecation. The only signal is a stray deprecation warning (`Projects (classic) is being deprecated...`), exit code is 0, and the PR body remains unchanged. Prefer `gh api repos/<owner>/<repo>/pulls/<N> -X PATCH -F body=@<file>` for programmatic PR body edits, and always verify-after-write (`gh pr view <N> --json body | jq ...`). Established in SPEC-017 R9c (closed PR body redactions for PR #12 and #17).
