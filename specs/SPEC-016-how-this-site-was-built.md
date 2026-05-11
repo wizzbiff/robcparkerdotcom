@@ -95,12 +95,14 @@ Spec Gate (2026-05-08) resolved Q2 to **Main nav placement**. Rationale: this pa
 **Implementation (replaces draft footer + bio plan):**
 
 - Add a new nav item **"How It's Built"** (3 words; shorter than the page H1 to fit the existing nav rhythm) to the main nav across all six pages: `index.html`, `about.html`, `resume.html`, `contact.html`, `advisory.html`, and the new `how-this-site-was-built.html`.
-- Recommended position in the nav order: **between Resume and Contact** (Home → About → Resume → How It's Built → Contact → Advisory). Rationale: keeps the candidate-evaluation path (Home → About → Resume) clean as the first three items, places the methodology page just before the conversion CTA (Contact), and respects SPEC-011's deliberate placement of Advisory after Contact. `ui-designer` confirms order at implementation; can shift if it visually breaks the nav row at a specific breakpoint.
-- Active-page highlighting follows the existing `js/main.js` pattern (the active page gets the active class on its nav item).
+- **Corrected nav baseline (Arch Gate 2026-05-11):** the current production nav is **4 items** (`Home · About · Resume · Contact`), NOT 5. Advisory was removed from main nav AND footer by SPEC-011. Post-SPEC-016 nav is **5 items**: `Home → About → Resume → How It's Built → Contact`. **No Advisory in the nav** — SPEC-011's referral-only placement is preserved.
+- Position in the nav order: **between Resume and Contact**. Rationale: keeps the candidate-evaluation path (Home → About → Resume) clean as the first three items, places the methodology page just before the conversion CTA (Contact).
+- Active-page highlighting follows the existing `js/main.js` `initActiveNav()` pattern. No JS changes required; the function uses pathname matching, so the new page's nav item receives the active class automatically.
+- New `<li>` markup must match existing items byte-for-byte: `<li><a href="how-this-site-was-built.html">How It's Built</a></li>` — **no `class="nav-link"`** (existing items don't carry this class; including it breaks byte-equality verification).
 - No footer entry added (would be redundant with nav).
 - No about-page-bio inline link added (also redundant).
 
-**Mobile considerations:** the existing main nav at the 480px / 768px breakpoints uses a hamburger toggle with a stacked menu. A sixth menu item adds one row to the stacked menu — no layout impact beyond a slightly taller drawer. `ui-designer` confirms.
+**Mobile considerations:** the existing main nav at the 480px / 768px breakpoints uses a hamburger toggle with a stacked menu. A fifth menu item adds one row to the stacked menu — no layout impact beyond a slightly taller drawer. UI-designer Arch Gate review confirmed: nav fits comfortably at all breakpoints (≥1024px: trivial; 768–1023px: ~620px nav width in ~720px available space; ≤767px: hamburger drawer; "How It's Built" at 14 chars does not wrap).
 
 **Original options table (preserved for traceability):**
 
@@ -123,10 +125,10 @@ The page has **eight sections** in the following order. Each section is a draft 
 
 #### Section 1: Hero
 
-- Headline: "How This Site Was Built" (or per Q1 slug decision — same text either way).
-- Subheadline: One sentence framing the page. Draft: "A working portfolio of AI-native engineering practice. Every page on this site was specified, reviewed, built, and tested through a Spec-Driven Development pipeline running on Claude Code agents."
-- Two CTAs (matching SPEC-008 hero pattern): primary "See the Pipeline" (anchor link to Section 3), secondary "View the Specs on GitHub" (external link to repo, opens in new tab — `target="_blank" rel="noopener noreferrer"`).
-- **Decision required at Spec Gate (Q3):** does Rob want the GitHub link to point at the public repo? If yes, confirm the repo is public. If no, drop the GitHub CTA and replace with anchor to Section 8 (Future Evolution).
+- Headline: "How This Site Was Built" (per Q1 slug decision).
+- **Subheadline (Arch Gate selection, marketing-copywriter primary):** Two-line treatment. Line 1: *"Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production. No slidedeck. No hypothetical."* Line 2: *"Below is how it works, what's stable, and what I'm still figuring out."* (Marketing-copywriter at lock-stage may make minor edits but the "No slidedeck. No hypothetical." beat is load-bearing for the differentiation signal and should not be cut.)
+- Two CTAs (matching SPEC-008 hero pattern): primary **"See the Pipeline"** (anchor link to `#pipeline` — Section 3), secondary **"Browse the Pipeline Specs on GitHub"** (external link to repo, opens in new tab — `target="_blank" rel="noopener noreferrer"`, plus `aria-label="… (opens in new tab)"` per contact.html LinkedIn pattern).
+- **Q3 resolved by SPEC-017 (2026-05-11):** repo is public; hero GitHub CTA wires directly. Pre-Arch-Gate concern eliminated.
 
 #### Section 2: Why this page exists
 
@@ -140,7 +142,7 @@ Two short paragraphs. Draft outline:
 
 #### Section 3: The SDD Pipeline
 
-A horizontal flow diagram (R4) showing the seven-stage pipeline:
+A horizontal flow diagram (R4) showing the **9-node pipeline (5 stages + 4 gates)**:
 
 ```
 PM-Spec → Spec Gate → Architect-Review → Arch Gate → Implementer-Tester → QA Gate → Deployment → Deploy Gate → Production
@@ -240,15 +242,16 @@ A simple block at page bottom: a one-sentence framing of the page as portfolio +
 - `graphic-artist` agent at implementation produces the SVG markup; `ui-designer` reviews layout integration.
 
 **Pipeline diagram (Section 3):**
-- Horizontal seven-step flow: rounded rectangles for stages, arrows between them, gate diamonds (or alternate shape) at decision points (Spec Gate, Arch Gate, QA Gate, Deploy Gate).
-- Color treatment per existing design tokens (`--primary-color`, `--accent-color`, `--secondary-color` per CLAUDE.md).
-- Mobile breakpoint: at ≤768px, the diagram reflows vertically rather than horizontally to remain readable.
-- ARIA: `<svg role="img" aria-labelledby="pipeline-diagram-title pipeline-diagram-desc">` with `<title>` and `<desc>` elements describing the diagram for screen readers.
+- Horizontal **9-node flow** (5 stages + 4 gates, terminating at Production): rounded rectangles for stages (`--color-surface-elevated` fill, `--color-border-hairline` 1px stroke); gate diamonds at decision points (Spec Gate, Arch Gate, QA Gate, Deploy Gate) with `--color-magenta-muted` fill; arrows in `--color-border-hairline`; Production terminal node uses `--color-charcoal` fill with `--color-text-on-dark` label text (visually anchors the diagram terminus).
+- **Color treatment per actual current design tokens** (Arch Gate correction — CLAUDE.md is stale): use `--color-surface-elevated`, `--color-magenta-muted`, `--color-charcoal`, `--color-border-hairline`, `--color-text-primary`, `--color-text-on-dark`. The legacy alias tokens `--primary-color`/`--secondary-color`/`--accent-color` referenced in CLAUDE.md were removed in SPEC-008 A-7 + SPEC-009 R2; do not reference them in implementation. Full token mapping table is in the Arch Gate Resolutions section below.
+- Mobile breakpoint: at ≤768px, the diagram reflows vertically rather than horizontally via the **duplicate-SVG approach** (one horizontal SVG with `class="diagram-desktop"`, one vertical SVG with `class="diagram-mobile"`, toggled via CSS `@media (max-width: 768px)`). Each variant has independent `<title>` and `<desc>` ARIA scaffold.
+- ARIA: `<svg role="img" aria-labelledby="pipeline-diagram-title pipeline-diagram-desc" focusable="false">` with `<title>` and `<desc>` elements describing the diagram for screen readers. Wrap each SVG in `<figure>` with `<figcaption>` carrying a one-line caption ("Figure 1: The SDD Pipeline" or similar).
 
 **Two-layer architecture diagram (Section 4):**
-- Two horizontal "swim lanes" — top lane = Layer 1 pipeline agents, bottom lane = Layer 2 specialist agents.
-- Connecting lines (or arrow patterns) showing which Layer 1 agents invoke which Layer 2 agents.
-- Same color/responsive/ARIA conventions as the pipeline diagram.
+- Two horizontal "swim lanes" — top lane = Layer 1 pipeline agents (5 agents: PM-Spec, Architect-Review, Implementer-Tester, Deployment, Learning-Engine), bottom lane = Layer 2 specialist agents (11 agents).
+- **Simplified to 3 representative invocation arrows** (Arch Gate / graphic-artist finding): NOT a full invocation graph. Recommended arrows: (1) PM-Spec → marketing-copywriter (labeled "content-heavy specs"); (2) Implementer-Tester → frontend-developer + qa-expert + test-automator (fan of 3 arrows); (3) Architect-Review → penetration-tester (labeled "security-sensitive specs"). Figcaption clarifies "example invocations" so reader understands these are representative, not exhaustive.
+- Mobile variant simplifies further: drop invocation arrows entirely, show two labeled groups (Layer 1 with 5 agents, Layer 2 with 11 agents).
+- Same color/responsive/ARIA conventions as the pipeline diagram. Layer 1 boxes use `--color-magenta-muted` fill (parallel to gate-node treatment — signals "orchestration layer"); Layer 2 boxes use `--color-surface-elevated` (signals "execution layer").
 
 **Diagram authoring sequence:**
 1. `graphic-artist` produces SVG drafts for both diagrams (likely 1–2 iterations to get layout balance right).
@@ -284,13 +287,16 @@ Three options:
 
 **Per SPEC-013 SEO conventions** (`governance/stack-quirks.md` SEO entry):
 
-- `<meta name="description">` — drafted: "How robcparker.com is built using a Spec-Driven Development pipeline of Claude Code agents. The two-layer agent architecture, the gate system, and the experimental mechanisms behind the methodology." (~158 chars; marketing-copywriter optimizes for ≤ 160).
+- `<meta name="description">` — **Arch Gate revised (original draft was 197 chars / 37 over budget):** *"robcparker.com is built on a Spec-Driven Development pipeline of Claude Code agents — two-layer architecture, gate system, and honest notes on what's rough."* (157 chars). The phrase "honest notes on what's rough" is intentional positioning — telegraphs Section 7's frank tone and serves as a curiosity hook differentiating from standard methodology pages.
 - `<meta property="og:title">` — "How This Site Was Built — Rob Parker"
 - `<meta property="og:description">` — same as meta description.
-- `<meta property="og:image">` — new OG card generated per SPEC-013's Pillow recipe. `graphic-artist` produces the OG card design; `frontend-developer` runs the recipe.
-- `<meta property="og:url">` — `https://www.robcparker.com/how-this-site-was-built.html`
+- `<meta property="og:image">` — new OG card at `images/og/og-card-how-this-site-was-built.png`. Production via new script at `images/source/og/og-card-how-this-site-was-built.py` following the SPEC-013 `og-card.py` Pillow + fontTools pattern (per `governance/stack-quirks.md` Image Optimization section). **Direction A** (typographic + pipeline silhouette): charcoal background, Fraunces title, magenta footer stripe, token-grid glyph at upper right, simplified pipeline silhouette (7-node mini-diagram) at right-center. Add `MAGENTA_MUTED = (247, 187, 219)` constant to the new script. Run via `uv run --with fonttools --with brotli --with pillow python3 images/source/og/og-card-how-this-site-was-built.py`. Target ≤100KB output.
+- `<meta property="og:url">` — `https://www.robcparker.com/how-this-site-was-built.html` (per the existing canonical-url convention; the apex-vs-www mismatch is a separate backlog item per `governance/stack-quirks.md` Cloudflare section — do NOT silently switch to apex for this page only).
 - `<meta name="twitter:card">` — `summary_large_image` (matches SPEC-013 pattern).
-- All meta tags follow the same character budgets and patterns as existing pages.
+- **`<link rel="canonical">`** — `https://www.robcparker.com/how-this-site-was-built.html`. Insert immediately after `<meta name="description">` and before the OG block per SPEC-013 IG-3.
+- **JSON-LD Person schema** (added per Arch Gate finding; SPEC-013 R5 / IG-7) — copy verbatim from `index.html:35-58`. Byte-identical across all pages; do NOT modify the `Person.url` (that's Rob's homepage, not the current page).
+- **Favicon + manifest + theme-color + Inter font preload** — copy byte-identical from `index.html:60-73` (per SPEC-013 IG-12, the Inter preload includes `crossorigin` attribute).
+- All meta tags follow the same character budgets and patterns as existing pages. Per Arch Gate IG: copy `index.html:1-73` as the head-block template, then substitute only the per-page strings (title, description, canonical, og:title, og:description, og:url, og:image, og:image:alt, twitter:title, twitter:description, twitter:image:alt).
 
 ### R7: Add "How It's Built" to main nav across all pages
 
@@ -298,23 +304,42 @@ Three options:
 
 **Files:** `index.html`, `about.html`, `resume.html`, `contact.html`, `advisory.html`, and the new `how-this-site-was-built.html`.
 
-**Edit:** in each page's `<nav>` block, add a new `<li>` for the "How It's Built" link, positioned between Resume and Contact (recommended order — `ui-designer` confirms at implementation). Markup follows the existing nav-item pattern:
+**Edit:** in each page's `<nav>` block, add a new `<li>` for the "How It's Built" link, positioned between Resume and Contact. **Markup (Arch Gate correction — no `class="nav-link"`):**
 
 ```html
-<li><a href="how-this-site-was-built.html" class="nav-link">How It's Built</a></li>
+<li><a href="how-this-site-was-built.html">How It's Built</a></li>
 ```
 
-**Active-state behavior:** when the user is on `how-this-site-was-built.html`, the existing `js/main.js` active-page-highlight logic adds the active class to this nav item automatically. No JS change required if the existing logic keys off the current pathname.
+The existing nav `<li>` items do NOT carry `class="nav-link"`; including it on this item would break byte-equality verification (per Arch Gate finding).
 
-**Mobile menu:** the hamburger drawer at ≤768px gets one additional row. `ui-designer` confirms drawer height fits within the design system rhythm.
+**Active-state behavior:** `js/main.js` `initActiveNav()` uses `window.location.pathname` matching, so the new page's nav item receives the active class automatically. No JS change required. Do NOT inline `class="active"` on the new page — let JS handle it.
+
+**Mobile menu:** the hamburger drawer at ≤768px gets one additional row (5 items total). UI-designer Arch Gate review confirmed all breakpoints clear; "How It's Built" at 14 chars does not wrap.
 
 **No footer entry added** (redundant with main-nav placement). **No about-page-bio inline link added** (also redundant).
 
 **Coverage:** five existing pages + the new page itself, six pages total. QA Gate verifies the link is present on all six and points correctly.
 
-### Implementation Preconditions — Repo Scrub Pass
+**Byte-equality verification (per Arch Gate IG, SPEC-011 IG-3 precedent):** after edits land, sha1sum the `<ul class="nav-links">` block across all 6 files:
 
-**Per Q3 resolution (A3), SPEC-016 implementation does NOT begin until the repo scrub pass is complete.** The scrub pass is operator work (not site-build work) and is logged as a separate work item — likely a follow-on Trivial spec or an `OPERATOR-TODOS.md` action depending on scope. It must address at minimum:
+```bash
+for f in index.html about.html resume.html contact.html advisory.html how-this-site-was-built.html; do
+  awk '/<ul class="nav-links"/,/<\/ul>/' "$f" | sha1sum
+done
+```
+
+Expect 5 identical sha1sums for the non-resume files. `resume.html` is known-divergent (carries an inline `class="active" aria-current="page"` on its own nav item — pre-existing inconsistency, not a SPEC-016 defect; flagged as a follow-on Trivial spec candidate). Any other divergence is a defect.
+
+**Apostrophe normalization (per Arch Gate IG):** pick straight (U+0027) or curly (U+2019) apostrophe and use consistently across all 6 files. The sha1sum check catches drift.
+
+### Implementation Preconditions — Repo Scrub Pass — RESOLVED 2026-05-11
+
+**SPEC-017 shipped the scrub-pass precondition on 2026-05-11.** Three internal-audience files (OPERATOR-TODOS.md + two audit docs) were removed from HEAD and all git history via `git filter-repo`; PR #12 and #17 bodies redacted; author emails normalized to `contact@robcparker.com`; repo flipped to public 2026-05-11. SPEC-016 QA Gate verifications (repo visibility PUBLIC, hero CTA resolves anonymously, sensitive files absent from HEAD/history) are now satisfiable.
+
+**Original Implementation Preconditions table preserved for audit trail:**
+
+<details>
+<summary>Original scrub-pass requirements (superseded by SPEC-017)</summary>
 
 | Concern | Treatment options |
 |---------|-------------------|
@@ -326,12 +351,15 @@ Three options:
 | Memory files (`~/.claude/projects/.../memory/`) | Already out of repo (gitignored). Safe. |
 | Git history | If any sensitive file was committed historically and its history needs purging, use `git filter-repo` or BFG Repo-Cleaner. Force-push only after backup. **Treat as destructive operation** — the SDD destructive-action rule applies; verify backups before force-pushing. |
 
-**QA Gate for SPEC-016 verifies:**
-- Repo visibility is "Public" via `gh repo view --json visibility`.
-- Hero GitHub CTA resolves to a 200 response from a non-authenticated browser (i.e., the link works for an anonymous reader).
-- Sensitive files identified at scrub-pass scoping are no longer in HEAD nor reachable in history (spot-check via `git log --all -- <path>`).
+</details>
 
-**Risk note:** the scrub pass is gating SPEC-016 but is itself NOT in this spec's implementation scope. If the scrub pass is delayed or scoped down (e.g., to "make repo public as-is"), SPEC-016's hero CTA may need to fall back to anchor-only (Q3 Option B) and a follow-on spec adds the GitHub link later. The R7 nav placement and R3/R4/R5/R6 page-build work can proceed in parallel with scrub planning; only the hero CTA wiring is on the critical path.
+**Outcome (per SPEC-017):** all rows resolved. OPERATOR-TODOS.md + audit docs gitignored and removed from history; `specs/scratch/` was already gitignored (never committed); `.claude/settings.local.json` added to repo gitignore for defense-in-depth; shipped specs kept public; memory files unchanged; git history rewritten via `git filter-repo --invert-paths --email-callback`.
+
+**QA Gate for SPEC-016 verifies (all now satisfiable):**
+- Repo visibility is "Public" via `gh repo view wizzbiff/robcparkerdotcom --json visibility` (verified 2026-05-11: PUBLIC).
+- Hero GitHub CTA resolves to a 200 response from a non-authenticated browser (verified 2026-05-11).
+- The Section 6 `specs/` directory link resolves 200 anonymously (per Arch Gate IG-9, added to QA list).
+- Sensitive files absent from HEAD AND history: `git log --all -- OPERATOR-TODOS.md robcparker_com_audit.md website_audit_prompt.md` returns empty (verified 2026-05-11 in SPEC-017 R6).
 
 ### R8: Sitemap and robots.txt update
 
@@ -446,7 +474,7 @@ The new page must be added to `sitemap.xml` so it's discoverable by search engin
 
 - **Given** the rendered page, **When** Section 1 hero is read, **Then** the headline matches Q1 slug decision and the subheadline names the SDD pipeline.
 - **Given** the rendered page, **When** Section 2 ("Why this page exists") is read, **Then** Grant Howe's foundational work is credited per the wording finalized at Q5 and approved by Rob's outreach.
-- **Given** the rendered page, **When** Section 3 (SDD Pipeline) is read, **Then** the diagram visually shows the seven-stage pipeline including all four gates (Spec, Arch, QA, Deploy), and the prose below names each stage with a 1–2 sentence description.
+- **Given** the rendered page, **When** Section 3 (SDD Pipeline) is read, **Then** the diagram visually shows the 9-node pipeline (5 stages + 4 gates, terminating at Production), and the prose below names each stage with a 1–2 sentence description.
 - **Given** the rendered page, **When** Section 4 (Two-Layer Architecture) is read, **Then** the diagram visually shows Layer 1 (5 pipeline agents) above Layer 2 (11 specialist agents) with at least 3 example invocation lines connecting them.
 - **Given** the rendered page, **When** Section 5 (Tiers and Solo Operator) is read, **Then** the four-tier table is present with descriptions matching `governance/tier-selection-guidelines.md`.
 - **Given** the rendered page, **When** Section 6 (Experimental Mechanisms) is read, **Then** the four mechanisms (Decision Rationale, Gate Annotations, Post-Completion Retros, Stack Quirks) are each described in 1–2 sentences AND the section explicitly notes they are experimental and being evaluated.
@@ -455,7 +483,7 @@ The new page must be added to `sitemap.xml` so it's discoverable by search engin
 
 ### Diagrams are accessible and responsive
 
-- **Given** the rendered Section 3 pipeline diagram on desktop (≥768px), **When** read by a screen reader (NVDA or VoiceOver), **Then** the SVG `<title>` and `<desc>` elements convey the seven-stage pipeline structure.
+- **Given** the rendered Section 3 pipeline diagram on desktop (≥768px), **When** read by a screen reader (NVDA or VoiceOver), **Then** the SVG `<title>` and `<desc>` elements convey the 9-node pipeline structure (5 stages + 4 gates + Production terminus).
 - **Given** the rendered Section 4 architecture diagram on desktop, **When** read by a screen reader, **Then** the two-layer structure and the invocation pattern are conveyed via `<title>` + `<desc>`.
 - **Given** the rendered page on mobile (≤480px), **When** both diagrams are viewed, **Then** they reflow to a vertical / stacked layout that remains readable without horizontal scroll.
 - **Given** the SVG markup, **When** inspected, **Then** all text inside the diagram meets WCAG AA contrast (4.5:1 for body text, 3:1 for large text) against the diagram background.
@@ -557,3 +585,141 @@ The new page must be added to `sitemap.xml` so it's discoverable by search engin
 ---
 
 *Drafted 2026-05-06 from Rob Parker's natural-language request to add a portfolio-style page explaining the SDD agentic workflow used to build robcparker.com, with attribution to Grant Howe's foundational work.*
+
+---
+
+## Arch Gate Resolutions (2026-05-11)
+
+Architect Review stage invoked **four specialists in parallel** (largest parallel-review fan-out on this project to date): `architect-reviewer` (design validation), `ui-designer` (layout + responsive), `graphic-artist` (SVG diagrams + OG card), `marketing-copywriter` (copy + frank-tone feasibility). `penetration-tester` skipped (content-only page; one external link to a repo we already pen-tested at SPEC-017). All four returned **Approve with conditions**. Conditions absorbed below.
+
+### Blocking findings (convergent across reviewers)
+
+| # | Finding | Source | Resolution |
+|---|---------|--------|------------|
+| B1 | **Nav-baseline error** — spec described nav going from 5 items (with Advisory) to 6 items. Actual nav is 4 items (Advisory removed by SPEC-011); post-SPEC-016 nav is 5 items NO Advisory. | architect-reviewer A2 + ui-designer Critical Finding | R2 + R7 corrected in spec body. Nav order: `Home → About → Resume → How It's Built → Contact`. No Advisory. |
+| B2 | **Pipeline node count inconsistency** — spec said "seven-stage"; actual pipeline is 9 nodes (5 stages + 4 gates + Production terminus per CLAUDE.md line 79). | architect-reviewer A1.c + graphic-artist Finding 1 | Corrected in R3 prose, R4 diagram spec, and 2 AC items: "9-node flow (5 stages + 4 gates)". |
+| B3 | **R4 references removed CSS tokens** — spec cited `--primary-color`/`--secondary-color`/`--accent-color`, all removed in SPEC-008 A-7 + SPEC-009 R2. CLAUDE.md is also stale. | architect-reviewer A4 + graphic-artist Finding 3 | R4 updated with current tokens. Full mapping table below. |
+| B4 | **Meta description 37 chars over budget** — spec draft was 197 chars; SPEC-013 budget is 160. | marketing-copywriter Focus Area 9 | R6 revised to 157-char version: *"robcparker.com is built on a Spec-Driven Development pipeline of Claude Code agents — two-layer architecture, gate system, and honest notes on what's rough."* |
+
+### Open question resolutions (Rob 2026-05-11)
+
+| Q | Topic | Resolution |
+|---|-------|------------|
+| AG-Q1 | **Hero subheadline direction** | Marketing-copywriter primary (two lines). Line 1 ends "No slidedeck. No hypothetical." (load-bearing differentiation beat). Line 2 telegraphs Section 7 frank tone. Codified in R3 Section 1 spec text. |
+| AG-Q2 | **Section 8 close — Pareto fourth option** | Add standalone callout line BEFORE the closing CTA, keep existing Section 8 paragraphs. Callout: *"The methodology behind this site is the same methodology I'd bring to your engineering organization."* Set in Fraunces display at larger size, visually distinct from surrounding prose. Marketing-copywriter's Pareto-dominant fourth option, matches SPEC-015 retro precedent (specialist found a fourth option the architect alone wouldn't have surfaced). |
+
+### Design-token mapping (Q9 compliance, no new tokens needed)
+
+| Diagram element | CSS token | Hex | Contrast |
+|---|---|---|---|
+| Stage node fill | `--color-surface-elevated` | `#F3F1EB` | — (bg) |
+| Gate node fill | `--color-magenta-muted` | `#F7BBDB` | — (bg) |
+| Stage/gate border | `--color-border-hairline` | `#7E7A74` | 3.78:1 on surface-elevated — passes 1.4.11 |
+| Stage node label | `--color-text-primary` | `#111318` | 15.6:1 on surface-elevated (AAA) |
+| Gate node label | `--color-charcoal` | `#111318` | ~10.2:1 on magenta-muted (AAA) |
+| Production node fill | `--color-charcoal` | `#111318` | — (terminal dark) |
+| Production node label | `--color-text-on-dark` | `#F7F6F2` | 17.2:1 on charcoal (AAA) |
+| Structural arrows | `--color-border-hairline` | `#7E7A74` | non-text |
+| Invocation arrows (Section 4) | `--color-magenta-text` | `#A51D65` | non-text |
+| Layer 1 boxes (arch diagram) | `--color-magenta-muted` | `#F7BBDB` | parallel to gate-fill — signals orchestration layer |
+| Layer 2 boxes (arch diagram) | `--color-surface-elevated` | `#F3F1EB` | parallel to stage-fill — signals execution layer |
+| Figcaption text | `--color-text-subtle` | `#8A8480` | 3.41:1 on cream — AA large only, acceptable for caption |
+
+**Important:** the implementer must use `--color-surface-elevated` (`#F3F1EB`), NOT the legacy alias `--surface-color` (`#EDEBE4`). They are different values; the legacy alias is darker.
+
+### Implementation Guidance (IG list for implementer-tester)
+
+| IG # | Item | Source |
+|---|---|---|
+| AG-IG-1 | After PR merge of any nav-baseline correction, `git checkout main && git pull --rebase origin main` before proceeding. | architect-reviewer |
+| AG-IG-2 | Pipeline node count: 9 nodes (5 stages + 4 gates terminating at Production). Reconcile any leftover "seven-stage" prose at lock-stage. | architect-reviewer / graphic-artist |
+| AG-IG-3 | Nav byte-equality: sha1sum `<ul class="nav-links">` block across 6 files; expect 5 matches + `resume.html` known-divergent (inline `class="active"` is pre-existing; do not normalize in this spec). | architect-reviewer |
+| AG-IG-4 | New-page `<head>` checklist: copy `index.html:1-73` byte-identical (favicon, manifest, theme-color, Inter preload, Person JSON-LD). Substitute only per-page strings. | architect-reviewer A9 |
+| AG-IG-5 | SVG accessibility scaffold: each diagram wrapped in `<figure>` with `<figcaption>`; `<svg role="img" aria-labelledby="X-title X-desc" focusable="false">`; `<title>` and `<desc>` as first two children of `<svg>`. Plain `<text>` for labels styled via CSS. Two SVG variants per diagram (desktop + mobile), CSS-toggled at 768px. | architect-reviewer + ui-designer + graphic-artist (convergent) |
+| AG-IG-6 | External link a11y: all `target="_blank"` links carry `aria-label="… (opens in new tab)"` matching the contact.html LinkedIn pattern. Hero CTA wording: **"Browse the Pipeline Specs on GitHub"** (marketing-copywriter recommendation; replaces draft "View the Specs on GitHub"). | architect-reviewer + marketing-copywriter |
+| AG-IG-7 | Sitemap entry: priority `0.8`, changefreq `monthly`, lastmod = deploy date. Match existing 2-space indentation; do NOT bump existing 5 entries' lastmod. | architect-reviewer A3 |
+| AG-IG-8 | Strip `class="nav-link"` from R7 example markup. Existing nav `<li>` items don't carry this class. | architect-reviewer + ui-designer |
+| AG-IG-9 | QA Gate verifies BOTH GitHub URLs (hero repo URL + Section 6 `specs/` tree URL) resolve 200 anonymously, not just the hero CTA. | architect-reviewer A8 |
+| AG-IG-10 | Apostrophe normalization: pick straight (U+0027) or curly (U+2019); use consistently across all 6 files. | architect-reviewer |
+| AG-IG-11 | Cloudflare clean-URL behavior: live URL is `https://robcparker.com/how-this-site-was-built` (apex, no `.html`). Canonical and `og:url` keep `.html` per existing site convention (apex-vs-www mismatch is a separate backlog item). QA verification uses `curl -L` to follow the 308. | architect-reviewer A9 |
+| AG-IG-12 | SVG fills via CSS custom properties (`fill: var(--color-surface-elevated)` in `<style>` block inside SVG or via class selector in `css/style.css`), NOT hardcoded hex. Preserves dark-mode upgrade path. | architect-reviewer |
+| AG-IG-13 | New utility CSS classes for `style.css`: `.diagram-wrapper { max-width: 100%; overflow-x: auto; margin: var(--space-12) 0; }` and `.diagram-figure figcaption { margin-top: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-subtle); }`. | ui-designer + graphic-artist |
+| AG-IG-14 | Section 5 Tier table: implementer chooses `<table>` (with `overflow-x: auto` wrapper) OR `<dl>` (preferred for mobile UX). Document choice in QA checklist. | ui-designer FA-9b |
+| AG-IG-15 | Section 6 mechanism descriptions: use `<dl>` semantic structure (term/definition pairs) rather than `<ul>`. | architect-reviewer A5 + ui-designer FA-9d |
+| AG-IG-16 | Section 7 visual treatment: three-card `highlights-grid` with NEUTRAL `--color-surface-elevated` surface. NO warning-colored treatment for the Rough card. Inter semibold H3s at `--font-size-lg` (not Fraunces — these are functional labels). | ui-designer FA-5 + FA-8 |
+| AG-IG-17 | One `section-alt` band on the page (recommendation: Section 5 Tier table). The dark closing-CTA section is the page terminus, not counted against the at-most-one alt-band rule per SPEC-008 R3.4. | ui-designer FA-1 |
+| AG-IG-18 | Section 4 architecture diagram: **3 representative invocation arrows** only (PM-Spec→marketing-copywriter; Implementer-Tester→fan of 3; Architect-Review→penetration-tester), with figcaption noting "example invocations" not exhaustive. Mobile variant drops arrows entirely. | graphic-artist Finding 2 (unanimous) |
+| AG-IG-19 | OG card: new script at `images/source/og/og-card-how-this-site-was-built.py` cloned from SPEC-013 `og-card.py`. Direction A (typographic + pipeline silhouette). Add `MAGENTA_MUTED = (247, 187, 219)` constant. Add `draw_pipeline_silhouette()` helper. Run via `uv run --with fonttools --with brotli --with pillow python3 <script>`. Output: `images/og/og-card-how-this-site-was-built.png`, ≤100KB. | graphic-artist Finding 4 |
+| AG-IG-20 | Stage 1 Grant attribution (R5 placeholder): use marketing-copywriter revised wording: *"The SDD methodology described here is adapted from prior work on structured agentic development pipelines using Claude Code. The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site."* Names Rob's three substantive extensions, which makes the adaptation legible. | marketing-copywriter Focus Area 3 |
+| AG-IG-21 | Stale AC at original spec lines 441-444 (about-bio link AC) is **superseded by Q2 main-nav resolution**. Mark as superseded at lock-stage. | marketing-copywriter Focus Area 6 |
+| AG-IG-22 | Section 4 prose carries the architectural principle (orchestration/execution split, why two layers), NOT the agent enumeration. Diagram carries the inventory; prose carries the principle. | marketing-copywriter Focus Area 9 |
+| AG-IG-23 | Section 7 frank-tone: marketing-copywriter delivered 13 drafted item framings (see Section 7 drafts block below). Each follows the pattern "name the pattern, name the evidence, name what's being done." Implementer uses these as starting points; lock-stage refines. | marketing-copywriter Focus Area 2 |
+| AG-IG-24 | Section 6 mechanism descriptions: marketing-copywriter delivered 4 drafted descriptions (see Section 6 drafts block below). | marketing-copywriter Focus Area 4 |
+
+### Section 7 frank-tone drafts (marketing-copywriter; lock-stage may refine)
+
+**Working Today (low-change risk):**
+1. *Two-layer agent architecture* — "The orchestration/specialist split has been the most stable design decision in the pipeline. Across 16 shipped specs, no spec required restructuring either layer."
+2. *Tier system and escalation triggers* — "The four-tier system consistently produces the right gate depth without manual judgment at every spec. The tier-selection table is both the policy and the audit trail."
+3. *Spec-as-source-of-truth* — "Specs survive context-window resets. An agent picking up a spec mid-pipeline gets the full decision history. This is the property that makes the pipeline actually run with one human in the loop."
+4. *Why-capture mechanisms* — "Decision Rationale and Gate Annotations are generating real signal early — the SPEC-015 retro caught a Pareto-dominant copy option that the architect alone would have missed."
+5. *Automated deployment* — "Cloudflare Pages connects the repo to production: a PR merge to main triggers a deploy with no further manual steps. The Deploy Gate verifies the outcome — not the mechanism."
+
+**Experimental (evaluating):**
+6. *Dynamic spec scope decisions* — "When to bundle two related changes into one spec versus shipping them separately is a judgment call the pipeline doesn't yet codify. Current heuristic: share a dependency → bundle; share only a topic → separate. Not robust enough to be a rule yet."
+7. *Learning Engine agent* — "The Learning Engine is defined and produced the SPEC-015 retro. What's thin is the feedback loop: the agent flags patterns, but there's no scheduled review cadence to act on them. Evaluating after 10 specs whether that loop needs more structure."
+8. *Post-Completion Retros* — "Retros are in the methodology but only trigger when something worth capturing actually happened. So far: two retros on 17 specs. 'Skip if nothing stands out' is working as designed, but it means the sample size is small."
+
+**Rough or Evolving:**
+9. *Solo-operator gate fatigue* — "One human approving every gate is a cognitive load issue. The tier system mitigates by right-sizing depth to risk. That mitigation is real. At higher velocity, it won't be enough."
+10. *Cross-spec coordination* — "When two specs touch overlapping assets, sequencing decisions create overhead the pipeline doesn't currently automate. SPEC-015 required a logo-naming coordination note to SPEC-012. The tier system doesn't model inter-spec dependencies — that's a gap."
+11. *Memory hygiene* — "The Claude Code memory system requires periodic review. One record stayed stale for roughly a week after Cloudflare Pages went live before being caught at a Spec Gate. Catching it required actively reading memory, not automated expiry."
+12. *PM-Spec to Architect-Review hand-off* — "First-draft specs occasionally arrive with open questions that need iteration before review can proceed. This isn't a failure mode — it's expected in any spec-driven system. The friction is recognizing the pattern early enough to budget for iteration."
+13. *Spec-Gate question backlogs* — "First-draft specs routinely surface more open questions than they resolve (SPEC-015: 8; SPEC-016: 12). A spec that surfaces 12 questions is doing its job — resolving them at Spec Gate is the correct moment. But the walkthrough is now a time-budgeted activity, not a quick approval step."
+
+### Section 6 mechanism descriptions (marketing-copywriter)
+
+- **Decision Rationale:** "Standard+ specs include a section capturing alternatives considered, constraints, and trade-offs — not for documentation's sake, but because future-Rob and future-agents need the why, not just the what. A decision without its rationale is a landmine for the next change that touches the same surface."
+- **Gate Annotations:** "When approving a gate, the gate owner notes why — especially when overriding a recommendation. This prevents the most common failure mode in technical review processes: approvals that carry no context and can't be audited six months later."
+- **Post-Completion Retros:** "After production deployment, 2-3 minutes of structured reflection. The trigger is selective — skip if nothing stood out — which means the retros that do get written are worth reading."
+- **Stack Quirks:** "Platform and tool gotchas accumulated through experience, in `governance/stack-quirks.md`. One-liners per entry, not exhaustive documentation — close enough to the moment of discovery to be accurate, short enough to actually get written."
+
+**Section 6 closing line:** *"The specs in this repo are worked examples of every mechanism above — browse the `specs/` directory to see them in practice."*
+
+### IG-residual range predictions (for QA Gate, per IG-residual-ranges + docs-heavy multiplier from SPEC-017 retro)
+
+| Grep pattern | Expected raw range | Assertion |
+|---|---|---|
+| `rg -ni 'how this site was built\|how-this-site-was-built' --glob '!specs/**'` | 20–60 hits | All hits expected to be page itself + 6 nav `<li>` + sitemap entry; zero unexpected |
+| `rg -n '<li><a href="how-this-site-was-built\.html"' *.html` | **6 hits exactly** | Nav byte-equality assertion; any miss is a defect |
+| `rg -n 'How It[''']s Built' *.html` | 6–12 hits | Apostrophe normalization watch |
+| `rg -ni 'grant howe\|geekbyte' --glob '!specs/**'` | Stage 1: 0–1; Stage 2: 2–4 | Two-stage spec produces two valid expected counts |
+| `rg -n 'how-this-site-was-built' sitemap.xml` | **1 hit exactly** | Sitemap entry |
+| `rg -ni 'SDD\|spec.driven development' --glob '!specs/**' --glob '!.claude/**' --glob '!governance/**'` | 30–120 hits | Docs-heavy multiplier; new page becomes main public SDD prose surface |
+| `rg -n '<title id=' how-this-site-was-built.html` | **2 hits exactly** | One per inline SVG diagram |
+| `rg -n 'target="_blank"' how-this-site-was-built.html` | 2–3 hits | Hero CTA + Section 6 link + (Stage 2) Grant link |
+| `rg -n 'rel="noopener noreferrer"' how-this-site-was-built.html` | Must match `target="_blank"` count | Defect if counts diverge |
+
+### Items considered, not absorbed
+
+| # | Topic | Decision |
+|---|-------|----------|
+| Tier escalation to Complex | Architect-reviewer flagged inline SVG as borderline new-pattern trigger | Stayed Standard. Inline SVG is a standard HTML5 primitive, not a build/dependency/framework change. Implementation surface is widest on the project but width ≠ tier. |
+| In-page TOC | UI-designer considered for long page | Rejected. Hero anchor CTA is sufficient navigation; sticky TOC adds complexity for marginal gain. |
+| Footer nav entry | R7 explicitly excludes; ui-designer flagged as inconsistency | Respected R7's exclusion. Flagged as candidate for future cleanup Trivial spec. |
+| `resume.html` inline-active normalization | Architect-reviewer flagged divergence | Out of SPEC-016 scope. Pre-existing inconsistency; candidate for follow-on Trivial spec. |
+| CLAUDE.md stale design-token references | Architect-reviewer A4 + graphic-artist | Out of SPEC-016 scope. Implementer uses correct tokens; CLAUDE.md cleanup is a follow-on Trivial spec. |
+| Apex-vs-www canonical mismatch | Multiple reviewers noted | Already a `specs/backlog.md` candidate. SPEC-016 follows the existing www convention for consistency. |
+
+### Stack-quirks follow-ons (capture at Post-Completion Retro)
+
+- **Inline SVG accessibility pattern** — `<figure>` + `<figcaption>` + `<svg role="img" aria-labelledby focusable="false">` + `<title>` and `<desc>` as first two children. First use on this site; establishes the pattern.
+- **Duplicate-SVG responsive pattern** — desktop horizontal + mobile vertical/simplified via CSS media query, NOT CSS transforms or overflow-scroll. Established for diagram-heavy pages.
+- **`--color-surface-elevated` vs. `--surface-color` divergence** — the canonical SPEC-008 token `--color-surface-elevated` (`#F3F1EB`) is NOT the same as the legacy alias `--surface-color` (`#EDEBE4`). Use the canonical token in new work.
+- **CLAUDE.md design-token section is stale** — references removed `--primary-color`/`--secondary-color`/`--accent-color` tokens. Add to follow-on cleanup.
+
+### Arch Gate Decision
+
+**Approved 2026-05-11** — implementation may begin. Blocking findings (B1–B4) absorbed into spec body. Open questions (AG-Q1, AG-Q2) resolved with Rob in conversation. Standard tier confirmed.
+
+**Arch Gate annotation:** Four-reviewer parallel invocation at Arch Gate (architect-reviewer + ui-designer + graphic-artist + marketing-copywriter) — largest parallel-review fan-out on this project to date. All four returned Approve with conditions; conditions converged on a substantive but mechanical set of fixes. The nav-baseline error and pipeline-node-count inconsistency were caught by multiple reviewers independently — confirms the value of multi-reviewer parallel for content + design specs. Marketing-copywriter delivered concrete copy drafts for all 13 Section 7 items + 4 Section 6 mechanism descriptions, eliminating an entire class of lock-stage discovery work. Per `feedback_credibility_signals_philosophy.md` memory, all reviewer recommendations preserved capability signals over legitimacy signals. Implementer-Tester picks up next.
