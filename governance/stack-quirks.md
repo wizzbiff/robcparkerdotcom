@@ -84,3 +84,19 @@ img.resize((800, 800), Image.LANCZOS).save(
 **Cloudflare Pages does NOT automatically generate `sitemap.xml` or `robots.txt`.** Static sites on Cloudflare Pages must commit both files at project root (or generate them at build time, but this site has no build). Cloudflare Pages adds an `X-Robots-Tag: noindex` header on preview URLs only — production deploys are crawlable by default. Verified via Cloudflare docs (`https://developers.cloudflare.com/pages/configuration/serving-pages/`) plus the community thread "Sitemap not available through Cloudflare Pages" (`https://community.cloudflare.com/t/sitemap-not-available-through-cloudflare-pages/384330`). Established in SPEC-013.
 
 **`_headers` rules for sitemap.xml and robots.txt are defensive, not strictly required.** Cloudflare Pages auto-assigns `application/xml` to `.xml` and `text/plain` to `.txt` by file extension. Explicit `Content-Type` rules in `_headers` are added defensively (matching the `/site.webmanifest` precedent) to remove a class of silent failure modes when XML parsers strictly validate the sitemap protocol. Established in SPEC-013 AG-1.
+
+## Git history rewrite
+
+**`git filter-repo --email-callback` is strictly history-only.** It rewrites every existing commit's author/committer email per the callback but does NOT update local `git config user.email`. The very next `git commit` you make will re-introduce whatever identity was in local config before the rewrite. Pair the rewrite with `git config user.email <new-address>` BEFORE making any new commits — or amend afterward with `git commit --amend --reset-author --no-edit` and another `git push --force-with-lease`. Established in SPEC-017 (gap caught only after R5; required a fourth force-push to remediate; post-R5 snapshot verification showed "only contact@robcparker.com" but didn't predict future-commit behavior).
+
+**`git filter-repo` requires `--force` on a non-fresh clone.** filter-repo refuses to run on a clone with a configured `origin` remote by default — a safety measure to encourage rewrites on fresh clones. For operator-tool specs that operate on the live working clone (because the local R4 tarball is the recovery artifact, not a fresh clone), pass `--force` explicitly. Established in SPEC-017 Arch Gate / R5.
+
+**`git filter-repo` removes the `origin` remote** as a safety measure during the rewrite. Re-add with `git remote add origin <url>`, then `git fetch origin` to refresh the `--force-with-lease` reference, before the force-push. Established in SPEC-017 R5 → R8.
+
+## GitHub CLI
+
+**`gh pr edit --body-file` fails silently** on some closed PRs — likely tied to the Projects-classic GraphQL deprecation. The only signal is a stray deprecation warning (`Projects (classic) is being deprecated...`), exit code is 0, and the PR body remains unchanged. Prefer `gh api repos/<owner>/<repo>/pulls/<N> -X PATCH -F body=@<file>` for programmatic PR body edits, and always verify-after-write (`gh pr view <N> --json body | jq ...`). Established in SPEC-017 R9c (closed PR body redactions for PR #12 and #17).
+
+## SDD process
+
+**R9-style grep counts on docs-heavy repos run ~10× higher than typical code-repo predictions.** The IG-residual-ranges rule (from SPEC-015 retro / `feedback_ig_residual_counts_as_ranges.md` memory) holds — assertion on "0 true positives" remains the relevant check — but the predicted *raw match counts* must be wider on repos with multi-thousand-line specs full of policy / security / CSS-token text. SPEC-017 R9a predicted 5–25 secret-pattern matches and 1–4 Formspree matches; actual was 156 and ~15 respectively, all false positives. For future spec-rich repos, predict raw counts in the hundreds, not the dozens; the relevant assertion is true-positive count, not raw. Established in SPEC-017 R9 / Post-Completion Retro.
