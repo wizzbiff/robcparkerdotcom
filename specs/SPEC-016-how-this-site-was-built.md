@@ -1,6 +1,6 @@
 # SPEC-016: "How This Site Was Built" Page
 
-**Status:** Spec Gate approved 2026-05-08 — implementation gated on repo scrub pass (per Q3 resolution)
+**Status:** Spec Gate approved 2026-05-08; scrub-pass precondition cleared 2026-05-11 (SPEC-017 shipped + repo flipped to public) — implementation unblocked, ready for Arch Gate
 **Tier:** Standard (confirmed at Spec Gate; see Tier Selection below)
 **Author:** PM-Spec Agent (derived from Rob's request 2026-05-06: "Add a new page labeled 'How this site was built' that explains our SDD workflow… highlight and explain the agentic development workflow that we are using to build this site… inspired by and expanded from Grant Howe's SDD workflow… provide explanations, architecture diagrams, and an overall point of view on the SDD workflow… should be future proof in the sense of hedging towards not just how the SDD workflow works today, but how it could evolve for the future, and what parts of the workflow are future proof, and which might evolve or currently have problems")
 **Date:** 2026-05-06 (Spec Gate approved 2026-05-08)
