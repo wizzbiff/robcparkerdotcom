@@ -523,3 +523,47 @@ All items from the QA Verification section above passed. Notable:
 - Close state: repo still PRIVATE — as designed per D4.
 
 **QA Gate Decision:** Approved 2026-05-11 — SPEC-017 implementation complete. The next operator action is the visibility flip per R11 (local OPERATOR-TODOS.md), which unblocks SPEC-016 implementation.
+
+---
+
+## Post-Completion Retro (2026-05-11)
+
+Per CLAUDE.md SDD experimental mechanisms — a 2–3 minute capture of what went well, what surprised, and process observations from this run. Second Post-Completion Retro on this project (SPEC-015 was the first).
+
+### What went well
+
+- **Two-reviewer parallel invocation at Arch Gate (architect-reviewer + penetration-tester) was high-leverage.** AR caught the R8.5 numbering ambiguity that would have caused R10.7 to execute prematurely — a real bug the Spec Gate didn't catch. Pen-tester independently verified the "no API keys, no PII, no credentials" content-sensitivity assertion by reading all three target files; found G2 (closed PR body references) that HEAD-only sweeps would have entirely missed. The two reviewers converged on Approve via independent paths. **Reinforces the "invoke specialists in parallel" pattern from SPEC-015's AG-1 retro lesson — generalizable to any spec with both design and security surface.**
+- **The destructive-action protocol worked exactly as designed.** R3 (origin backup branch) + R4 (local tarball) + R8a (post-push API verification) + R10.7 (explicit irreversibility threshold) provided four independent verification layers. No recovery from tarball was needed. The R10.7 gate's "ALL prior verifications above are checked and documented BEFORE R10.7 executes" prevented premature point-of-no-return execution.
+- **Pre-spec walkthrough resolved four substantive operator decisions (D1–D4) in conversation.** Spec Gate was then a clean 5-question lightweight walkthrough plus one gap-catch (Q1: backup branch retention vs. visibility flip — pre-spec missed this). Two-stage gate review (Spec → Arch) caught what each stage was suited to catch.
+
+### What surprised
+
+- **Three substantive findings emerged during implementation that all gates missed.** (a) SPEC-017's own body contained 4 absolute `/home/robparker/...` paths — operator-private texture in the very spec describing the removal of operator-private texture. Recursive irony. (b) R9 raw-match counts exceeded predicted ranges by an order of magnitude (5–25 → 156, 30–200 → 233); the IG-residual-ranges rule held (zero true positives) but the prediction was off. (c) The post-R5 path-sanitization commit re-introduced `rob.c.parker@gmail.com` as author because the R5 `--email-callback` rewrote history but didn't touch local `git config user.email`. Each was fixable inline, but each required adjustment to the supposedly-locked procedure.
+- **`git filter-repo --email-callback` is strictly history-only.** R6.2's "only contact@robcparker.com" verification was true at the snapshot moment but didn't predict that any new commit would revert to the local config. The mental model "the rewrite normalized everything" was wrong — it normalized everything *that existed at rewrite time*. Fixing this required a fourth force-push to amend the offending commit. Manageable but unexpected.
+- **`gh pr edit --body-file` fails silently** for R9c's PR body redactions. The only signal was a stray GraphQL deprecation warning about Projects classic. Switching to `gh api repos/.../pulls/<N> -X PATCH -F body=@<file>` worked cleanly. **Important:** the operation appeared to succeed because gh's exit code was 0; only post-edit verification revealed the bodies were unchanged. Defensive default: verify-after-write for any PR/issue body edit.
+
+### Process observations
+
+- **Implementation-time inline findings should be expected, not exceptional, on operator-tool specs.** Site-implementation specs (CSS/HTML/JS) can hit "spec said exactly this" determinism; operator-tool specs run into reality (file-system state, tool versions, API quirks). For destructive specs, build in a "discover findings → resolve inline OR escalate to spec-scope expansion" decision tree as a first-class part of the procedure, not as a recovery path.
+- **IG-residual range predictions need a "docs-heavy repo" multiplier.** SPEC-017 R9 predictions assumed ranges typical for code repos with sparse documentation. This project's pattern of multi-thousand-line specs full of policy/security/CSS-token text inflates grep counts by ~10×. **Worth a stack-quirks entry:** "for spec/docs-heavy repos, expect R9-style raw grep counts in the hundreds; assert on true-positive count, not raw count."
+- **Local `git config user.email` is part of the rewrite scope for any `--email-callback` history rewrite.** The R5 step that normalizes history must include "update local git config to match" as a paired action; otherwise the very next commit re-introduces the previous identity. Spec didn't model this. **Worth a stack-quirks entry.**
+- **The IG-residual-ranges rule from SPEC-015's retro saved this implementation.** Without it, the implementer would have surfaced 156 secret-pattern matches as a finding instead of recognizing the prediction was just too narrow. The rule is doing its job — the predictions just need wider bounds for docs-heavy repos.
+- **`gh` CLI fragility on Projects-classic-touching commands is worth knowing.** Quirk: silent failure with stray deprecation warnings as the only signal. Verify-after-write is the right default. **Worth a stack-quirks entry.**
+
+### Counterfactual
+
+- **If pen-tester had not been invoked at Arch Gate, the scrub would have shipped with PR #12 and PR #17 still mentioning `OPERATOR-TODOS.md:72` etc. in their bodies after visibility flip.** A determined reader would have caught "this file was scrubbed from the repo — what was in it?" within minutes. The architect-reviewer's threat model is design-correctness, not adversarial recon; without the pen-tester's parallel pass, this entire class of findings (PR/issue/comment surfaces outside git refs) wouldn't have been considered. **Two-reviewer parallel is now the load-bearing pattern for any security-relevant spec.**
+- **If R10.7 had not been gated behind "ALL prior verifications complete," the email-residual finding (which surfaced AFTER R10.7-equivalent point) would have meant fixing it with the local R4 tarball as sole recovery — instead of via straightforward amend-and-force-push.** The gate did its job.
+- **If Rob had not done the GitHub `contact@robcparker.com` verification as a R0 pre-step, R5's `--email-callback` would have shipped commits attributed to an unverified address.** Post-flip, the public commit log would have shown `Rob Parker <contact@robcparker.com>` with no avatar and no profile-link — degraded portfolio surface for SPEC-016. The R0 verification gate caught this; no recovery would have been possible without re-running the rewrite.
+
+### Stack-quirks follow-on
+
+Three new entries to add to `governance/stack-quirks.md` in a follow-on commit:
+
+1. **Git history rewrite — `--email-callback` is history-only.** After `git filter-repo --email-callback` rewrites history, update local `git config user.email` BEFORE making any new commits, or new commits will re-introduce the previous author identity. Verified at SPEC-017 close.
+2. **R9-style grep counts on docs-heavy repos.** Predicted raw match counts in IG-residual ranges should be ~10× wider than typical code-repo predictions. SPEC-017 R9 predicted 5–25 secret-pattern matches; actual was 156 — all false positives but the prediction noise made the result harder to read. Established in SPEC-017 retro.
+3. **`gh pr edit --body-file` silent failure.** Prefer `gh api repos/.../pulls/<N> -X PATCH -F body=@<file>` for programmatic PR body edits; the `pr edit` form has a fragile dependency on Projects-classic metadata that may fail silently with only a stray deprecation warning as a signal. Always verify-after-write. Established in SPEC-017 R9c.
+
+---
+
+*Retro drafted 2026-05-11 inline by the conversation thread that ran the SPEC-017 implementation (no separate `sdd/learning-engine` invocation; the retro followed directly from the implementation findings without a separate-agent pass). Time-to-write: ~7 minutes (over the 2–3 minute target; comparable to SPEC-015's first retro at ~5 minutes, plus this had more findings to consolidate). Future retros should aim closer to budget — the IG-residual-range rule and the email-residual fix both warrant follow-on stack-quirks entries which should be tightened.*
