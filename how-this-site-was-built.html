@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>How This Site Was Built — Rob Parker</title>
+    <meta name="description" content="robcparker.com is built on a Spec-Driven Development pipeline of Claude Code agents — two-layer architecture, gate system, and honest notes on what's rough.">
+
+    <link rel="canonical" href="https://www.robcparker.com/how-this-site-was-built.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.robcparker.com/how-this-site-was-built.html">
+    <meta property="og:title" content="How This Site Was Built — Rob Parker">
+    <meta property="og:description" content="robcparker.com is built on a Spec-Driven Development pipeline of Claude Code agents — two-layer architecture, gate system, and honest notes on what's rough.">
+    <meta property="og:image" content="https://www.robcparker.com/images/og/og-card-how-this-site-was-built.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rob Parker — How This Site Was Built — SDD Pipeline, Two-Layer Agent Architecture">
+
+    <!-- Twitter Card (SPEC-013 R4) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How This Site Was Built — Rob Parker">
+    <meta name="twitter:description" content="robcparker.com is built on a Spec-Driven Development pipeline of Claude Code agents — two-layer architecture, gate system, and honest notes on what's rough.">
+    <meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card-how-this-site-was-built.png">
+    <meta name="twitter:image:alt" content="Rob Parker — How This Site Was Built — SDD Pipeline, Two-Layer Agent Architecture">
+
+    <!-- WHY (SPEC-013 R5): Person schema disambiguates Rob from other Rob Parkers via sameAs LinkedIn signal.
+         Block is byte-identical across all five pages; Person.url is the homepage canonical (not the per-page URL). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Rob Parker",
+      "jobTitle": "Senior Engineering Executive",
+      "description": "Senior engineering executive with 25+ years of experience building AI-native platforms and scaling high-performing teams.",
+      "image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",
+      "url": "https://www.robcparker.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Atlanta",
+        "addressRegion": "GA",
+        "addressCountry": "US"
+      },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "Georgia Institute of Technology" },
+        { "@type": "CollegeOrUniversity", "name": "Clemson University" }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/robcparker/"
+      ]
+    }
+    </script>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111318">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#111318">
+
+    <!-- Preload body font (Inter). WHY: crossorigin required even for same-origin or the
+         preload is discarded (IG-12). Fraunces intentionally not preloaded — display-only,
+         font-display:swap handles FOUT acceptably. -->
+    <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Skip to main content — accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ================================================================
+         HEADER / NAVIGATION
+         ================================================================ -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="nav-inner" aria-label="Main navigation">
+                <a href="index.html" class="nav-logo" aria-label="Rob Parker — home">Rob Parker</a>
+
+                <!-- Hamburger toggle — hidden in CSS until .js-enabled is set by JS (IG-4) -->
+                <button
+                    class="nav-toggle"
+                    aria-expanded="false"
+                    aria-controls="nav-links"
+                    aria-label="Toggle navigation menu"
+                >
+                    <span class="nav-toggle-icon" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+
+                <!-- WHY: role="list" restores list semantics that Safari/VoiceOver
+                     strips when list-style:none is applied -->
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="resume.html">Resume</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ================================================================
+         MAIN CONTENT
+         ================================================================ -->
+    <main id="main-content">
+
+        <!-- ================================================================
+             SECTION 1: HERO
+             ================================================================ -->
+        <section class="hero" aria-labelledby="hero-headline">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-headline-col">
+                        <span class="hero-eyebrow">Spec-Driven Development</span>
+                        <h1 id="hero-headline">How This Site Was Built</h1>
+                    </div>
+                    <div class="hero-copy-col">
+                        <div class="hero-subheadline">
+                            <p>Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production. No slidedeck. No hypothetical.</p>
+                            <p style="margin-top: var(--space-4);">Below is how it works, what's stable, and what I'm still figuring out.</p>
+                        </div>
+                        <div class="hero-cta-stack">
+                            <a href="#pipeline" class="btn btn-primary">See the Pipeline</a>
+                            <a
+                                href="https://github.com/wizzbiff/robcparkerdotcom"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Browse the Pipeline Specs on GitHub (opens in new tab)"
+                                class="btn-textlink"
+                            >Browse the Pipeline Specs on GitHub <span class="arrow" aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 2: WHY THIS PAGE EXISTS
+             ================================================================ -->
+        <section class="section" id="why" aria-labelledby="why-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="why-heading">Why This Page Exists</h2>
+                </div>
+                <p>Most candidates for senior engineering roles can describe how they would bring AI-native practices to an organization. Few can show a working example. This page is one. Every spec in this repo, every commit, every gate decision is an artifact of the SDD methodology described here. The site itself is the proof.</p>
+                <p style="margin-top: var(--space-6);">The SDD methodology described here is adapted from prior work on structured agentic development pipelines using Claude Code. The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site.</p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 3: THE SDD PIPELINE
+             ================================================================ -->
+        <!-- WHY: id="pipeline" is on the <section> element, not the <h2>, so that
+             the hero "See the Pipeline" anchor link (#pipeline) scrolls to the top
+             of the section with its heading visible — anchor-target convention. -->
+        <section class="section" id="pipeline" aria-labelledby="pipeline-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="pipeline-heading">The SDD Pipeline</h2>
+                </div>
+                <p class="sdd-section-intro">Every change to this site flows through the same nine-node pipeline: five stages and four gate checkpoints, from first requirement to production.</p>
+
+                <!-- SPEC-016 graphic-artist SVG diagrams — embedded inline per R4 / Q4.
+                     CSS custom property fills resolve from document root. -->
+                <div class="diagram-wrapper">
+
+                    <!-- DESKTOP VARIANT — horizontal flow, viewBox 1200×220 -->
+                    <figure class="diagram-figure">
+                        <svg
+                            class="diagram-desktop"
+                            viewBox="0 0 1200 220"
+                            xmlns="http://www.w3.org/2000/svg"
+                            role="img"
+                            aria-labelledby="pipeline-diagram-desktop-title pipeline-diagram-desktop-desc"
+                            focusable="false"
+                            style="width: 100%; height: auto; display: block;"
+                        >
+                            <title id="pipeline-diagram-desktop-title">SDD Pipeline — 9-node flow</title>
+                            <desc id="pipeline-diagram-desktop-desc">
+                                A horizontal flow diagram of the Spec-Driven Development pipeline containing
+                                9 nodes: PM-Spec stage, Spec Gate decision point, Architect-Review stage,
+                                Arch Gate decision point, Implementer-Tester stage, QA Gate decision point,
+                                Deployment stage, Deploy Gate decision point, and Production terminus.
+                                Stages are shown as rounded rectangles; gates as diamonds;
+                                Production as a filled charcoal rectangle. Arrows connect nodes left to right.
+                            </desc>
+
+                            <style>
+                                .node-stage    { fill: var(--color-surface-elevated); stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .node-gate     { fill: var(--color-magenta-muted);    stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .node-terminal { fill: var(--color-charcoal);         stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .label-stage   { fill: var(--color-text-primary);  font-family: var(--font-family-base, "Inter", sans-serif); font-size: 11px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .label-gate    { fill: var(--color-charcoal);      font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .label-terminal{ fill: var(--color-text-on-dark);  font-family: var(--font-family-base, "Inter", sans-serif); font-size: 11px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+                                .arrow         { stroke: var(--color-border-hairline); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-desktop); }
+                            </style>
+
+                            <defs>
+                                <marker id="arrowhead-desktop" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="var(--color-border-hairline)" />
+                                </marker>
+                            </defs>
+
+                            <!-- Node 1: PM-Spec (stage) -->
+                            <rect class="node-stage" x="22" y="82" width="96" height="56" rx="6" ry="6" />
+                            <text class="label-stage" x="70" y="107">PM-Spec</text>
+                            <text class="label-stage" x="70" y="121" font-size="9" font-weight="400" fill="var(--color-text-primary)" text-anchor="middle">Stage</text>
+
+                            <!-- Arrow 1→2 -->
+                            <line class="arrow" x1="118" y1="110" x2="152" y2="110" />
+
+                            <!-- Node 2: Spec Gate (diamond) -->
+                            <polygon class="node-gate" points="185,77 218,110 185,143 152,110" />
+                            <text class="label-gate" x="185" y="107">Spec</text>
+                            <text class="label-gate" x="185" y="119">Gate</text>
+
+                            <!-- Arrow 2→3 -->
+                            <line class="arrow" x1="218" y1="110" x2="254" y2="110" />
+
+                            <!-- Node 3: Architect-Review (stage) -->
+                            <rect class="node-stage" x="254" y="82" width="112" height="56" rx="6" ry="6" />
+                            <text class="label-stage" x="310" y="105">Architect-</text>
+                            <text class="label-stage" x="310" y="119">Review</text>
+
+                            <!-- Arrow 3→4 -->
+                            <line class="arrow" x1="366" y1="110" x2="402" y2="110" />
+
+                            <!-- Node 4: Arch Gate (diamond) -->
+                            <polygon class="node-gate" points="435,77 468,110 435,143 402,110" />
+                            <text class="label-gate" x="435" y="107">Arch</text>
+                            <text class="label-gate" x="435" y="119">Gate</text>
+
+                            <!-- Arrow 4→5 -->
+                            <line class="arrow" x1="468" y1="110" x2="504" y2="110" />
+
+                            <!-- Node 5: Implementer-Tester (stage) -->
+                            <rect class="node-stage" x="504" y="82" width="112" height="56" rx="6" ry="6" />
+                            <text class="label-stage" x="560" y="105">Implementer-</text>
+                            <text class="label-stage" x="560" y="119">Tester</text>
+
+                            <!-- Arrow 5→6 -->
+                            <line class="arrow" x1="616" y1="110" x2="648" y2="110" />
+
+                            <!-- Node 6: QA Gate (diamond) -->
+                            <polygon class="node-gate" points="680,77 712,110 680,143 648,110" />
+                            <text class="label-gate" x="680" y="107">QA</text>
+                            <text class="label-gate" x="680" y="119">Gate</text>
+
+                            <!-- Arrow 6→7 -->
+                            <line class="arrow" x1="712" y1="110" x2="746" y2="110" />
+
+                            <!-- Node 7: Deployment (stage) -->
+                            <rect class="node-stage" x="746" y="82" width="96" height="56" rx="6" ry="6" />
+                            <text class="label-stage" x="794" y="107">Deployment</text>
+                            <text class="label-stage" x="794" y="121" font-size="9" font-weight="400" fill="var(--color-text-primary)" text-anchor="middle">Stage</text>
+
+                            <!-- Arrow 7→8 -->
+                            <line class="arrow" x1="842" y1="110" x2="872" y2="110" />
+
+                            <!-- Node 8: Deploy Gate (diamond) -->
+                            <polygon class="node-gate" points="905,77 938,110 905,143 872,110" />
+                            <text class="label-gate" x="905" y="107">Deploy</text>
+                            <text class="label-gate" x="905" y="119">Gate</text>
+
+                            <!-- Arrow 8→9 -->
+                            <line class="arrow" x1="938" y1="110" x2="972" y2="110" />
+
+                            <!-- Node 9: Production (terminal) -->
+                            <rect class="node-terminal" x="972" y="82" width="100" height="56" rx="4" ry="4" />
+                            <text class="label-terminal" x="1022" y="107">Production</text>
+                            <text class="label-terminal" x="1022" y="121" font-size="9" font-weight="400" fill="var(--color-text-on-dark)" text-anchor="middle">Terminus</text>
+
+                        </svg>
+
+                        <figcaption>Figure 1: The SDD Pipeline — PM-Spec through Production</figcaption>
+                    </figure>
+
+                    <!-- MOBILE VARIANT — vertical flow, viewBox 320×900 -->
+                    <figure class="diagram-figure">
+                        <svg
+                            class="diagram-mobile"
+                            viewBox="0 0 320 900"
+                            xmlns="http://www.w3.org/2000/svg"
+                            role="img"
+                            aria-labelledby="pipeline-diagram-mobile-title pipeline-diagram-mobile-desc"
+                            focusable="false"
+                            style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto;"
+                        >
+                            <title id="pipeline-diagram-mobile-title">SDD Pipeline — 9-node flow (vertical)</title>
+                            <desc id="pipeline-diagram-mobile-desc">
+                                A vertical flow diagram of the Spec-Driven Development pipeline containing
+                                9 nodes stacked top to bottom: PM-Spec stage, Spec Gate decision point,
+                                Architect-Review stage, Arch Gate decision point, Implementer-Tester stage,
+                                QA Gate decision point, Deployment stage, Deploy Gate decision point,
+                                and Production terminus. Stages are rounded rectangles; gates are diamonds;
+                                Production is a filled charcoal rectangle. Short vertical arrows connect nodes.
+                            </desc>
+
+                            <style>
+                                .m-node-stage    { fill: var(--color-surface-elevated); stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .m-node-gate     { fill: var(--color-magenta-muted);    stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .m-node-terminal { fill: var(--color-charcoal);         stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .m-label-stage   { fill: var(--color-text-primary);  font-family: var(--font-family-base, "Inter", sans-serif); font-size: 12px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .m-label-gate    { fill: var(--color-charcoal);      font-family: var(--font-family-base, "Inter", sans-serif); font-size: 11px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .m-label-terminal{ fill: var(--color-text-on-dark);  font-family: var(--font-family-base, "Inter", sans-serif); font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+                                .m-arrow         { stroke: var(--color-border-hairline); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-mobile); }
+                            </style>
+
+                            <defs>
+                                <marker id="arrowhead-mobile" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="var(--color-border-hairline)" />
+                                </marker>
+                            </defs>
+
+                            <!-- Node 1: PM-Spec -->
+                            <rect class="m-node-stage" x="80" y="24" width="160" height="52" rx="6" ry="6" />
+                            <text class="m-label-stage" x="160" y="50">PM-Spec</text>
+
+                            <!-- Arrow 1→2 -->
+                            <line class="m-arrow" x1="160" y1="76" x2="160" y2="106" />
+
+                            <!-- Node 2: Spec Gate (diamond) -->
+                            <polygon class="m-node-gate" points="160,108 188,136 160,164 132,136" />
+                            <text class="m-label-gate" x="160" y="133">Spec</text>
+                            <text class="m-label-gate" x="160" y="145">Gate</text>
+
+                            <!-- Arrow 2→3 -->
+                            <line class="m-arrow" x1="160" y1="164" x2="160" y2="195" />
+
+                            <!-- Node 3: Architect-Review -->
+                            <rect class="m-node-stage" x="80" y="196" width="160" height="52" rx="6" ry="6" />
+                            <text class="m-label-stage" x="160" y="219">Architect-Review</text>
+
+                            <!-- Arrow 3→4 -->
+                            <line class="m-arrow" x1="160" y1="248" x2="160" y2="278" />
+
+                            <!-- Node 4: Arch Gate (diamond) -->
+                            <polygon class="m-node-gate" points="160,280 188,308 160,336 132,308" />
+                            <text class="m-label-gate" x="160" y="305">Arch</text>
+                            <text class="m-label-gate" x="160" y="317">Gate</text>
+
+                            <!-- Arrow 4→5 -->
+                            <line class="m-arrow" x1="160" y1="336" x2="160" y2="367" />
+
+                            <!-- Node 5: Implementer-Tester -->
+                            <rect class="m-node-stage" x="80" y="368" width="160" height="52" rx="6" ry="6" />
+                            <text class="m-label-stage" x="160" y="391">Implementer-Tester</text>
+
+                            <!-- Arrow 5→6 -->
+                            <line class="m-arrow" x1="160" y1="420" x2="160" y2="450" />
+
+                            <!-- Node 6: QA Gate (diamond) -->
+                            <polygon class="m-node-gate" points="160,452 188,480 160,508 132,480" />
+                            <text class="m-label-gate" x="160" y="477">QA</text>
+                            <text class="m-label-gate" x="160" y="489">Gate</text>
+
+                            <!-- Arrow 6→7 -->
+                            <line class="m-arrow" x1="160" y1="508" x2="160" y2="539" />
+
+                            <!-- Node 7: Deployment -->
+                            <rect class="m-node-stage" x="80" y="540" width="160" height="52" rx="6" ry="6" />
+                            <text class="m-label-stage" x="160" y="566">Deployment</text>
+
+                            <!-- Arrow 7→8 -->
+                            <line class="m-arrow" x1="160" y1="592" x2="160" y2="622" />
+
+                            <!-- Node 8: Deploy Gate (diamond) -->
+                            <polygon class="m-node-gate" points="160,624 188,652 160,680 132,652" />
+                            <text class="m-label-gate" x="160" y="649">Deploy</text>
+                            <text class="m-label-gate" x="160" y="661">Gate</text>
+
+                            <!-- Arrow 8→9 -->
+                            <line class="m-arrow" x1="160" y1="680" x2="160" y2="711" />
+
+                            <!-- Node 9: Production (terminal) -->
+                            <rect class="m-node-terminal" x="80" y="712" width="160" height="52" rx="4" ry="4" />
+                            <text class="m-label-terminal" x="160" y="738">Production</text>
+
+                        </svg>
+
+                        <figcaption>Figure 1: The SDD Pipeline — PM-Spec through Production</figcaption>
+                    </figure>
+
+                </div><!-- /.diagram-wrapper -->
+
+                <!-- Per-node descriptions -->
+                <div class="sdd-pipeline-nodes">
+                    <p><strong>PM-Spec.</strong> Natural-language requirements become a structured Feature Spec with acceptance criteria, dependencies, and a tier recommendation — AI-assisted, human-approved at Spec Gate.</p>
+                    <p><strong>Spec Gate.</strong> Rob approves the spec — or, for Critical-tier work, brings in an external second reviewer. Open questions are resolved here, before architecture or implementation begins.</p>
+                    <p><strong>Architect-Review.</strong> The spec is validated against the site's existing patterns and architecture. Security-sensitive specs trigger an additional penetration-tester review at this stage.</p>
+                    <p><strong>Arch Gate.</strong> Formal approval to proceed to implementation. Blocking findings from Architect-Review must be absorbed into the spec before this gate closes.</p>
+                    <p><strong>Implementer-Tester.</strong> The implementation stage: frontend-developer builds, qa-expert defines the QA strategy, test-automator executes, and code-reviewer signs off on quality and security.</p>
+                    <p><strong>QA Gate.</strong> Approval to commit and merge. The QA checklist must pass; any defect surfaced here blocks the merge.</p>
+                    <p><strong>Deployment.</strong> Cloudflare Pages auto-deploys from main on merge — no manual deployment steps. The pipeline produces the trigger; the platform handles the rest.</p>
+                    <p><strong>Deploy Gate.</strong> Confirms the change shipped as expected in production — correct behavior, no regressions, no unintended side effects.</p>
+                    <p><strong>Production.</strong> The change is live. A Post-Completion Retro captures what's worth capturing; the Learning Engine flags patterns for future pipeline improvement.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 4: THE TWO-LAYER AGENT ARCHITECTURE
+             ================================================================ -->
+        <section class="section" id="two-layer-architecture" aria-labelledby="two-layer-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="two-layer-heading">The Two-Layer Agent Architecture</h2>
+                </div>
+                <p class="sdd-section-intro">The agents running this pipeline divide into two layers with a clean separation of concerns: one layer orchestrates, the other executes.</p>
+
+                <!-- SPEC-016 graphic-artist SVG diagrams — embedded inline per R4 / Q4. -->
+                <div class="diagram-wrapper">
+
+                    <!-- DESKTOP VARIANT — two swim lanes, viewBox 1200×360 -->
+                    <figure class="diagram-figure">
+                        <svg
+                            class="diagram-desktop"
+                            viewBox="0 0 1200 360"
+                            xmlns="http://www.w3.org/2000/svg"
+                            role="img"
+                            aria-labelledby="arch-diagram-desktop-title arch-diagram-desktop-desc"
+                            focusable="false"
+                            style="width: 100%; height: auto; display: block;"
+                        >
+                            <title id="arch-diagram-desktop-title">Two-Layer Agent Architecture</title>
+                            <desc id="arch-diagram-desktop-desc">
+                                A swim-lane diagram showing two horizontal layers. Layer 1 (top, orchestration)
+                                contains 5 pipeline agents: PM-Spec, Architect-Review, Implementer-Tester,
+                                Deployment, and Learning-Engine. Layer 2 (bottom, execution) contains 11
+                                specialist agents: Frontend-Developer, Code-Reviewer, Architect-Reviewer,
+                                Marketing-Copywriter, UI-Designer, Graphic-Artist, Test-Automator, QA-Expert,
+                                Pen-Tester, Error-Detective, and Multi-Agent-Coordinator. Three representative
+                                invocation arrows descend from Layer 1 to Layer 2: PM-Spec to
+                                Marketing-Copywriter labeled content-heavy specs; Implementer-Tester fans to
+                                Frontend-Developer, QA-Expert, and Test-Automator labeled implementation work;
+                                and Architect-Review to Pen-Tester labeled security-sensitive specs.
+                            </desc>
+
+                            <style>
+                                .l1-box   { fill: var(--color-magenta-muted);    stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .l2-box   { fill: var(--color-surface-elevated); stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .lane-bg-1 { fill: none; stroke: var(--color-border-hairline); stroke-width: 1; stroke-dasharray: 4 4; rx: 6; }
+                                .lane-bg-2 { fill: none; stroke: var(--color-border-hairline); stroke-width: 1; stroke-dasharray: 4 4; }
+                                .l1-label { fill: var(--color-charcoal);      font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .l2-label { fill: var(--color-text-primary);  font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .lane-label { fill: var(--color-text-subtle); font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+                                .invoc-arrow  { stroke: var(--color-magenta-text); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-invoc); }
+                                .arrow-label  { fill: var(--color-magenta-text); font-family: var(--font-family-base, "Inter", sans-serif); font-size: 9px; font-weight: 500; text-anchor: middle; }
+                            </style>
+
+                            <defs>
+                                <marker id="arrowhead-invoc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="var(--color-magenta-text)" />
+                                </marker>
+                            </defs>
+
+                            <!-- Lane background rectangles (dashed border, no fill) -->
+                            <rect class="lane-bg-1" x="16" y="20" width="1168" height="130" rx="8" ry="8" />
+                            <rect class="lane-bg-2" x="16" y="200" width="1168" height="140" rx="8" ry="8" />
+
+                            <!-- Lane labels -->
+                            <text class="lane-label" x="24" y="36">Layer 1 — Orchestration (SDD Pipeline Agents)</text>
+                            <text class="lane-label" x="24" y="216">Layer 2 — Execution (Specialist Agents)</text>
+
+                            <!-- Layer 1 boxes -->
+
+                            <!-- L1-1: PM-Spec -->
+                            <rect class="l1-box" x="40" y="59" width="160" height="52" rx="6" ry="6" />
+                            <text class="l1-label" x="120" y="82">PM-Spec</text>
+                            <text class="l1-label" x="120" y="95" font-size="8" font-weight="400">Pipeline Agent</text>
+
+                            <!-- L1-2: Architect-Review -->
+                            <rect class="l1-box" x="280" y="59" width="160" height="52" rx="6" ry="6" />
+                            <text class="l1-label" x="360" y="82">Architect-Review</text>
+                            <text class="l1-label" x="360" y="95" font-size="8" font-weight="400">Pipeline Agent</text>
+
+                            <!-- L1-3: Implementer-Tester -->
+                            <rect class="l1-box" x="520" y="59" width="160" height="52" rx="6" ry="6" />
+                            <text class="l1-label" x="600" y="82">Implementer-Tester</text>
+                            <text class="l1-label" x="600" y="95" font-size="8" font-weight="400">Pipeline Agent</text>
+
+                            <!-- L1-4: Deployment -->
+                            <rect class="l1-box" x="760" y="59" width="160" height="52" rx="6" ry="6" />
+                            <text class="l1-label" x="840" y="82">Deployment</text>
+                            <text class="l1-label" x="840" y="95" font-size="8" font-weight="400">Pipeline Agent</text>
+
+                            <!-- L1-5: Learning-Engine -->
+                            <rect class="l1-box" x="1000" y="59" width="160" height="52" rx="6" ry="6" />
+                            <text class="l1-label" x="1080" y="82">Learning-Engine</text>
+                            <text class="l1-label" x="1080" y="95" font-size="8" font-weight="400">Pipeline Agent</text>
+
+                            <!-- Layer 2 boxes -->
+
+                            <!-- L2-1: Frontend-Developer -->
+                            <rect class="l2-box" x="40" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="88" y="267">Frontend-</text>
+                            <text class="l2-label" x="88" y="280">Developer</text>
+
+                            <!-- L2-2: Code-Reviewer -->
+                            <rect class="l2-box" x="142" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="190" y="267">Code-</text>
+                            <text class="l2-label" x="190" y="280">Reviewer</text>
+
+                            <!-- L2-3: Architect-Reviewer -->
+                            <rect class="l2-box" x="244" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="292" y="267">Architect-</text>
+                            <text class="l2-label" x="292" y="280">Reviewer</text>
+
+                            <!-- L2-4: Marketing-Copywriter -->
+                            <rect class="l2-box" x="346" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="394" y="267">Marketing-</text>
+                            <text class="l2-label" x="394" y="280">Copywriter</text>
+
+                            <!-- L2-5: UI-Designer -->
+                            <rect class="l2-box" x="448" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="496" y="267">UI-</text>
+                            <text class="l2-label" x="496" y="280">Designer</text>
+
+                            <!-- L2-6: Graphic-Artist -->
+                            <rect class="l2-box" x="550" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="598" y="267">Graphic-</text>
+                            <text class="l2-label" x="598" y="280">Artist</text>
+
+                            <!-- L2-7: Test-Automator -->
+                            <rect class="l2-box" x="652" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="700" y="267">Test-</text>
+                            <text class="l2-label" x="700" y="280">Automator</text>
+
+                            <!-- L2-8: QA-Expert -->
+                            <rect class="l2-box" x="754" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="802" y="267">QA-</text>
+                            <text class="l2-label" x="802" y="280">Expert</text>
+
+                            <!-- L2-9: Pen-Tester -->
+                            <rect class="l2-box" x="856" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="904" y="267">Pen-</text>
+                            <text class="l2-label" x="904" y="280">Tester</text>
+
+                            <!-- L2-10: Error-Detective -->
+                            <rect class="l2-box" x="958" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="1006" y="267">Error-</text>
+                            <text class="l2-label" x="1006" y="280">Detective</text>
+
+                            <!-- L2-11: Multi-Agent-Coordinator -->
+                            <rect class="l2-box" x="1060" y="248" width="96" height="44" rx="6" ry="6" />
+                            <text class="l2-label" x="1108" y="267">Multi-Agent-</text>
+                            <text class="l2-label" x="1108" y="280">Coordinator</text>
+
+                            <!-- Invocation arrows (AG-IG-18 — exactly 3 representative) -->
+
+                            <!-- Arrow A: PM-Spec → Marketing-Copywriter -->
+                            <polyline class="invoc-arrow" points="120,111 120,175 394,175 394,248" />
+                            <text class="arrow-label" x="257" y="169">content-heavy specs</text>
+
+                            <!-- Arrow B (fan): Implementer-Tester → FE-Dev, QA-Expert, Test-Automator -->
+                            <!-- Shared stem -->
+                            <line class="invoc-arrow" x1="600" y1="111" x2="600" y2="175" />
+                            <!-- Branch to Frontend-Developer -->
+                            <polyline class="invoc-arrow" points="600,175 88,175 88,248" />
+                            <!-- Branch to Test-Automator -->
+                            <polyline class="invoc-arrow" points="600,175 700,175 700,248" />
+                            <!-- Branch to QA-Expert -->
+                            <polyline class="invoc-arrow" points="600,175 802,175 802,248" />
+                            <!-- Fan label -->
+                            <text class="arrow-label" x="480" y="169">implementation work</text>
+
+                            <!-- Arrow C: Architect-Review → Pen-Tester -->
+                            <polyline class="invoc-arrow" points="360,111 360,188 904,188 904,248" />
+                            <text class="arrow-label" x="632" y="197">security-sensitive specs</text>
+
+                        </svg>
+
+                        <figcaption>Figure 2: Two-Layer Agent Architecture — example invocations shown, not exhaustive</figcaption>
+                    </figure>
+
+                    <!-- MOBILE VARIANT — two stacked labeled groups, no arrows, viewBox 320×520 -->
+                    <figure class="diagram-figure">
+                        <svg
+                            class="diagram-mobile"
+                            viewBox="0 0 320 520"
+                            xmlns="http://www.w3.org/2000/svg"
+                            role="img"
+                            aria-labelledby="arch-diagram-mobile-title arch-diagram-mobile-desc"
+                            focusable="false"
+                            style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto;"
+                        >
+                            <title id="arch-diagram-mobile-title">Two-Layer Agent Architecture</title>
+                            <desc id="arch-diagram-mobile-desc">
+                                Two labeled groups stacked vertically. Layer 1 — Orchestration contains
+                                5 pipeline agents: PM-Spec, Architect-Review, Implementer-Tester, Deployment,
+                                and Learning-Engine. Layer 2 — Execution contains 11 specialist agents:
+                                Frontend-Developer, Code-Reviewer, Architect-Reviewer, Marketing-Copywriter,
+                                UI-Designer, Graphic-Artist, Test-Automator, QA-Expert, Pen-Tester,
+                                Error-Detective, and Multi-Agent-Coordinator.
+                            </desc>
+
+                            <style>
+                                .ml1-box   { fill: var(--color-magenta-muted);    stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .ml2-box   { fill: var(--color-surface-elevated); stroke: var(--color-border-hairline); stroke-width: 1; }
+                                .ml1-label { fill: var(--color-charcoal);     font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .ml2-label { fill: var(--color-text-primary); font-family: var(--font-family-base, "Inter", sans-serif); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+                                .mlane-label { fill: var(--color-text-subtle); font-family: var(--font-family-base, "Inter", sans-serif); font-size: 9px; font-weight: 500; letter-spacing: 0.06em; }
+                                .mlane-bg  { fill: none; stroke: var(--color-border-hairline); stroke-width: 1; stroke-dasharray: 4 4; }
+                            </style>
+
+                            <!-- Layer 1 band -->
+                            <rect class="mlane-bg" x="8" y="16" width="304" height="184" rx="6" ry="6" />
+                            <text class="mlane-label" x="16" y="30">LAYER 1 — ORCHESTRATION</text>
+
+                            <!-- Row 1 -->
+                            <rect class="ml1-box" x="16" y="38" width="120" height="40" rx="6" ry="6" />
+                            <text class="ml1-label" x="76" y="58">PM-Spec</text>
+
+                            <rect class="ml1-box" x="152" y="38" width="148" height="40" rx="6" ry="6" />
+                            <text class="ml1-label" x="226" y="58">Architect-Review</text>
+
+                            <!-- Row 2 -->
+                            <rect class="ml1-box" x="16" y="86" width="148" height="40" rx="6" ry="6" />
+                            <text class="ml1-label" x="90" y="106">Implementer-Tester</text>
+
+                            <rect class="ml1-box" x="172" y="86" width="128" height="40" rx="6" ry="6" />
+                            <text class="ml1-label" x="236" y="106">Deployment</text>
+
+                            <!-- Row 3 — centred -->
+                            <rect class="ml1-box" x="88" y="134" width="144" height="40" rx="6" ry="6" />
+                            <text class="ml1-label" x="160" y="154">Learning-Engine</text>
+
+                            <!-- Layer 2 band -->
+                            <rect class="mlane-bg" x="8" y="216" width="304" height="290" rx="6" ry="6" />
+                            <text class="mlane-label" x="16" y="230">LAYER 2 — EXECUTION</text>
+
+                            <!-- Row 1: Frontend-Developer, Code-Reviewer, Architect-Reviewer -->
+                            <rect class="ml2-box" x="12" y="238" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="56" y="254">Frontend-</text>
+                            <text class="ml2-label" x="56" y="267">Developer</text>
+
+                            <rect class="ml2-box" x="112" y="238" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="156" y="254">Code-</text>
+                            <text class="ml2-label" x="156" y="267">Reviewer</text>
+
+                            <rect class="ml2-box" x="212" y="238" width="96" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="260" y="254">Architect-</text>
+                            <text class="ml2-label" x="260" y="267">Reviewer</text>
+
+                            <!-- Row 2: Marketing-Copywriter, UI-Designer, Graphic-Artist -->
+                            <rect class="ml2-box" x="12" y="286" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="56" y="302">Marketing-</text>
+                            <text class="ml2-label" x="56" y="315">Copywriter</text>
+
+                            <rect class="ml2-box" x="112" y="286" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="156" y="302">UI-</text>
+                            <text class="ml2-label" x="156" y="315">Designer</text>
+
+                            <rect class="ml2-box" x="212" y="286" width="96" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="260" y="302">Graphic-</text>
+                            <text class="ml2-label" x="260" y="315">Artist</text>
+
+                            <!-- Row 3: Test-Automator, QA-Expert, Pen-Tester -->
+                            <rect class="ml2-box" x="12" y="334" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="56" y="350">Test-</text>
+                            <text class="ml2-label" x="56" y="363">Automator</text>
+
+                            <rect class="ml2-box" x="112" y="334" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="156" y="350">QA-</text>
+                            <text class="ml2-label" x="156" y="363">Expert</text>
+
+                            <rect class="ml2-box" x="212" y="334" width="96" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="260" y="350">Pen-</text>
+                            <text class="ml2-label" x="260" y="363">Tester</text>
+
+                            <!-- Row 4: Error-Detective, Multi-Agent-Coordinator -->
+                            <rect class="ml2-box" x="12" y="382" width="88" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="56" y="398">Error-</text>
+                            <text class="ml2-label" x="56" y="411">Detective</text>
+
+                            <rect class="ml2-box" x="112" y="382" width="104" height="40" rx="6" ry="6" />
+                            <text class="ml2-label" x="164" y="398">Multi-Agent-</text>
+                            <text class="ml2-label" x="164" y="411">Coordinator</text>
+
+                        </svg>
+
+                        <figcaption>Figure 2: Two-Layer Agent Architecture — example invocations shown on wider screens. Layer 1 orchestrates; Layer 2 executes.</figcaption>
+                    </figure>
+
+                </div><!-- /.diagram-wrapper -->
+
+                <p>Layer 1 agents orchestrate the pipeline: they route work, apply the tier system, invoke the right specialists, and own the gate checkpoints. Layer 2 agents do the actual work — implementation, design, copy, security review, QA. The split is a deliberate architectural decision. When the pipeline itself needs to change — a new gate type, a different tier trigger — Layer 1 absorbs that change without touching the specialists. When a specialist needs to improve — a sharper code-review lens, a tighter QA strategy — that evolution happens without rewriting the pipeline. Each layer is independently iterable. That property is what lets one human run a multi-agent pipeline without the system collapsing every time something improves.</p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 5: TIERS AND GATE OWNERSHIP
+             ================================================================ -->
+        <!-- WHY: section-alt applied here per AG-IG-17 — one alternating band
+             per page (not counting the dark closing CTA). The tier table is the
+             right candidate: structured data benefits from visual separation. -->
+        <section class="section section-alt" id="tiers" aria-labelledby="tiers-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="tiers-heading">Tiers and Gate Ownership</h2>
+                </div>
+                <p class="sdd-section-intro">Not every change carries the same risk — the tier system matches gate depth to the stakes of each change, so routine work moves fast and high-risk work moves carefully.</p>
+
+                <!-- WHY: <dl> chosen over <table> per AG-IG-14 recommendation for mobile UX.
+                     Each tier is a named concept with two lines of description — definition-list
+                     semantics fit the content naturally, and <dl> avoids the horizontal-scroll
+                     concern on narrow viewports that a multi-column <table> would introduce. -->
+                <dl class="sdd-dl">
+                    <div>
+                        <dt>Trivial</dt>
+                        <dd>Copy fixes, config changes, image swaps. Inline approval — no checklists required.</dd>
+                    </div>
+                    <div>
+                        <dt>Standard</dt>
+                        <dd>New pages, bug fixes, styling overhauls, minor features. Full spec, inline architecture review, required QA checklist, inline deployment confirmation.</dd>
+                    </div>
+                    <div>
+                        <dt>Complex</dt>
+                        <dd>New integrations, framework migrations, significant refactors. All checklists required; spec surfaces mandatory escalation triggers explicitly.</dd>
+                    </div>
+                    <div>
+                        <dt>Critical</dt>
+                        <dd>Authentication, payments, PII handling, core data model changes. All checklists enhanced; external second reviewer required in addition to AI-agent-structured review.</dd>
+                    </div>
+                </dl>
+
+                <p>Rob owns every gate — Spec Gate, Arch Gate, QA Gate, Deploy Gate — with AI-agent-structured review at each. Critical-tier work is the one exception: it requires an external second reviewer before the gate can close. The tier system is what makes one-human-in-the-loop viable: by right-sizing gate depth to actual risk, it keeps cognitive load proportional to stakes rather than constant across every change.</p>
+                <p style="margin-top: var(--space-6);">The tier-and-gate-ownership model is a Rob-specific extension to the foundational SDD pipeline. It was developed to make the methodology run sustainably with a single human operator — a design constraint that shaped both the tier definitions and the gate structure.</p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 6: EXPERIMENTAL MECHANISMS
+             ================================================================ -->
+        <section class="section" id="experimental" aria-labelledby="experimental-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="experimental-heading">Experimental Mechanisms</h2>
+                </div>
+                <p class="sdd-section-intro">Four additions sit on top of the core pipeline — mechanisms for preserving the why behind decisions, not just the what.</p>
+
+                <!-- WHY: <dl> per AG-IG-15 — term/definition pairs map directly to
+                     mechanism names and their descriptions. -->
+                <dl class="sdd-dl">
+                    <div>
+                        <dt>Decision Rationale</dt>
+                        <dd>Standard+ specs include a section capturing alternatives considered, constraints, and trade-offs — not for documentation's sake, but because future-Rob and future-agents need the why, not just the what. A decision without its rationale is a landmine for the next change that touches the same surface.</dd>
+                    </div>
+                    <div>
+                        <dt>Gate Annotations</dt>
+                        <dd>When approving a gate, the gate owner notes why — especially when overriding a recommendation. This prevents the most common failure mode in technical review processes: approvals that carry no context and can't be audited six months later.</dd>
+                    </div>
+                    <div>
+                        <dt>Post-Completion Retros</dt>
+                        <dd>After production deployment, 2–3 minutes of structured reflection. The trigger is selective — skip if nothing stood out — which means the retros that do get written are worth reading.</dd>
+                    </div>
+                    <div>
+                        <dt>Stack Quirks</dt>
+                        <dd>Platform and tool gotchas accumulated through experience, in <code>governance/stack-quirks.md</code>. One-liners per entry, not exhaustive documentation — close enough to the moment of discovery to be accurate, short enough to actually get written.</dd>
+                    </div>
+                </dl>
+
+                <p>All four mechanisms are experimental — CLAUDE.md marks them explicitly: "Evaluate after 10 specs."</p>
+                <p style="margin-top: var(--space-4);">For worked examples of each mechanism above, browse <a
+                    href="https://github.com/wizzbiff/robcparkerdotcom/tree/main/specs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="the specs/ directory in the repo (opens in new tab)"
+                >the <code>specs/</code> directory in the repo</a>.</p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 7: WHAT'S WORKING, WHAT'S EXPERIMENTAL, WHAT'S ROUGH
+             ================================================================ -->
+        <section class="section" id="working-experimental-rough" aria-labelledby="working-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="working-heading">What's Working, What's Experimental, What's Rough</h2>
+                </div>
+                <p class="sdd-section-intro">This is the engineering-judgment section: an honest accounting of what's stable, what's being evaluated, and what still has real problems.</p>
+
+                <div class="highlights-grid">
+
+                    <article class="highlight-card">
+                        <!-- WHY (AG-IG-16): h3 rendered in Inter semibold via .highlights-grid .highlight-card h3
+                             override in style.css — functional label, not a Fraunces display heading. -->
+                        <h3>Working Today</h3>
+                        <ul class="sdd-card-list">
+                            <li><strong>Two-layer agent architecture</strong> — The orchestration/specialist split has been the most stable design decision in the pipeline. Across 16 shipped specs, no spec required restructuring either layer.</li>
+                            <li><strong>Tier system and escalation triggers</strong> — The four-tier system consistently produces the right gate depth without manual judgment at every spec. The tier-selection table is both the policy and the audit trail.</li>
+                            <li><strong>Spec-as-source-of-truth</strong> — Specs survive context-window resets. An agent picking up a spec mid-pipeline gets the full decision history. This is the property that makes the pipeline actually run with one human in the loop.</li>
+                            <li><strong>Why-capture mechanisms</strong> — Decision Rationale and Gate Annotations are generating real signal early — the SPEC-015 retro caught a Pareto-dominant copy option that the architect alone would have missed.</li>
+                            <li><strong>Automated deployment</strong> — Cloudflare Pages connects the repo to production: a PR merge to main triggers a deploy with no further manual steps. The Deploy Gate verifies the outcome — not the mechanism.</li>
+                        </ul>
+                    </article>
+
+                    <article class="highlight-card">
+                        <h3>Experimental</h3>
+                        <ul class="sdd-card-list">
+                            <li><strong>Dynamic spec scope decisions</strong> — When to bundle two related changes into one spec versus shipping them separately is a judgment call the pipeline doesn't yet codify. Current heuristic: share a dependency → bundle; share only a topic → separate. Not robust enough to be a rule yet.</li>
+                            <li><strong>Learning Engine agent</strong> — The Learning Engine is defined and produced the SPEC-015 retro. What's thin is the feedback loop: the agent flags patterns, but there's no scheduled review cadence to act on them. Evaluating after 10 specs whether that loop needs more structure.</li>
+                            <li><strong>Post-Completion Retros</strong> — Retros are in the methodology but only trigger when something worth capturing actually happened. So far: two retros on 17 specs. "Skip if nothing stands out" is working as designed, but it means the sample size is small.</li>
+                        </ul>
+                    </article>
+
+                    <article class="highlight-card">
+                        <h3>Rough or Evolving</h3>
+                        <ul class="sdd-card-list">
+                            <li><strong>Solo-operator gate fatigue</strong> — One human approving every gate is a cognitive load issue. The tier system mitigates by right-sizing depth to risk. That mitigation is real. At higher velocity, it won't be enough.</li>
+                            <li><strong>Cross-spec coordination</strong> — When two specs touch overlapping assets, sequencing decisions create overhead the pipeline doesn't currently automate. SPEC-015 required a logo-naming coordination note to SPEC-012. The tier system doesn't model inter-spec dependencies — that's a gap.</li>
+                            <li><strong>Memory hygiene</strong> — The Claude Code memory system requires periodic review. One record stayed stale for roughly a week after Cloudflare Pages went live before being caught at a Spec Gate. Catching it required actively reading memory, not automated expiry.</li>
+                            <li><strong>PM-Spec to Architect-Review hand-off</strong> — First-draft specs occasionally arrive with open questions that need iteration before review can proceed. This isn't a failure mode — it's expected in any spec-driven system. The friction is recognizing the pattern early enough to budget for iteration.</li>
+                            <li><strong>Spec-Gate question backlogs</strong> — First-draft specs routinely surface more open questions than they resolve (SPEC-015: 8; SPEC-016: 12). A spec that surfaces 12 questions is doing its job — resolving them at Spec Gate is the correct moment. But the walkthrough is now a time-budgeted activity, not a quick approval step.</li>
+                        </ul>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 8: FUTURE EVOLUTION
+             ================================================================ -->
+        <section class="section" id="future" aria-labelledby="future-heading">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="future-heading">Future Evolution</h2>
+                </div>
+                <p>Phase 1 of robcparker.com is a static marketing site. Phase 2 is an AI agent product. Phase 3 is a subscription billing platform. The SDD pipeline that built Phase 1 will need to evolve for each of those transitions — new specialists (backend-developer, db-architect, ai-integrations), new tier triggers (auth, AI safety review, payment compliance), new gates. The pipeline is designed to absorb that evolution. Tiers escalate when the trigger checklist demands it. New agents are added by writing new role files in the same shape as the existing ones. The two-layer architecture doesn't change — the inventory inside each layer does.</p>
+                <p style="margin-top: var(--space-6);">That property — load-bearing skeleton, replaceable parts — is not specific to this site. It's the same property that makes an engineering organization resilient through growth: a stable operating model that can absorb new tooling, new platforms, and new team members without rewiring from scratch. The methodology here is one instance of that pattern; the pattern generalizes.</p>
+
+                <!-- Pareto callout — standalone before closing CTA, per AG-Q2 -->
+                <blockquote class="sdd-pareto-callout">
+                    The methodology behind this site is the same methodology I'd bring to your engineering organization.
+                </blockquote>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             CLOSING CTA — dark section terminus
+             Not counted against the at-most-one alt-band rule per AG-IG-17.
+             ================================================================ -->
+        <section class="section section-dark cta-section" aria-labelledby="cta-heading">
+            <div class="container">
+                <h2 id="cta-heading">This Page Is the Portfolio</h2>
+                <p>The methodology described here is live — every spec, every gate decision, and every deployed change is in the public repo. If you're evaluating engineering leaders who build this way, let's talk.</p>
+                <a href="contact.html" class="btn btn-white">Get in Touch</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================
+         FOOTER
+         ================================================================ -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">Rob Parker</a>
+                    <p class="footer-tagline">Engineering leadership, delivered.</p>
+                </div>
+
+                <nav aria-label="Footer navigation">
+                    <ul class="footer-nav" role="list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="footer-bottom">
+                <!-- WHY (IG-5): Year hardcoded per architecture guidance — no dynamic JS needed -->
+                <p class="footer-copyright">&copy; 2026 Rob Parker</p>
+                <div class="footer-social">
+                    <a
+                        href="https://www.linkedin.com/in/robcparker/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Rob Parker on LinkedIn (opens in a new tab)"
+                    >LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WHY (IG-2): defer used instead of async — defer preserves execution order
+         and fires after DOM is parsed, which is what DOMContentLoaded listeners need. -->
+    <script src="js/main.js" defer></script>
+</body>
+</html>
