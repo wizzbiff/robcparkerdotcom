@@ -2386,3 +2386,130 @@ a.resume-contact-item:hover {
     font-weight: var(--font-weight-semibold);
 }
 
+/* ==========================================================================
+   SPEC-016: Diagram + callout utilities
+   ========================================================================== */
+
+/* Diagram wrapper: allows horizontal scroll on small screens without
+   breaking the page layout. */
+.diagram-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: var(--space-12) 0;
+}
+
+.diagram-figure {
+    margin: 0;
+}
+
+.diagram-figure figcaption {
+    margin-top: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    text-align: center;
+}
+
+/* Desktop diagram shown by default; mobile variant hidden */
+.diagram-desktop { display: block; }
+.diagram-mobile  { display: none; }
+
+@media (max-width: 768px) {
+    .diagram-desktop { display: none; }
+    .diagram-mobile  { display: block; }
+}
+
+/* Pareto callout — Fraunces display, larger than body, visually distinct.
+   Used between Section 8 paragraphs and the closing CTA on the SDD page. */
+.sdd-pareto-callout {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    border-left: 4px solid var(--color-magenta);
+    padding: var(--space-6) var(--space-8);
+    margin: var(--space-12) 0;
+}
+
+/* WHY (AG-IG-16): Section 7 card H3s are functional labels, not display headings.
+   Override Fraunces inheritance from h1/h2 rule at style.css:316; force Inter
+   semibold to keep these labels at the same visual register as the card chrome. */
+.highlights-grid .highlight-card h3 {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* WHY: Section 7 has exactly 3 cards. The shared .highlights-grid rule at
+   style.css:1737 sets repeat(4, 1fr) at ≥1024px (used by index.html's 4-card
+   section); without this override, the SDD page renders a phantom empty 4th
+   slot at desktop widths. Scope is page-specific via the #working-experimental-rough
+   section id so index.html keeps its 4-column rhythm. */
+@media (min-width: 1024px) {
+    #working-experimental-rough .highlights-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* SDD page: definition-list term/definition pairs (Sections 5 and 6) */
+.sdd-dl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin: var(--space-8) 0;
+}
+
+.sdd-dl dt {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.sdd-dl dd {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    margin-left: 0;
+}
+
+/* SDD section intro (one-sentence leads above diagrams / tables) */
+.sdd-section-intro {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    max-width: 780px;
+    margin-bottom: var(--space-8);
+}
+
+/* SDD pipeline node descriptions — bold term followed by prose */
+.sdd-pipeline-nodes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+}
+
+.sdd-pipeline-nodes p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* SDD bullet lists inside highlight cards */
+.sdd-card-list {
+    list-style: disc;
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.sdd-card-list li {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-muted);
+}
+
