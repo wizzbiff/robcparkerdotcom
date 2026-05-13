@@ -79,6 +79,22 @@ images/                             # Committed: web-optimized image assets
 PM-Spec → Spec Gate → Architect-Review → Arch Gate → Implementer-Tester → QA Gate → Deployment → Deploy Gate → Production
 ```
 
+## SDD Pipeline Defaults
+- Execute specs through ALL gates (Spec → Arch → Implementation → QA) autonomously unless asked otherwise
+- Never mark a gate as approved without explicit user authorization
+- After replace_all edits, run a grep verification pass to catch indentation variants
+- Verify production deploys against the apex domain (robcparker.com), not the www subdomain
+
+## Git & GitHub Conventions
+- Use the configured git author email for ALL commits; if a history rewrite occurs, re-verify author email on subsequent commits
+- Do not invent gh CLI flags — run `gh <cmd> --help` first if unsure
+- Assume gh CLI may need install/auth on fresh environments; check `gh auth status` early in PR workflows
+
+## Edit Safety
+- When editing spec or governance docs (R-numbered sections, gate decisions), re-read the file after edits to confirm no adjacent sections were clobbered
+- Prefer targeted edits over replace_all on structured documents
+
+
 ### Agent Architecture: Two Layers
 
 This project uses a **two-layer agent architecture**:
