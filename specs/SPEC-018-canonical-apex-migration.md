@@ -1,6 +1,6 @@
 # SPEC-018: Canonical-Tag Apex Migration
 
-**Status:** Spec Gate approved 2026-05-13 — proceeding to Arch Gate
+**Status:** Arch Gate approved 2026-05-13 — proceeding to Implementation
 **Tier:** Standard (multi-file SEO-load-bearing migration; 43 absolute-URL surfaces across 6 HTML pages + sitemap.xml + robots.txt; requires single coherent change so canonical/OG/sitemap stay consistent)
 **Author:** PM-Spec Agent (promoted from `specs/backlog.md` entry "Canonical-tag / live-URL host mismatch (apex vs. www)" dated 2026-05-09; surfaced at SPEC-015 Deploy Gate)
 **Date:** 2026-05-13
@@ -157,7 +157,7 @@ Independent of SPEC-018's canonical migration: the `www` subdomain currently ret
 The exact strings get locked at Arch Gate. These ACs are framed against the post-deploy live state:
 
 - **AC-1: All canonicals on apex.** `curl -s https://robcparker.com/<path> | grep '<link rel="canonical"'` returns the apex-form URL for each of the 6 pages (with `<path>` = `/`, `/about`, `/resume`, `/contact`, `/advisory`, `/how-this-site-was-built` assuming Q1 = clean; equivalent `.html` paths if Q1 = `.html`).
-- **AC-2: No www in HTML/XML/TXT at repo root.** `grep -rn "www.robcparker.com" --include="*.html" --include="*.xml" --include="*.txt"` returns **0 true-positive matches** across HTML, XML, and TXT files at repo root. Historical mentions in `specs/`, `governance/`, `.claude/`, `checklists/`, and `OPERATOR-TODOS.md` are explicitly out of scope and remain intact — expected raw count of historical mentions across those out-of-scope locations: **6–15** at spec time (informational, not asserted). If the live raw count exceeds that range, the gap is investigated for newly-added active references; below or within range is passing.
+- **AC-2: No www in HTML/XML/TXT at repo root.** `grep -rn "www.robcparker.com" --include="*.html" --include="*.xml" --include="*.txt"` returns **0 matches**, full stop. The `--include` filter excludes `.md` files entirely, so historical mentions in `specs/` / `governance/` / `.claude/` / `checklists/` / `OPERATOR-TODOS.md` (all `.md`) do not appear in this sweep. Both raw count and true-positive count are asserted to be exactly 0. (For the broader informational full-repo sweep including `.md` historical record, see IG-4 in Arch Gate; predicted raw band is 65–95, asserted true-positives 0.)
 - **AC-3: sitemap.xml on apex with chosen path form.** `curl -s https://robcparker.com/sitemap.xml` returns 200 with all 6 `<loc>` entries on the apex host and in the path form chosen at Q1.
 - **AC-4: robots.txt Sitemap directive on apex.** `curl -s https://robcparker.com/robots.txt` returns 200 with `Sitemap: https://robcparker.com/sitemap.xml`.
 - **AC-5: OG image fetchable.** `curl -sI https://robcparker.com/images/og/og-card.png` returns 200 (and for SPEC-016's variant: `og-card-how-this-site-was-built.png`). Verifies the OG image URL change resolves on the apex.
@@ -166,6 +166,8 @@ The exact strings get locked at Arch Gate. These ACs are framed against the post
 - **AC-8: specs/backlog.md no longer lists the canonical mismatch.** Lines 30-38 (the original entry) are gone.
 - **AC-9: Existing 308 redirects unbroken.** `curl -sI https://robcparker.com/resume.html` still returns 308 with `Location: /resume`. Spec doesn't touch redirect behavior; this AC is a no-regression check.
 - **AC-10: www host still returns 522 (no Cloudflare DNS change).** `curl -sI --max-time 8 https://www.robcparker.com/` returns 522. Confirms the spec did not implicitly attempt a DNS fix.
+
+- **AC-11: CLAUDE.md URL declaration on apex.** `grep -n "https://www.robcparker.com" CLAUDE.md` returns 0 matches; `grep -n "https://robcparker.com" CLAUDE.md` returns ≥1 match (the line 11 URL declaration).
 
 ## Risk + Reversibility
 
@@ -187,6 +189,142 @@ The exact strings get locked at Arch Gate. These ACs are framed against the post
 - **Promotion source:** `specs/backlog.md` lines 30-38, dated 2026-05-09, surfaced at SPEC-015 Deploy Gate.
 - **Consumes:** the live Cloudflare Pages clean-URL behavior (308s on `.html` paths). Codified in `governance/stack-quirks.md`.
 - **Sets precedent for:** future content additions. Q1's resolution becomes the going-forward canonical convention; new pages adopt the chosen form from the first commit.
+
+## Arch Gate Review (2026-05-13)
+
+Conducted by `architect-reviewer` (Layer 2). No `penetration-tester` invocation: SPEC-018 is byte-string URL migration with zero injection surface, no user input handling, no auth/payment scope. Standard-tier non-security-relevant default per spec-pipeline skill.
+
+### Architectural findings
+
+| ID | Severity | Finding | Disposition |
+|---|---|---|---|
+| AG-1 | Should-fix | R5 stack-quirks edit must be surgical, not replace_all on the Cloudflare paragraph. | **Accepted.** Targeted Edit on the apex/www-mismatch substring only; preserves Turnstile + 308 context. See IG-3. |
+| AG-2 | Should-fix | AC-2's 6–15 raw-count range was the wrong shape: `--include=*.html,*.xml,*.txt` excludes `.md`, so the actual residual is 0 outright. | **Accepted.** AC-2 rewritten — both raw and true-positive counts asserted = 0; broader informational sweep moved to IG-4. |
+| AG-3 | Should-fix | Home page canonical/og:url is `https://robcparker.com/` (trailing slash) — explicit lock-stage callout needed to prevent a one-character regression. | **Accepted.** Lock invariants line in PART B; SPEC-013 IG-3 prior art preserved. |
+| AG-4 | Nice-to-have | JSON-LD `url` is the Person entity homepage on every page (SPEC-013 IG-4); lock must NOT switch to per-page URLs. | **Accepted.** Lock invariants line in PART B. |
+| AG-5 | Nice-to-have | No AC verified CLAUDE.md:11 was updated. | **Accepted.** AC-11 added. |
+| AG-6 | Nice-to-have | OPERATOR-TODOS.md ticket text should be surfaced as an IG artifact for paste post-merge. | **Accepted.** IG-5 produces the suggested text. |
+| AG-7 | Nice-to-have | AC-10 `--max-time 8` is harmless but unnecessary. | **Accepted as-is** (harmless; no change). |
+
+### Pre-Implementation String Lock — 43 surfaces
+
+All replacements: `https://www.robcparker.com` → `https://robcparker.com`. The 12 sub-page path surfaces (canonical + og:url across 5 sub-pages + how-this-site-was-built) and 5 sitemap entries also drop `.html`; home `/` paths keep the trailing slash unchanged.
+
+| # | File | Line | Old string | New string |
+|---|---|---|---|---|
+| 1 | index.html | 13 | `<link rel="canonical" href="https://www.robcparker.com/">` | `<link rel="canonical" href="https://robcparker.com/">` |
+| 2 | index.html | 17 | `<meta property="og:url" content="https://www.robcparker.com/">` | `<meta property="og:url" content="https://robcparker.com/">` |
+| 3 | index.html | 21 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 4 | index.html | 30 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 5 | index.html | 42 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 6 | index.html | 43 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 7 | about.html | 12 | `<link rel="canonical" href="https://www.robcparker.com/about.html">` | `<link rel="canonical" href="https://robcparker.com/about">` |
+| 8 | about.html | 18 | `<meta property="og:url" content="https://www.robcparker.com/about.html">` | `<meta property="og:url" content="https://robcparker.com/about">` |
+| 9 | about.html | 22 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 10 | about.html | 31 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 11 | about.html | 43 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 12 | about.html | 44 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 13 | resume.html | 13 | `<link rel="canonical" href="https://www.robcparker.com/resume.html">` | `<link rel="canonical" href="https://robcparker.com/resume">` |
+| 14 | resume.html | 19 | `<meta property="og:url" content="https://www.robcparker.com/resume.html">` | `<meta property="og:url" content="https://robcparker.com/resume">` |
+| 15 | resume.html | 23 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 16 | resume.html | 32 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 17 | resume.html | 44 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 18 | resume.html | 45 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 19 | contact.html | 14 | `<link rel="canonical" href="https://www.robcparker.com/contact.html">` | `<link rel="canonical" href="https://robcparker.com/contact">` |
+| 20 | contact.html | 19 | `<meta property="og:url" content="https://www.robcparker.com/contact.html">` | `<meta property="og:url" content="https://robcparker.com/contact">` |
+| 21 | contact.html | 23 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 22 | contact.html | 32 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 23 | contact.html | 44 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 24 | contact.html | 45 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 25 | advisory.html | 11 | `<link rel="canonical" href="https://www.robcparker.com/advisory.html">` | `<link rel="canonical" href="https://robcparker.com/advisory">` |
+| 26 | advisory.html | 16 | `<meta property="og:url" content="https://www.robcparker.com/advisory.html">` | `<meta property="og:url" content="https://robcparker.com/advisory">` |
+| 27 | advisory.html | 20 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 28 | advisory.html | 29 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card.png">` |
+| 29 | advisory.html | 41 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 30 | advisory.html | 42 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 31 | how-this-site-was-built.html | 11 | `<link rel="canonical" href="https://www.robcparker.com/how-this-site-was-built.html">` | `<link rel="canonical" href="https://robcparker.com/how-this-site-was-built">` |
+| 32 | how-this-site-was-built.html | 15 | `<meta property="og:url" content="https://www.robcparker.com/how-this-site-was-built.html">` | `<meta property="og:url" content="https://robcparker.com/how-this-site-was-built">` |
+| 33 | how-this-site-was-built.html | 18 | `<meta property="og:image" content="https://www.robcparker.com/images/og/og-card-how-this-site-was-built.png">` | `<meta property="og:image" content="https://robcparker.com/images/og/og-card-how-this-site-was-built.png">` |
+| 34 | how-this-site-was-built.html | 27 | `<meta name="twitter:image" content="https://www.robcparker.com/images/og/og-card-how-this-site-was-built.png">` | `<meta name="twitter:image" content="https://robcparker.com/images/og/og-card-how-this-site-was-built.png">` |
+| 35 | how-this-site-was-built.html | 39 | `"image": "https://www.robcparker.com/images/rob-parker-headshot@2x.jpg",` | `"image": "https://robcparker.com/images/rob-parker-headshot@2x.jpg",` |
+| 36 | how-this-site-was-built.html | 40 | `"url": "https://www.robcparker.com/",` | `"url": "https://robcparker.com/",` |
+| 37 | sitemap.xml | 4 | `<loc>https://www.robcparker.com/</loc>` | `<loc>https://robcparker.com/</loc>` |
+| 38 | sitemap.xml | 10 | `<loc>https://www.robcparker.com/about.html</loc>` | `<loc>https://robcparker.com/about</loc>` |
+| 39 | sitemap.xml | 16 | `<loc>https://www.robcparker.com/resume.html</loc>` | `<loc>https://robcparker.com/resume</loc>` |
+| 40 | sitemap.xml | 22 | `<loc>https://www.robcparker.com/how-this-site-was-built.html</loc>` | `<loc>https://robcparker.com/how-this-site-was-built</loc>` |
+| 41 | sitemap.xml | 28 | `<loc>https://www.robcparker.com/contact.html</loc>` | `<loc>https://robcparker.com/contact</loc>` |
+| 42 | sitemap.xml | 34 | `<loc>https://www.robcparker.com/advisory.html</loc>` | `<loc>https://robcparker.com/advisory</loc>` |
+| 43 | robots.txt | 4 | `Sitemap: https://www.robcparker.com/sitemap.xml` | `Sitemap: https://robcparker.com/sitemap.xml` |
+
+**Lock invariants:**
+- Surfaces 1, 2, 6, 12, 18, 24, 30, 36, 37: **home-form (`/`) — host changes only, NO path edit. DO NOT drop the trailing slash.** SPEC-013 IG-3 prior art.
+- Surfaces 5, 11, 17, 23, 29, 35: JSON-LD `image` — host changes only.
+- Surfaces 6, 12, 18, 24, 30, 36: JSON-LD `url` is the **Person entity homepage** (SPEC-013 IG-4); host changes only — do NOT switch to per-page URL.
+- Surfaces 3, 4, 9, 10, 15, 16, 21, 22, 27, 28, 33, 34: image path absolute URLs — host changes only.
+
+### Implementation Guidance (IG)
+
+**IG-1 (CLAUDE.md:11 — Q2):**
+- Old: `**URL:** https://www.robcparker.com`
+- New: `**URL:** https://robcparker.com`
+- Single-line targeted edit; re-read post-edit per CLAUDE.md edit-safety rule.
+
+**IG-2 (specs/backlog.md — R6):** Delete the `### Canonical-tag / live-URL host mismatch (apex vs. www)` entry (lines 30–38 inclusive) along with one trailing blank line so the next sibling `### Rebrand-credibility sentence…` heading is separated by exactly one blank line. Targeted edit, not replace_all.
+
+**IG-3 (governance/stack-quirks.md — R5):** Surgical replacement on line 34 within the Cloudflare-section paragraph.
+
+- Old substring:
+  > `For live-site verification, hit the apex with clean paths or use \`curl -L\` to follow the 308. The repo's existing \`<link rel="canonical">\` and OG/sitemap URLs still point to \`www.robcparker.com/...html\` — this mismatch is a real SEO concern logged as a \`specs/backlog.md\` candidate (canonical-tag / live-URL host mismatch). Established in SPEC-015 Deploy Gate (2026-05-09).`
+
+- New substring:
+  > `For live-site verification, hit the apex with clean paths or use \`curl -L\` to follow the 308. Canonical convention is the **apex with clean URLs** (e.g., \`https://robcparker.com/resume\`, not \`https://www.robcparker.com/resume.html\`); all \`<link rel="canonical">\`, OG/Twitter, JSON-LD, sitemap \`<loc>\`, and robots.txt \`Sitemap:\` URLs use this form. Home canonical retains the trailing slash (\`https://robcparker.com/\`). Established in SPEC-015 Deploy Gate (2026-05-09); convention codified in SPEC-018 (2026-05-13).`
+
+Preserves the Turnstile sentence and Cloudflare Pages 308 fact ahead of the edited region. Post-edit, re-read lines 30–36 to confirm no clobber.
+
+**IG-4 (Post-edit verification — predicted residual ranges):**
+
+In-scope sweep (HTML/XML/TXT at repo root):
+```
+grep -rn "www\.robcparker\.com" --include="*.html" --include="*.xml" --include="*.txt"
+```
+- **Asserted raw count post-edit:** 0
+- **Asserted true-positive count:** 0
+
+Full-repo sweep (informational only):
+```
+grep -rn "www\.robcparker\.com" .
+```
+- **Pre-edit raw count (verified 2026-05-13):** 115
+- **Predicted post-edit raw count band:** **65–95** (43 in-scope removals + IG-1 + IG-3 + IG-2 ≈ 47 removals; lock-stage spec body additions add ~5–15; landing band informational)
+- **Asserted true-positive count:** 0 active canonical signals; all remaining matches are historical mentions in `specs/`, `checklists/`, `.claude/`, and SPEC-018's own body (per Q4: shipped specs untouched)
+- If raw count exceeds 95: investigate for newly-introduced active references. Below or within range is passing.
+
+**IG-5 (OPERATOR-TODOS.md ticket text — Q6 follow-on; user pastes post-merge into local-gitignored file):**
+
+```
+### Cloudflare: 301 www → apex for robcparker.com
+
+- Source: SPEC-018 Q6 resolution (2026-05-13).
+- What: Configure Cloudflare to serve https://www.robcparker.com/* as a permanent 301
+  redirect to https://robcparker.com/* (preserving path). Currently www returns HTTP 522.
+- Why: Any historical inbound link (LinkedIn post, email signature, indexed www URL,
+  cached social-share card) continues to fail until www is a working redirect target.
+  SPEC-018 fixed the canonical signal in code; this fixes the live host.
+- How: Cloudflare dashboard → Pages → robcparker.com project → Custom domains, or
+  Cloudflare Rules → Redirect Rules at the zone level (whichever operator prefers).
+  301 (permanent), preserve path and query string, force HTTPS.
+- Verify: `curl -sI https://www.robcparker.com/resume` returns 301 with
+  Location: https://robcparker.com/resume.
+- Tier estimate: Operator (Cloudflare-dashboard work, not code).
+- Status: Open.
+- Date added: 2026-05-13.
+```
+
+**IG-6 (Edit ordering recommendation):** Batch by file to minimize re-read overhead. Suggested order: `index.html` → `about.html` → `resume.html` → `contact.html` → `advisory.html` → `how-this-site-was-built.html` → `sitemap.xml` → `robots.txt` → `CLAUDE.md` → `governance/stack-quirks.md` → `specs/backlog.md`. Run IG-4 in-scope grep after each HTML file; running raw count should decrement by 6 per HTML file, 6 for sitemap, 1 for robots, then 1 for CLAUDE.md, 1 for stack-quirks paragraph, 2 for backlog entry = 47 in-scope removals total.
+
+**IG-7 (AC-2 wording correction):** AC-2 is already corrected in this spec revision (raw + true-positive both asserted = 0; informational broader sweep moved to IG-4). No additional action required.
+
+**Arch Gate Decision:** Approved 2026-05-13 with conditions absorbed — implementation may begin. AG-2 was the load-bearing catch: AC-2's residual-count range was the wrong shape because `--include` filters excluded the `.md` files the range was estimating; correcting the assertion to "0, full stop" + moving the broader sweep to IG-4 prevents a false-positive QA failure on a number that didn't apply to the sweep it filters.
 
 ## Implementation Notes
 
