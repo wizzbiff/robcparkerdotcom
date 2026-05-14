@@ -8,15 +8,6 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 
 ## Open candidates
 
-### Hero CTA — add tertiary "Get in Touch" link
-
-- **Source:** `robcparker_com_audit.md` Dimension 2 (lines 51-53)
-- **Origin:** Surfaced during SPEC-011 Spec Gate (Q5); scope-cut from SPEC-011 to keep that spec focused on advisory removal.
-- **Scope:** Add a tertiary "Get in Touch" link to the home hero CTA stack at `index.html:94-97` (currently has "View My Resume" and "Learn More About Rob"), OR alternatively make the Contact item visually prominent in the main nav (slightly bolder weight, or a subtle visual treatment). Goal: give a recruiter who decides "I want to talk to this person right now" a fast path from landing → contact.
-- **Tier estimate:** Trivial
-- **Status:** Idea — ready to promote
-- **Date added:** 2026-04-25
-
 ### GitHub link on Contact page
 
 - **Source:** `robcparker_com_audit.md` Dimension 7 (lines 235-237)
