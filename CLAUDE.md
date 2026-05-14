@@ -8,7 +8,7 @@ AI agent product with subscription billing.
 
 **Owner:** Rob Parker, Senior Engineering Executive
 **Methodology:** Spec-Driven Development (SDD) — Solo Operator Model
-**URL:** https://www.robcparker.com
+**URL:** https://robcparker.com
 
 ## Current State
 
