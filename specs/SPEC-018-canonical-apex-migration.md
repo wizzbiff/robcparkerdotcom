@@ -1,6 +1,6 @@
 # SPEC-018: Canonical-Tag Apex Migration
 
-**Status:** QA Gate approved 2026-05-13 — opening PR
+**Status:** Shipped — Deploy Gate approved 2026-05-13
 **Tier:** Standard (multi-file SEO-load-bearing migration; 43 absolute-URL surfaces across 6 HTML pages + sitemap.xml + robots.txt; requires single coherent change so canonical/OG/sitemap stay consistent)
 **Author:** PM-Spec Agent (promoted from `specs/backlog.md` entry "Canonical-tag / live-URL host mismatch (apex vs. www)" dated 2026-05-09; surfaced at SPEC-015 Deploy Gate)
 **Date:** 2026-05-13
@@ -381,6 +381,29 @@ Conducted by `qa-expert` (Layer 2). Full checklist at `checklists/QA-SPEC-018.md
 2. QA-SPEC-016 nav-baseline hashes differ from current HEAD; root cause is prior-checklist origin-state mismatch, not SPEC-018 regression. Verified via sha1 diff between SPEC-016 merge commit (75842c7) and HEAD: identical nav blocks across all 6 files.
 
 **QA Gate Decision:** Approved 2026-05-13. 20/20 PASS-eligible items pass; the byte-equality sweep across all 43 lock surfaces was the load-bearing check, independently confirming AG-3 home-slash and AG-4 JSON-LD-url invariants. PR opens next.
+
+## Deployment (2026-05-13)
+
+PR #20 merged at commit `16294b7`. Cloudflare Pages auto-deployed within ~1 minute (deploy already complete by the time the first verification curl ran). All Deploy Gate checks executed against the apex `https://robcparker.com/`.
+
+### Live verification results
+
+| AC | Check | Expected | Live result | Status |
+|---|---|---|---|---|
+| AC-1 | 6 canonical URLs on live apex | All apex, clean-form, home `/` | All match: `/`, `/about`, `/resume`, `/contact`, `/advisory`, `/how-this-site-was-built` | PASS |
+| AC-3 | `sitemap.xml` 200 with 6 apex clean-form `<loc>` | 200; 6 entries on apex | 200; 6 entries on apex, home with trailing slash, sub-pages no `.html` | PASS |
+| AC-4 | `robots.txt` 200 with apex `Sitemap:` | 200; `Sitemap: https://robcparker.com/sitemap.xml` | 200; matches | PASS |
+| AC-5 | OG image URLs fetchable on apex | 200 on `og-card.png`, `og-card-how-this-site-was-built.png`, `rob-parker-headshot@2x.jpg` | All 3 return 200 | PASS |
+| AC-9 | `.html` form 308-redirects unbroken (no-regression) | 308 with `Location:` to clean form on 5 sub-pages | All 5 return `308 / location: /<path>` | PASS |
+| AC-10 | www host still 522 (no DNS change) | 522 | 522 | PASS |
+
+**Bonus checks:** live OG meta (`og:url`, `og:image`, `twitter:image`) and JSON-LD Person `url`/`image` on the home page match the Pre-Implementation String Lock byte-for-byte.
+
+### Findings discovered post-deploy
+
+None. Live state matches the lock exactly; no regressions surfaced; no new backlog candidates identified.
+
+**Deploy Gate Decision:** Approved 2026-05-13. SPEC-018 live at `https://robcparker.com/` and all 5 sub-page clean URLs; sitemap.xml + robots.txt on apex; 6 page canonicals byte-identical to lock; 0 www residuals in live HTML; 308 chain unbroken; www subdomain unchanged at 522 (DNS-level fix correctly remains the operator follow-on per Q6).
 
 ## Spec Gate Open Question Summary
 
