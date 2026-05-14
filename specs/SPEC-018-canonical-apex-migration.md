@@ -326,9 +326,47 @@ grep -rn "www\.robcparker\.com" .
 
 **Arch Gate Decision:** Approved 2026-05-13 with conditions absorbed — implementation may begin. AG-2 was the load-bearing catch: AC-2's residual-count range was the wrong shape because `--include` filters excluded the `.md` files the range was estimating; correcting the assertion to "0, full stop" + moving the broader sweep to IG-4 prevents a false-positive QA failure on a number that didn't apply to the sweep it filters.
 
-## Implementation Notes
+## Implementation Notes (2026-05-13)
 
-To be populated during Implementation stage. Lock-stage additions, findings, and deviations from the Pre-Implementation String Lock go here.
+Implementation walked IG-1 through IG-7 in IG-6 order. All 43 in-scope lock surfaces migrated byte-correctly; lock invariants verified intact (home trailing slash on 9 surfaces, JSON-LD `url` homepage-canonical on all 6 pages, SPEC-016 OG image variant preserved).
+
+### Verification results (local pre-deploy)
+
+| Check | Predicted | Actual | Status |
+|---|---|---|---|
+| AC-2 in-scope sweep | 0 | 0 | PASS |
+| AC-7 stack-quirks (specs/backlog.md candidate framing removed) | 0 | 0 | PASS |
+| AC-7 stack-quirks (SPEC-018 attribution present) | ≥1 | 1 | PASS |
+| AC-8 backlog entry removed | 0 | 0 | PASS |
+| AC-11 CLAUDE.md migrated | 0 www / ≥1 apex | 0 / 1 | PASS |
+| IG-4 full-repo raw (informational) | 65–95 band | 119 | Below band — see Finding 1 |
+
+### Finding 1: IG-4 full-repo informational band was too narrow
+
+The architect predicted the full-repo `www.robcparker.com` raw count would land at 65–95 post-edit. Actual landed at **119**, with **52 historical mentions outside SPEC-018's own body** (67 within SPEC-018's lock table per Q4 — those are intentional and stay).
+
+**Root cause:** The architect's pre-edit baseline (115 mentions) was measured BEFORE SPEC-018's Arch Gate commit added the 43-row lock table (which itself contains 67 www mentions in its old-string column). The actual pre-edit baseline at implementation time was 165, not 115. The architect's reduction estimate (~47 active migrations) was accurate (actual delta: 46); only the absolute band was offset.
+
+**Disposition:** Benign. Asserted true-positive count is still 0 (no active canonical signals remain on www). The 52 non-SPEC-018-body mentions are all historical record in shipped specs, checklists, governance/stack-quirks.md's new example string, and `.claude/skills/` — all explicitly out of scope per Q4. Logging as a process observation: future Arch-Gate range estimates should account for the spec body's own contribution to the full-repo grep when the lock table is large and quoted verbatim.
+
+### Finding 2: Lock-stage spec body addition smaller than predicted
+
+IG-4 predicted "~5–15" lock-stage additions to SPEC-018's body during implementation. Actual additions to SPEC-018's body during this Implementation stage: this Implementation Notes section contains 2 www mentions (in the architect prediction discussion above). Materially smaller than the upper bound; consistent with the lower bound. No spec retention deviation.
+
+### Edits inventory (47 active migrations, matching IG-6 prediction)
+
+- 36 HTML surfaces across 6 pages (index, about, resume, contact, advisory, how-this-site-was-built)
+- 6 sitemap.xml `<loc>` entries
+- 1 robots.txt `Sitemap:` directive
+- 1 CLAUDE.md URL declaration (IG-1)
+- 1 governance/stack-quirks.md Cloudflare paragraph (IG-3)
+- 2 specs/backlog.md mentions removed via entry deletion (IG-2)
+
+Total: 47 active migrations. Matches IG-6 prediction exactly.
+
+### Operator-side follow-on
+
+IG-5 OPERATOR-TODOS.md ticket text (Cloudflare www→apex 301) is to be pasted into the local-gitignored `OPERATOR-TODOS.md` post-merge by Rob, on his own schedule. Not part of this commit (file is gitignored per SPEC-017).
 
 ## Spec Gate Open Question Summary
 
