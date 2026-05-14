@@ -285,3 +285,23 @@ None. Clean deploy. No blockers, no non-blockers, no follow-ons needed.
 **Deploy Gate Decision:** Approved 2026-05-14 — SPEC-019 live at https://robcparker.com/. Hero CTA stack now contains 3 anchors with byte-locked `Get in Touch →` text-link; clean-URL routing to `/contact` confirmed; 0 cross-page regressions across all 6 site pages.
 
 ---
+
+## Post-Completion Retro (2026-05-14)
+
+### What surprised
+
+Marketing-copywriter locked the CTA label `Get in Touch` from site-voice calibration alone, without explicit visibility into existing CTAs on the page. Post-edit grep surfaced that the same string was already the visible label on two other home-page CTAs (`index.html:229` filled-primary tier, `index.html:264` white-on-dark tier inside the closing "Let's Talk" section). Convergence, not collision — the new hero text-link now joins two existing instances using consistent label text across three visual treatments.
+
+### Process observations
+
+Positive evidence that the site's CTA vocabulary is internally consistent enough for a fresh copywriter pass to converge on existing patterns from voice calibration alone. Reinforces the compounding value of voice/copy work accumulated across SPEC-008→SPEC-018 — fresh specialists land on the established choice without having to see the prior choices.
+
+### What went well / counterfactual
+
+Trivial-tier pipeline ran textbook — 4 commits, zero rework, zero deferred findings. Two-reviewer parallel at Arch Gate (architect-reviewer + marketing-copywriter in a single tool-call batch) is now the default pattern from SPEC-015/-016/-017 retros and held here too. Nothing else notable; methodology earned its keep without surprises.
+
+### Stack-quirks follow-on
+
+None. The architect-reviewer's tablet-breakpoint correction (1023px is the narrowest column-width context for `.hero-copy-col`, not just 375px) is a useful single-instance observation but not yet codification-worthy — would be premature on one data point. If a future spec hits the same `.hero-copy-col` narrowing-on-tablet trap, codify then.
+
+---
