@@ -219,3 +219,44 @@ The hero CTA (text-link tier) now joins these two existing instances (filled-pri
 - New anchor indentation: 28 spaces, matches existing `.hero-cta-stack` children. UTF-8 arrow glyph (`→`) preserved.
 
 ---
+
+## QA-SPEC-019 Checklist (2026-05-14)
+
+**Branch:** `spec/SPEC-019-hero-contact-cta`
+**Commit under test:** `eadc6cb`
+**Specialists:** `qa-expert`, `code-reviewer` (parallel)
+**code-reviewer decision:** Approve — no concerns across quality, accessibility, security, or convention. `.btn-textlink:focus-visible` keyboard accessibility inherited; `aria-hidden="true"` on arrow correct; WCAG 2.4.4 satisfied for the three same-text→same-destination "Get in Touch" instances on the page.
+
+### Checklist
+
+| # | Item | Source | Type | Result |
+|---|------|--------|------|--------|
+| 1 | `.hero-cta-stack` contains exactly 3 child anchors | AC1 | Automation | **PASS** — 3 anchors confirmed via HTML parse |
+| 2 | New anchor `href` is `contact.html` | AC2 | Automation | **PASS** — line 138 |
+| 3 | New anchor uses only existing CSS classes (no new class) | AC3 | Automation | **PASS** — `css/style.css` unchanged in `eadc6cb` |
+| 4 | Visible label matches byte-locked string | AC4 | Automation | **PASS** — exact match to Arch Gate lock |
+| 5 | At ≥ 1024px: 3 CTAs vertical, no horizontal overflow | AC5 / AG-IG-4 | Visual | **PASS** (Rob verified) |
+| 6 | At 768px: same — vertical stack, readable spacing | AC6 / AG-IG-4 | Visual | **PASS** (Rob verified) |
+| 7 | At 1023px (tablet — narrowest column context): 3 CTAs stack cleanly inside `.hero-copy-col` | AC6 / AG-IG-4 | Visual | **PASS** (Rob verified — architect-corrected breakpoint) |
+| 8 | At 375px: vertical stack, touch targets ≥ 44px height, no overflow | AC7 / AG-IG-4 | Visual | **PASS** (Rob verified) |
+| 9 | Tab order: View My Resume → Learn More About Rob → Get in Touch | AC8 | Visual | **PASS** (Rob verified) |
+| 10 | Browser console clean on `index.html` — no new errors | AC9 / AG-IG-6 | Visual | **PASS** (Rob verified) |
+| 11 | Backlog entry absent from `specs/backlog.md` | AC10 / AG-IG-5 | Automation | **PASS** — 0 matches on "Get in Touch" and "Hero CTA" |
+| 12 | `class="btn-textlink"` in `index.html` count = 2, true-positive = 2 | AG-IG-2 | Automation | **PASS** |
+| 13 | `href="contact.html"` in `index.html` count = 5, true-positive new = 1 | AG-IG-2 | Automation | **PASS** |
+| 14 | Cross-page regression: other 5 HTML pages, `css/style.css`, `js/main.js` unmodified in `eadc6cb` | Regression | Automation | **PASS** — `git show --stat eadc6cb` confirms only `index.html`, `specs/backlog.md`, `specs/SPEC-019-hero-contact-cta.md` changed |
+| 15 | Other 5 pages still render correctly (shared nav/footer visually intact) | Regression | Visual | **PASS** (Rob verified) |
+
+**Cross-page nav-baseline check (sha1sum of `.nav-links` blocks across 6 files):** Explicitly excluded. This change did not touch nav markup; `git show --stat eadc6cb` confirms no other HTML file was modified. Exclusion is correct per project QA convention.
+
+### Final status
+
+- **15 / 15 items PASS.** 8 automation + 7 visual (verified by Rob 2026-05-14).
+
+### Regression risk assessment
+
+Risk: **None identified.** Single additive anchor in `index.html`. No CSS, no JS, no shared partials touched. Architect-reviewer pre-verified that `.hero-cta-stack` (style.css:729-734) and `.btn-textlink` (style.css:739-769) have no `nth-child`, `:last-child`, or sibling-combinator selectors that a child-count change could trigger. Cross-page risk effectively zero.
+
+**QA Gate Decision:** Approved 2026-05-14 — SPEC-019 implementation complete (15/15 PASS). PR opens next.
+
+---
