@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:help.formspree.io)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "WebSearch",
+      "Bash(gh pr *)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)"
+    ]
+  }
+}
