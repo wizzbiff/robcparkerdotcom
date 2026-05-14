@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.robcparker.com/sitemap.xml
+Sitemap: https://robcparker.com/sitemap.xml
