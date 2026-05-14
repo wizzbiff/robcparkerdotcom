@@ -260,3 +260,28 @@ Risk: **None identified.** Single additive anchor in `index.html`. No CSS, no JS
 **QA Gate Decision:** Approved 2026-05-14 — SPEC-019 implementation complete (15/15 PASS). PR opens next.
 
 ---
+
+## Deployment (2026-05-14)
+
+**PR:** [#21](https://github.com/wizzbiff/robcparkerdotcom/pull/21) merged to `main` 2026-05-14.
+**Merge commit:** `7a1136e`.
+**Cloudflare deploy:** completed within the standard ~1–2 minute window; live HTML verified post-deploy.
+
+### Live verification results
+
+| Check | Target | Result |
+|-------|--------|--------|
+| Apex live | `https://robcparker.com/` | HTTP 200 ✓ |
+| Apex-only convention | `https://www.robcparker.com/` | HTTP 522 ✓ (per `governance/stack-quirks.md`) |
+| Byte-equality | Locked string in live hero HTML matches Arch Gate lock exactly | ✓ |
+| Hero stack count | `.hero-cta-stack` contains exactly 3 anchors on live apex | ✓ |
+| Clean-URL routing | `GET https://robcparker.com/contact` (no `.html`) | HTTP 200 direct ✓ |
+| Cross-page smoke | `/`, `/about`, `/resume`, `/contact`, `/advisory`, `/how-this-site-was-built` | all HTTP 200 ✓ |
+
+### Findings post-deploy
+
+None. Clean deploy. No blockers, no non-blockers, no follow-ons needed.
+
+**Deploy Gate Decision:** Approved 2026-05-14 — SPEC-019 live at https://robcparker.com/. Hero CTA stack now contains 3 anchors with byte-locked `Get in Touch →` text-link; clean-URL routing to `/contact` confirmed; 0 cross-page regressions across all 6 site pages.
+
+---
