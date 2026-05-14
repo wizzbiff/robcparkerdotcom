@@ -405,6 +405,38 @@ None. Live state matches the lock exactly; no regressions surfaced; no new backl
 
 **Deploy Gate Decision:** Approved 2026-05-13. SPEC-018 live at `https://robcparker.com/` and all 5 sub-page clean URLs; sitemap.xml + robots.txt on apex; 6 page canonicals byte-identical to lock; 0 www residuals in live HTML; 308 chain unbroken; www subdomain unchanged at 522 (DNS-level fix correctly remains the operator follow-on per Q6).
 
+## Post-Completion Retro (2026-05-13)
+
+### What went well
+
+- **PM-Spec audit BEFORE the Spec Gate walkthrough.** Drafted spec → invoked PM-Spec for an audit pass → absorbed 7 findings → walked Open Questions with fewer surprises. Most consequential catch: AG-style finding on AC-2's IG-range shape and adding Q6 to make the www-inbound 301 trade-off explicit rather than silently accepted. Pattern worth repeating on every Standard+ spec.
+- **Pre-Implementation String Lock with `(file, line, old, new)` rows.** All 43 surfaces enumerated up front; Implementation became a transcription pass with built-in residual-count verification. Implementer hit 0 lock-stage adjustments — same outcome as SPEC-015's 21-LOCK pattern.
+- **QA byte-equality via Python line-exact substring match.** qa-expert independently verified each of the 43 lock rows landed exactly. Independently caught the off-by-one in my Implementation Notes count tally (benign, but the discipline matters).
+- **Apex live state matched lock byte-for-byte at Deploy Gate.** No post-deploy findings, no backlog candidates surfaced.
+
+### What surprised
+
+- **The IG-4 full-repo range was offset by SPEC-018's own lock-table commit.** Architect measured baseline (115 mentions) at Arch Review; that measurement happened BEFORE I committed the Arch Gate version of the spec, which added 67–68 `www.robcparker.com` mentions in the lock table's old-string column. Actual pre-Implementation baseline was 165. The architect's *reduction* estimate (~47 active migrations) was within 1 of actual (46) — only the absolute band was offset. Benign in this case; could be confusing on a future spec where the band shape is load-bearing.
+
+### Process observations
+
+- **`feedback_ig_residual_counts_as_ranges` partially fired.** The memory rule correctly pushed AC-2 from a singleton to a range — but didn't catch that the range was for the wrong sweep (a `--include`-filtered grep that excluded the `.md` files the range was estimating). AG-2 caught that. Lesson: when stating an IG range, also state the *exact grep scope* the range applies to. The architect's IG-4 (in-scope vs. full-repo, with explicit grep commands) is the better pattern.
+- **When a spec body contains the migration content verbatim (large lock table), the baseline grep should be measured AFTER that lock is committed,** or the lock table should be programmatically excluded from informational sweeps. Worth a `governance/stack-quirks.md` SDD-process one-liner.
+- **Deploy Gate cycle time on Cloudflare Pages is ~1 minute, not 1–2.** First verification curl already showed the apex canonical post-merge. The skill's "~1–2 minutes" guidance can be tightened.
+
+### Counterfactual
+
+- **Without the Arch Gate (specifically AG-2), AC-2 would have shipped with a range-shape mismatch.** At QA Gate, the in-scope grep returns 0 — which satisfies the asserted true-positive count but would have read as "way under the 6–15 informational band," triggering a midstream "did we miss something?" investigation. The Arch Gate caught the wrong-shape framing before it confused QA. Positive evidence for the two-stage gate.
+- **Without the PM-Spec audit pre-walkthrough, Q6 (www→apex 301 follow-on) would have shipped silently accepted in the Trade-offs paragraph.** The audit promoted it to an explicit Open Question with options — which led to an actual operator ticket. Positive evidence for the audit-before-walkthrough pattern.
+
+### Follow-on stack-quirks entry (to add post-retro)
+
+Proposed one-liner for `governance/stack-quirks.md` SDD-process section:
+
+> **Spec-body lock tables skew full-repo grep baselines.** When a Pre-Implementation String Lock contains the migration content verbatim (old-string column), the spec body's contribution to a `grep -rn` full-repo count is non-trivial (~40–70 mentions on a Standard-tier migration). Architects measuring an informational baseline at Arch Gate should either measure AFTER the lock table is committed, or programmatically exclude the spec file from informational sweeps. SPEC-018 retro (2026-05-13).
+
+Retro write time: ~4 minutes. Above 2–3 target but well under SPEC-015/-017's 5–7.
+
 ## Spec Gate Open Question Summary
 
 | Q# | Topic | PM-Spec Recommendation | Resolution |
