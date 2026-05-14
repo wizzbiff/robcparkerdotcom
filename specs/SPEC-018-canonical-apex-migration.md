@@ -1,6 +1,6 @@
 # SPEC-018: Canonical-Tag Apex Migration
 
-**Status:** Arch Gate approved 2026-05-13 — proceeding to Implementation
+**Status:** QA Gate approved 2026-05-13 — opening PR
 **Tier:** Standard (multi-file SEO-load-bearing migration; 43 absolute-URL surfaces across 6 HTML pages + sitemap.xml + robots.txt; requires single coherent change so canonical/OG/sitemap stay consistent)
 **Author:** PM-Spec Agent (promoted from `specs/backlog.md` entry "Canonical-tag / live-URL host mismatch (apex vs. www)" dated 2026-05-09; surfaced at SPEC-015 Deploy Gate)
 **Date:** 2026-05-13
@@ -367,6 +367,20 @@ Total: 47 active migrations. Matches IG-6 prediction exactly.
 ### Operator-side follow-on
 
 IG-5 OPERATOR-TODOS.md ticket text (Cloudflare www→apex 301) is to be pasted into the local-gitignored `OPERATOR-TODOS.md` post-merge by Rob, on his own schedule. Not part of this commit (file is gitignored per SPEC-017).
+
+## QA Gate (2026-05-13)
+
+Conducted by `qa-expert` (Layer 2). Full checklist at `checklists/QA-SPEC-018.md`.
+
+**Results:** 20 of 20 PASS-eligible items PASS. 0 FAIL. 6 items DEFER-to-Deploy (inherently require the live Cloudflare-served site: AC-1, AC-3, AC-4, AC-5, AC-9, AC-10).
+
+**Load-bearing check:** byte-equality verification on all 43 lock surfaces independently confirmed the Pre-Implementation String Lock landed exactly, including AG-3 (home trailing slash) and AG-4 (JSON-LD `url` stays homepage-canonical on every page).
+
+**Two benign observations:**
+1. Implementation Notes' IG-4 informational count was off-by-one (claim 67/119; actual 68/120 at commit time; 125 now after QA checklist was added). All 125 full-repo mentions accounted for in out-of-scope locations. 0 active canonical signals on www. Documentation tally, not correctness.
+2. QA-SPEC-016 nav-baseline hashes differ from current HEAD; root cause is prior-checklist origin-state mismatch, not SPEC-018 regression. Verified via sha1 diff between SPEC-016 merge commit (75842c7) and HEAD: identical nav blocks across all 6 files.
+
+**QA Gate Decision:** Approved 2026-05-13. 20/20 PASS-eligible items pass; the byte-equality sweep across all 43 lock surfaces was the load-bearing check, independently confirming AG-3 home-slash and AG-4 JSON-LD-url invariants. PR opens next.
 
 ## Spec Gate Open Question Summary
 
