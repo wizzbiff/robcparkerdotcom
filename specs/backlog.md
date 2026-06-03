@@ -18,6 +18,16 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 - **Status:** Idea — deferred pending SugarAI corroborating public material
 - **Date added:** 2026-05-08
 
+### GitHub in Contact-page JSON-LD `sameAs` array
+
+- **Source:** SPEC-020 "Out of scope" (the GitHub *link* shipped 2026-06-03; the structured-data signal was deferred).
+- **Origin:** SPEC-020 added a visible GitHub link to `contact.html` but deliberately left the Person/JSON-LD `sameAs` array (`contact.html:56-58`) as LinkedIn-only. Adding the GitHub URL there is an entity-disambiguation (SEO) signal, separate from the visible link.
+- **Scope:** Add `"https://github.com/wizzbiff"` to the `sameAs` array in the Person JSON-LD block at `contact.html:56-58`. Single-line additive change; verify JSON validity.
+- **Promotion trigger:** The `wizzbiff` GitHub profile is fleshed out (display name, bio, pinned/visible repos) such that it is a *strong* disambiguation signal rather than a near-empty profile. A bare profile in `sameAs` is a weak entity signal for the senior-exec audience and search crawlers.
+- **Tier estimate:** Trivial
+- **Status:** Idea — deferred pending GitHub profile polish
+- **Date added:** 2026-06-03
+
 ---
 
 ## How to use this file

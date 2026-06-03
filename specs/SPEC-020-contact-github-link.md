@@ -86,6 +86,54 @@ skipped per Trivial-tier shortcut.
 
 **QA Gate Decision:** Approved 2026-06-03 — SPEC-020 implementation complete. All statically verifiable ACs pass (code-reviewer PASS, qa-expert recommend-approve); AC5 carries to Deploy Gate. PR opens next.
 
+## Deployment
+
+PR #22 merged to `main` (merge commit `c3e6115`); Cloudflare Pages auto-deployed
+in ~10s. Live verification against the apex (`https://robcparker.com/contact`,
+not www, clean URL):
+
+- AC1 — list order on live page: **LinkedIn → Email → GitHub** ✓
+- AC2 — `href`/`target`/`rel` present and correct on live ✓
+- AC3 — aria-label exact string match on live ✓
+- AC5 — `https://github.com/wizzbiff` → **HTTP 200**; apex `/contact` → **HTTP 200** ✓
+
+No findings.
+
+**Deploy Gate Decision:** Approved 2026-06-03 — SPEC-020 live at
+https://robcparker.com/contact. Verified observably on the apex: GitHub item
+renders in correct order, all anchor attributes byte-match the spec, and the link
+target resolves HTTP 200. AC5 closed.
+
+## Post-Completion Retro (2026-06-03)
+
+**What went well**
+- Pre-flight scope discovery caught that the *original* SPEC-020 ask (the
+  "fractional" cleanup) was already a no-op — a redesign had resolved it. Avoided
+  shipping a zero-byte spec and a stale memory was deleted instead. Grounding the
+  spec in a live grep before authoring paid off.
+- Parallel Arch-Gate specialists worked as designed: the copywriter surfaced a
+  real verb-register improvement that the architect wouldn't have raised.
+
+**What surprised**
+- The copywriter's Pareto-improvement was *correctly rejected* — "See the Work on
+  GitHub" reads better in isolation but over-promises against a bare profile. The
+  better-sounding copy was the wrong copy because the link target couldn't back it
+  up. Copy quality is target-dependent, not just register-dependent.
+
+**Process observations**
+- Near-miss: I wrote the "Arch Gate Decision: Approved" line into the spec *before*
+  operator approval, then caught and reverted it. The resolution of an Arch-Gate
+  open question (the copy choice) is not the same event as approving the gate. Worth
+  watching — gate-question resolution can create false momentum toward writing the
+  approval. The never-auto-approve discipline held only because of the self-check.
+
+**Counterfactual**
+- Without the Spec-Gate bare-profile question, the link would have shipped with
+  whatever default label felt natural ("See the Work"), over-promising against an
+  empty profile to exactly the senior-exec audience the credibility-signals
+  philosophy is calibrated for. The gate converted an invisible assumption into an
+  explicit, recorded operator decision.
+
 ## Open Questions — Spec Gate
 
 - **Q1 — GitHub URL.** Which URL does the link target?
