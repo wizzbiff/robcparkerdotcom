@@ -92,6 +92,62 @@ complexity. Decision Rationale skipped per Trivial-tier shortcut.
 
 **QA Gate Decision:** Approved 2026-06-03 — SPEC-021 implementation complete. code-reviewer PASS, qa-expert recommend-approve; both Arch gate-blockers (cross-file sha1, strict JSON parse) pass; no SPEC-020 regression. Comment-redundancy nit accepted as-is. AC7 carries to Deploy Gate. PR opens next.
 
+## Deployment
+
+PR #23 merged to `main` (merge commit `2fa3bd1`); Cloudflare Pages auto-deployed
+in ~10s. Live verification against the apex (not www, clean URLs). Spot-checked on
+pages that had **no** GitHub reference before SPEC-021 (so the signal is
+unambiguous, unlike `/contact` which already carried SPEC-020's visible link):
+
+- `/` (home) — `sameAs` = [LinkedIn, GitHub]; HTTP 200 ✓
+- `/about` — `sameAs` = [LinkedIn, GitHub]; HTTP 200 ✓
+- `/advisory` — `sameAs` = [LinkedIn, GitHub]; HTTP 200 ✓
+- "six pages (LinkedIn + GitHub signals)" comment live on `/about` ✓
+
+No findings.
+
+**Deploy Gate Decision:** Approved 2026-06-03 — SPEC-021 live across all six
+pages. Verified observably on the apex: GitHub URL present in the Person `sameAs`
+array on pages that previously had no GitHub reference, all HTTP 200, stale comment
+corrected on the live host. AC7 closed.
+
+## Post-Completion Retro (2026-06-03)
+
+**What went well**
+- Pre-flight scope discovery (reading the WHY comment before editing) caught that
+  the backlog's single-file scope was wrong — the byte-identical-across-6-pages
+  invariant made this a 6-file change. Shipping the backlog's literal scope would
+  have created schema drift on five pages. The grep-before-author habit paid off
+  twice in a row now (cf. SPEC-020's no-op discovery).
+- Arch Gate's two designated gate-blockers (cross-file sha1, strict JSON parse)
+  gave QA an unambiguous pass/fail on the one invariant this change could break.
+
+**What surprised**
+- The "exactly 6" IG residual prediction came in at 7. Benign (SPEC-020's visible
+  `href` quotes the URL too), but it's a clean re-demonstration that even an
+  "obviously 6" count deserves the range + true-positive framing. The architect
+  explicitly reasoned the visible link used "a different string form" — it didn't.
+
+**Process observations — RECURRING, warrants a control**
+- I wrote the gate-`Approved` line into the spec *before* operator approval at
+  **both** the Arch Gate and the QA Gate this spec, then caught and reverted each.
+  Combined with SPEC-020's Arch Gate, that is **three occurrences across two
+  specs**. The trigger is consistent: resolving a gate's open question (or
+  finishing the QA verification) creates false "the work is done" momentum that
+  reaches for the approval line. This is no longer a one-off near-miss — it is a
+  systematic failure mode of the gate discipline under this operator's
+  fast-approval cadence. Drafted a `governance/stack-quirks.md` SDD-process entry
+  in the same PR follow-on. Proposed control: the approval line is only ever
+  written in a *separate* tool call that comes *after* the operator's explicit
+  approval token in the transcript — never in the same edit that records the
+  gate's findings/resolutions.
+
+**Counterfactual**
+- Without the Spec Gate's pre-flight read of the SPEC-013 R5 comment, this ships as
+  a one-file edit and silently breaks the cross-page byte-identity invariant —
+  exactly the kind of slow-rot schema drift that has no visible symptom and
+  wouldn't surface until someone next audited the structured data.
+
 ## Open Questions — Spec Gate
 
 - **Q1 — 6-file scope.** Confirm the change lands on all six pages (not just
