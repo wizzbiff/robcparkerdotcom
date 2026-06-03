@@ -25,7 +25,7 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 - **Scope:** Add `"https://github.com/wizzbiff"` to the `sameAs` array in the Person JSON-LD block at `contact.html:56-58`. Single-line additive change; verify JSON validity.
 - **Promotion trigger:** The `wizzbiff` GitHub profile is fleshed out (display name, bio, pinned/visible repos) such that it is a *strong* disambiguation signal rather than a near-empty profile. A bare profile in `sameAs` is a weak entity signal for the senior-exec audience and search crawlers.
 - **Tier estimate:** Trivial
-- **Status:** Idea — deferred pending GitHub profile polish
+- **Status:** Promotion-ready — profile polished 2026-06-03 (name "Rob Parker", capability-signal bio, Atlanta GA, robcparker.com backlink). Metadata is now a strong disambiguation signal; repo surface still thin (no pinned repos, one visible non-fork) but the entity-signal intent is met.
 - **Date added:** 2026-06-03
 
 ---
