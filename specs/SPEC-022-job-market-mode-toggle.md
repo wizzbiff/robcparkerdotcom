@@ -350,3 +350,41 @@ Plus the two known Q5/false-positive carries already in the prediction (`advisor
 ### Finding 2 — `index.html:256` comment was already "CONTACT CTA"
 
 AG-IG-4 targeted the `index.html:222` comment ("FULL-TIME ROLE CTA…"), which was neutralized to `<!-- CONTACT CTA -->`. Note the dark footer-CTA section's own comment (`index.html:256`) was *already* `<!-- CONTACT CTA -->` pre-spec — no collision; the two sections now carry the same neutral descriptor, which is fine. **Disposition: no action.**
+
+---
+
+## QA-SPEC-022 Checklist (2026-06-03)
+
+**Branch:** `spec/SPEC-022-job-market-mode-toggle` · **Commit under test:** `b9f485e`
+**Specialists:** `qa-expert` (static/automated) + `code-reviewer` (parallel).
+**code-reviewer verdict:** **APPROVE** — all 32 String-Lock strings ship byte-identically; entities (`&mdash;`/`&middot;`/`&rsquo;`/`M&amp;A`/literal em-dash) correct per file convention; description triplets + contact title triplet consistent; `aria-labelledby` bindings intact (no id renamed); manifest MODE OFF strings match shipped files and MODE ON strings match pre-spec originals; no scope leakage (`js/main.js`, `css/style.css` untouched; `hiring` option retained). No critical/important/convention findings.
+
+### Static checklist (qa-expert)
+
+| # | Item | AC | Result |
+|---|------|----|--------|
+| 1 | Head regions (title/og/twitter/desc ×6 pages) free of job-seeking terms | AC1 | **PASS** (0 head matches) |
+| 2 | Body copy free of inventoried job-seeking phrases | AC2 | **PASS** (0 matches) |
+| 3 | Byte-lock spot-checks (index h2, index footer p, contact title triplet, advisory hero, how-built HB-1/HB-2, about hero/bio, resume positioning/summary) | AC3 | **PASS** (all byte-identical) |
+| 4 | Contact form `hiring` option + `SUBJECT_BY_INTENT` unchanged; 5/5 option↔key sync | AC4 | **PASS** |
+| 5 | index CTA reframed-in-place; `#ft-cta-heading`/`#cta-heading` preserved; dev comment neutralized | AC5 | **PASS** |
+| 6 | PDF Summary + resume.html:161 both free of targeting clause; brand divergence acknowledged | AC6 | **PASS** |
+| 7 | `governance/job-market-mode.md` exists; 20 toggle points cover all String-Lock entries; MODE OFF/ON columns; Q5 footnote | AC7 | **PASS** |
+| 8 | `project_positioning.md` memory + MEMORY.md updated to neutral frame | AC8 | **PASS** (done at implementation; outside repo tree — operator may eyeball) |
+| 9 | Regression scope: only 6 HTML + manifest + spec + PDF changed; `js/main.js`, `css/style.css` untouched | — | **PASS** |
+| 10 | HTML tag integrity across changed regions (text-only edits, balanced tags) | — | **PASS** |
+| 11 | Nav/footer baseline unchanged (no nav markup touched) | AC11 | **PASS** |
+| 12 | AG-IG-9 residual: raw 7, true-positive **0** (all benign — see Finding 1) | AG-IG-9 | **PASS** |
+| 13 | AG-IG-10 `hiring`: raw 3, true-positive **0** (2 Q5-retained + 1 advisory copy) | AG-IG-10 | **PASS** |
+| 14 | AG-IG-11 head terms: raw 0 | AG-IG-11 | **PASS** |
+
+**Static result: 14/14 PASS (20 sub-checks), 0 FAIL.**
+
+### Deferred to operator visual check (browser-required)
+
+- **AC9 — console-clean sweep** on all 6 pages (near-zero risk: no JS/CSS changed; `contact.html` highest priority for its form JS).
+- **AC10 — reflow at 768px and 375px** on the pages with materially changed copy length: `index.html` (CTA paragraphs), `about.html` (bio — the new `Based in Atlanta, Georgia.` is a short standalone sentence; confirm it doesn't read as an orphan mid-bio at 375px), `advisory.html` (longer hero paragraph — primary reflow risk), `how-this-site-was-built.html` (CTA), `resume.html`, `contact.html`.
+
+No static defects block approval; the deferred items are the standard pre-deploy visual pass.
+
+**QA Gate Decision:** Approved 2026-06-03 — SPEC-022 implementation complete (14/14 static PASS, code-reviewer APPROVE; reflow + console verified by Rob on a local preview). PR opens next; final byte-equality + console verification re-confirmed against the apex domain at the Deploy Gate.
