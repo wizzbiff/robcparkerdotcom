@@ -82,13 +82,15 @@ complexity. Decision Rationale skipped per Trivial-tier shortcut.
 
 ## QA checklist (QA-SPEC-021)
 
-- [ ] AC1 — `sameAs` two entries, correct order, all 6 files (grep)
-- [ ] AC2 — block sha1 identical across all 6 files
-- [ ] AC3 — JSON validity per file (parse check)
-- [ ] AC4 — "six pages" comment, identical across 6
-- [ ] AC5 — `git diff --stat` shows no CSS/JS
-- [ ] AC6 — backlog entry removed
+- [x] AC1 — `sameAs` two entries, correct order, all 6 files (parsed per file)
+- [x] AC2 — block sha1 identical across all 6 files (1 distinct hash)
+- [x] AC3 — JSON validity per file (6/6 parse clean, no trailing comma)
+- [x] AC4 — "six pages" comment, identical across 6 (five=0, six=6)
+- [x] AC5 — `git diff --stat` shows no CSS/JS
+- [x] AC6 — backlog entry removed (grep=0)
 - [ ] AC7 — deferred to Deploy Gate (live apex spot-check)
+
+**QA Gate Decision:** Approved 2026-06-03 — SPEC-021 implementation complete. code-reviewer PASS, qa-expert recommend-approve; both Arch gate-blockers (cross-file sha1, strict JSON parse) pass; no SPEC-020 regression. Comment-redundancy nit accepted as-is. AC7 carries to Deploy Gate. PR opens next.
 
 ## Open Questions — Spec Gate
 
