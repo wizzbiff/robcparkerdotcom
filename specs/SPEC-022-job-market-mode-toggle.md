@@ -388,3 +388,52 @@ AG-IG-4 targeted the `index.html:222` comment ("FULL-TIME ROLE CTA…"), which w
 No static defects block approval; the deferred items are the standard pre-deploy visual pass.
 
 **QA Gate Decision:** Approved 2026-06-03 — SPEC-022 implementation complete (14/14 static PASS, code-reviewer APPROVE; reflow + console verified by Rob on a local preview). PR opens next; final byte-equality + console verification re-confirmed against the apex domain at the Deploy Gate.
+
+---
+
+## Deployment (2026-06-03)
+
+**PR:** [#24](https://github.com/wizzbiff/robcparkerdotcom/pull/24) merged to `main` 2026-06-03.
+**Merge commit:** `7f3f282`.
+**Cloudflare deploy:** completed within the standard window; live apex polled until the new content flipped, then verified.
+
+### Live verification results (apex)
+
+| Check | Target | Result |
+|-------|--------|--------|
+| Apex live | `https://robcparker.com/` | HTTP 200 ✓ |
+| Clean-URL routing | `/`, `/about`, `/resume`, `/contact`, `/advisory`, `/how-this-site-was-built` | all HTTP 200 ✓ (served directly, 0 redirects) |
+| Byte-equality (8 spot strings) | index desc + h2, about hero + bio, resume positioning, contact title, advisory hero, how-built CTA | all present byte-identical to String Lock ✓ |
+| Live job-seeking sweep | all 6 pages concatenated | **0 true-positive matches** ✓ |
+| Live resume PDF | `https://robcparker.com/files/rob-parker-resume.pdf` | 0 targeting/job-seeking matches (`pdftotext`) ✓ |
+
+### Findings post-deploy
+
+**Finding 1 — `www` now 301-redirects to apex (was documented 522).** `https://www.robcparker.com/` returned **HTTP 301 → `https://robcparker.com/`** (resolves 200, 1 redirect), not the HTTP 522 documented in `governance/stack-quirks.md` (Cloudflare section) and `project_site_live.md` memory. www is now a working redirect alias to the apex. **Non-blocker** — unrelated to SPEC-022 (a Cloudflare config change at some prior point); the apex-canonical verification rule is unchanged and all apex checks pass. **Disposition:** governance/memory update candidate — `stack-quirks.md` www entry and `project_site_live.md` should be refreshed to reflect the 301 behavior (apex remains canonical). Flagged for Rob; queued as a follow-on hygiene edit, not a SPEC-022 site change. *Refreshed in the SPEC-022 closeout commit.*
+
+**Deploy Gate Decision:** Approved 2026-06-03 — SPEC-022 live at https://robcparker.com. All 6 pages + the resume PDF verified job-seeking-free on the live apex; 8 locked strings byte-identical; clean-URL routing intact; `governance/job-market-mode.md` gives a bounded MODE OFF→ON flip-back. Job-market mode is OFF.
+
+---
+
+## Post-Completion Retro (2026-06-03)
+
+### What went well
+
+The Pre-Implementation String Lock did its job again — 32 byte-locked strings shipped with zero re-wording at implementation, and the QA byte-equality checks were a mechanical pass/fail rather than a judgment call. Two-reviewer parallel at Arch Gate earned its keep decisively: the architect's independent completeness sweep caught a **6th production page the PM-Spec audit missed entirely** (`how-this-site-was-built.html`, in the global nav), and the copywriter independently caught contact's mislabeled og/twitter **title** tags. Either miss would have shipped a visible job-seeking contradiction on the live site.
+
+### What surprised
+
+The reversibility requirement turned out to be the most interesting part of the spec, not the copy. Because there's no build step, "make it easily reversible" couldn't be a feature flag — it had to be a documentation artifact (`governance/job-market-mode.md`), and getting that right (anchor-keyed not line-keyed; MODE OFF/ON mirror columns; the Q5 "deliberately untoggled" footnote so the retained form option isn't accidentally restored) was where the real design thinking went. The manifest is the actual deliverable; the copy swap was the easy half.
+
+### Process observations
+
+- **AG-IG-9 raw count overshot the predicted range again (7 vs 1–4), benignly** — and the cause was exactly the codified `feedback_ig_residual_counts_as_ranges.md` pattern: the *neutral replacement strings themselves* contain grep tokens ("open to the right conversation", "speaking opportunity") in non-job senses. When a content spec's NEW copy is in the same lexical field as the OLD copy being purged, predict residual ranges wider still. The range framing absorbed it cleanly — no false alarm.
+- **The canonical-PDF-first rule created a sequencing wrinkle** the spec anticipated: Rob regenerated the PDF before the copywriter locked the resume string, which flipped the intended order. It worked out because the PDF simply *removed* the targeting sentence (no new wording to coordinate), but it surfaced a latent rule conflict — mirroring the PDF verbatim would have reverted SPEC-015's "SugarAI" rebrand. The Arch Gate override caught it.
+
+### Counterfactual
+
+Without the Arch Gate completeness sweep, SPEC-022 ships neutralizing 5 pages while `how-this-site-was-built.html` keeps telling visitors "If you're evaluating engineering leaders who build this way, let's talk" — a job-seeking CTA on a public, in-nav page, directly contradicting the entire point of the spec. The gate is the only thing between the PM-Spec audit's blind spot and that escape.
+
+### Stack-quirks follow-on
+
+Yes — the `www` 522→301 change (Deployment Finding 1) is codification-worthy and is refreshed in `governance/stack-quirks.md` + `project_site_live.md` in the closeout commit. The apex-canonical verification rule is unchanged; only the documented www failure mode is now stale.
