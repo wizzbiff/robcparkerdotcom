@@ -8,16 +8,6 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 
 ## Open candidates
 
-### GitHub link on Contact page
-
-- **Source:** `robcparker_com_audit.md` Dimension 7 (lines 235-237)
-- **Origin:** Scoped as R4 in SPEC-012 draft; deferred at Spec Gate (2026-04-26) because Rob's GitHub profile is not currently in a state he wants linked from a Director/VP candidate site.
-- **Scope:** Add a third `<li class="alt-channel-item">` to `contact.html:211-235` (the `<ul class="alt-channels-list">`) after LinkedIn and Email. List becomes LinkedIn → Email → GitHub. Markup reuses `.alt-channel-item`, `.alt-channel-label`, `.alt-channel-link` (no CSS changes). Uses `target="_blank"` + `rel="noopener noreferrer"` + accessible aria-label matching the LinkedIn pattern at `contact.html:215-220`.
-- **Promotion trigger:** Rob has populated his GitHub profile (e.g., starter README, a few visible repos) to a state he's comfortable linking from the candidate site.
-- **Tier estimate:** Trivial
-- **Status:** Idea — promotion-ready once profile is updated
-- **Date added:** 2026-04-26
-
 ### Rebrand-credibility sentence — SugarAI platform attribution
 
 - **Source:** SPEC-015 R8 (originally drafted; dropped at Spec Gate 2026-05-08 per Q2 resolution).
