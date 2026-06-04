@@ -125,7 +125,7 @@
                     </div>
                     <div class="hero-copy-col">
                         <div class="hero-subheadline">
-                            <p>Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production. No slidedeck. No hypothetical.</p>
+                            <p>Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production.</p>
                             <p style="margin-top: var(--space-4);">Below is how it works, what's stable, and what I'm still figuring out.</p>
                         </div>
                         <div class="hero-cta-stack">
@@ -151,8 +151,8 @@
                 <div class="section-header">
                     <h2 id="why-heading">Why This Page Exists</h2>
                 </div>
-                <p>Most engineering leaders can describe how they would bring AI-native practices to an organization. Few can show a working example. This page is one. Every spec in this repo, every commit, every gate decision is an artifact of the SDD methodology described here. The site itself is the proof.</p>
-                <p style="margin-top: var(--space-6);">The SDD methodology described here is adapted from prior work on structured agentic development pipelines using Claude Code. The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site.</p>
+                <p>This page is a working example of AI-native practices. Every spec in this repo, every commit, every gate decision is an artifact of the SDD methodology described here.</p>
+                <p style="margin-top: var(--space-6);">Adapted from <a href="https://www.geekbyte.biz/sdd/dashboard" target="_blank" rel="noopener noreferrer" aria-label="GeekByte's structured agentic development pipeline (opens in new tab)">GeekByte's structured agentic development pipeline</a>, developed by Grant Howe. The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site.</p>
             </div>
         </section>
 
@@ -701,8 +701,8 @@
              SECTION 5: TIERS AND GATE OWNERSHIP
              ================================================================ -->
         <!-- WHY: section-alt applied here per AG-IG-17 — one alternating band
-             per page (not counting the dark closing CTA). The tier table is the
-             right candidate: structured data benefits from visual separation. -->
+             per page. The tier table is the right candidate: structured data
+             benefits from visual separation. -->
         <section class="section section-alt" id="tiers" aria-labelledby="tiers-heading">
             <div class="container">
                 <div class="section-header">
@@ -734,7 +734,7 @@
                 </dl>
 
                 <p>Rob owns every gate — Spec Gate, Arch Gate, QA Gate, Deploy Gate — with AI-agent-structured review at each. Critical-tier work is the one exception: it requires an external second reviewer before the gate can close. The tier system is what makes one-human-in-the-loop viable: by right-sizing gate depth to actual risk, it keeps cognitive load proportional to stakes rather than constant across every change.</p>
-                <p style="margin-top: var(--space-6);">The tier-and-gate-ownership model is a Rob-specific extension to the foundational SDD pipeline. It was developed to make the methodology run sustainably with a single human operator — a design constraint that shaped both the tier definitions and the gate structure.</p>
+                <p style="margin-top: var(--space-6);">The tier-and-gate-ownership model is an extension to GeekByte's foundational SDD pipeline. It was developed to make the methodology run sustainably with a single human operator, and that constraint shaped both the tier definitions and the gate structure.</p>
             </div>
         </section>
 
@@ -839,22 +839,10 @@
                 <p>Phase 1 of robcparker.com is a static marketing site. Phase 2 is an AI agent product. Phase 3 is a subscription billing platform. The SDD pipeline that built Phase 1 will need to evolve for each of those transitions — new specialists (backend-developer, db-architect, ai-integrations), new tier triggers (auth, AI safety review, payment compliance), new gates. The pipeline is designed to absorb that evolution. Tiers escalate when the trigger checklist demands it. New agents are added by writing new role files in the same shape as the existing ones. The two-layer architecture doesn't change — the inventory inside each layer does.</p>
                 <p style="margin-top: var(--space-6);">That property — load-bearing skeleton, replaceable parts — is not specific to this site. It's the same property that makes an engineering organization resilient through growth: a stable operating model that can absorb new tooling, new platforms, and new team members without rewiring from scratch. The methodology here is one instance of that pattern; the pattern generalizes.</p>
 
-                <!-- Pareto callout — standalone before closing CTA, per AG-Q2 -->
+                <!-- Pareto callout — page-terminal, per AG-Q2 -->
                 <blockquote class="sdd-pareto-callout">
-                    The methodology behind this site is the same methodology I'd bring to your engineering organization.
+                    Every spec, every gate decision, and every deployed change that produced this site is in the public repository — the full record is checkable.
                 </blockquote>
-            </div>
-        </section>
-
-        <!-- ================================================================
-             CLOSING CTA — dark section terminus
-             Not counted against the at-most-one alt-band rule per AG-IG-17.
-             ================================================================ -->
-        <section class="section section-dark cta-section" aria-labelledby="cta-heading">
-            <div class="container">
-                <h2 id="cta-heading">This Page Is the Portfolio</h2>
-                <p>The methodology described here is live — every spec, every gate decision, and every deployed change is in the public repo. If you build this way too, let's talk.</p>
-                <a href="contact.html" class="btn btn-white">Get in Touch</a>
             </div>
         </section>
 
