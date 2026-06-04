@@ -125,7 +125,7 @@
                     </div>
                     <div class="hero-copy-col">
                         <div class="hero-subheadline">
-                            <p>Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production. No slidedeck. No hypothetical.</p>
+                            <p>Every page on this site was specified, reviewed, built, and deployed through a multi-agent SDD pipeline — then shipped to production.</p>
                             <p style="margin-top: var(--space-4);">Below is how it works, what's stable, and what I'm still figuring out.</p>
                         </div>
                         <div class="hero-cta-stack">
@@ -151,8 +151,8 @@
                 <div class="section-header">
                     <h2 id="why-heading">Why This Page Exists</h2>
                 </div>
-                <p>Most engineering leaders can describe how they would bring AI-native practices to an organization. Few can show a working example. This page is one. Every spec in this repo, every commit, every gate decision is an artifact of the SDD methodology described here. The site itself is the proof.</p>
-                <p style="margin-top: var(--space-6);">The SDD methodology described here is adapted from prior work on structured agentic development pipelines using Claude Code. The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site.</p>
+                <p>This page is a working example of AI-native practices. Every spec in this repo, every commit, every gate decision is an artifact of the SDD methodology described here.</p>
+                <p style="margin-top: var(--space-6);">Adapted from <a href="https://www.geekbyte.biz/sdd/dashboard" target="_blank" rel="noopener noreferrer" aria-label="GeekByte's structured agentic development pipeline (opens in new tab)">GeekByte's structured agentic development pipeline</a>, developed by Grant Howe.</p>
             </div>
         </section>
 
@@ -174,7 +174,7 @@
                 <div class="diagram-wrapper">
 
                     <!-- DESKTOP VARIANT — horizontal flow, viewBox 1200×220 -->
-                    <figure class="diagram-figure">
+                    <figure class="diagram-figure diagram-desktop">
                         <svg
                             class="diagram-desktop"
                             viewBox="0 0 1200 220"
@@ -182,7 +182,7 @@
                             role="img"
                             aria-labelledby="pipeline-diagram-desktop-title pipeline-diagram-desktop-desc"
                             focusable="false"
-                            style="width: 100%; height: auto; display: block;"
+                            style="width: 100%; height: auto;"
                         >
                             <title id="pipeline-diagram-desktop-title">SDD Pipeline — 9-node flow</title>
                             <desc id="pipeline-diagram-desktop-desc">
@@ -285,7 +285,7 @@
                     </figure>
 
                     <!-- MOBILE VARIANT — vertical flow, viewBox 320×900 -->
-                    <figure class="diagram-figure">
+                    <figure class="diagram-figure diagram-mobile">
                         <svg
                             class="diagram-mobile"
                             viewBox="0 0 320 900"
@@ -293,7 +293,7 @@
                             role="img"
                             aria-labelledby="pipeline-diagram-mobile-title pipeline-diagram-mobile-desc"
                             focusable="false"
-                            style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto;"
+                            style="width: 100%; max-width: 320px; height: auto; margin: 0 auto;"
                         >
                             <title id="pipeline-diagram-mobile-title">SDD Pipeline — 9-node flow (vertical)</title>
                             <desc id="pipeline-diagram-mobile-desc">
@@ -421,7 +421,7 @@
                 <div class="diagram-wrapper">
 
                     <!-- DESKTOP VARIANT — two swim lanes, viewBox 1200×360 -->
-                    <figure class="diagram-figure">
+                    <figure class="diagram-figure diagram-desktop">
                         <svg
                             class="diagram-desktop"
                             viewBox="0 0 1200 360"
@@ -429,7 +429,7 @@
                             role="img"
                             aria-labelledby="arch-diagram-desktop-title arch-diagram-desktop-desc"
                             focusable="false"
-                            style="width: 100%; height: auto; display: block;"
+                            style="width: 100%; height: auto;"
                         >
                             <title id="arch-diagram-desktop-title">Two-Layer Agent Architecture</title>
                             <desc id="arch-diagram-desktop-desc">
@@ -583,7 +583,7 @@
                     </figure>
 
                     <!-- MOBILE VARIANT — two stacked labeled groups, no arrows, viewBox 320×520 -->
-                    <figure class="diagram-figure">
+                    <figure class="diagram-figure diagram-mobile">
                         <svg
                             class="diagram-mobile"
                             viewBox="0 0 320 520"
@@ -591,7 +591,7 @@
                             role="img"
                             aria-labelledby="arch-diagram-mobile-title arch-diagram-mobile-desc"
                             focusable="false"
-                            style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto;"
+                            style="width: 100%; max-width: 320px; height: auto; margin: 0 auto;"
                         >
                             <title id="arch-diagram-mobile-title">Two-Layer Agent Architecture</title>
                             <desc id="arch-diagram-mobile-desc">
@@ -701,8 +701,8 @@
              SECTION 5: TIERS AND GATE OWNERSHIP
              ================================================================ -->
         <!-- WHY: section-alt applied here per AG-IG-17 — one alternating band
-             per page (not counting the dark closing CTA). The tier table is the
-             right candidate: structured data benefits from visual separation. -->
+             per page. The tier table is the right candidate: structured data
+             benefits from visual separation. -->
         <section class="section section-alt" id="tiers" aria-labelledby="tiers-heading">
             <div class="container">
                 <div class="section-header">
@@ -734,7 +734,7 @@
                 </dl>
 
                 <p>Rob owns every gate — Spec Gate, Arch Gate, QA Gate, Deploy Gate — with AI-agent-structured review at each. Critical-tier work is the one exception: it requires an external second reviewer before the gate can close. The tier system is what makes one-human-in-the-loop viable: by right-sizing gate depth to actual risk, it keeps cognitive load proportional to stakes rather than constant across every change.</p>
-                <p style="margin-top: var(--space-6);">The tier-and-gate-ownership model is a Rob-specific extension to the foundational SDD pipeline. It was developed to make the methodology run sustainably with a single human operator — a design constraint that shaped both the tier definitions and the gate structure.</p>
+                <p style="margin-top: var(--space-6);">The tier-and-gate-ownership model is an extension to GeekByte's foundational SDD pipeline. It was developed to make the methodology run sustainably with a single human operator, and that constraint shaped both the tier definitions and the gate structure.</p>
             </div>
         </section>
 
@@ -785,9 +785,9 @@
         <section class="section" id="working-experimental-rough" aria-labelledby="working-heading">
             <div class="container">
                 <div class="section-header">
-                    <h2 id="working-heading">What's Working, What's Experimental, What's Rough</h2>
+                    <h2 id="working-heading">What's Working, What's Experimental, What's Evolving</h2>
                 </div>
-                <p class="sdd-section-intro">This is the engineering-judgment section: an honest accounting of what's stable, what's being evaluated, and what still has real problems.</p>
+                <p class="sdd-section-intro">This is the engineering-judgment section: an honest accounting of what's stable, what's being evaluated, and what's next.</p>
 
                 <div class="highlights-grid">
 
@@ -814,7 +814,7 @@
                     </article>
 
                     <article class="highlight-card">
-                        <h3>Rough or Evolving</h3>
+                        <h3>Evolving</h3>
                         <ul class="sdd-card-list">
                             <li><strong>Solo-operator gate fatigue</strong> — One human approving every gate is a cognitive load issue. The tier system mitigates by right-sizing depth to risk. That mitigation is real. At higher velocity, it won't be enough.</li>
                             <li><strong>Cross-spec coordination</strong> — When two specs touch overlapping assets, sequencing decisions create overhead the pipeline doesn't currently automate. SPEC-015 required a logo-naming coordination note to SPEC-012. The tier system doesn't model inter-spec dependencies — that's a gap.</li>
@@ -836,25 +836,13 @@
                 <div class="section-header">
                     <h2 id="future-heading">Future Evolution</h2>
                 </div>
-                <p>Phase 1 of robcparker.com is a static marketing site. Phase 2 is an AI agent product. Phase 3 is a subscription billing platform. The SDD pipeline that built Phase 1 will need to evolve for each of those transitions — new specialists (backend-developer, db-architect, ai-integrations), new tier triggers (auth, AI safety review, payment compliance), new gates. The pipeline is designed to absorb that evolution. Tiers escalate when the trigger checklist demands it. New agents are added by writing new role files in the same shape as the existing ones. The two-layer architecture doesn't change — the inventory inside each layer does.</p>
+                <p>Phase 1 of robcparker.com is a static marketing site. Phase 2 is an AI agent modeled on Rob's life experience. The SDD pipeline that built Phase 1 will need to evolve for that transition — new specialists (backend-developer, ai-integrations), new tier triggers (auth, AI safety review), new gates. The pipeline is designed to absorb that evolution. Tiers escalate when the trigger checklist demands it. New agents are added by writing new role files in the same shape as the existing ones. The two-layer architecture doesn't change — the inventory inside each layer does.</p>
                 <p style="margin-top: var(--space-6);">That property — load-bearing skeleton, replaceable parts — is not specific to this site. It's the same property that makes an engineering organization resilient through growth: a stable operating model that can absorb new tooling, new platforms, and new team members without rewiring from scratch. The methodology here is one instance of that pattern; the pattern generalizes.</p>
 
-                <!-- Pareto callout — standalone before closing CTA, per AG-Q2 -->
+                <!-- Pareto callout — page-terminal, per AG-Q2 -->
                 <blockquote class="sdd-pareto-callout">
-                    The methodology behind this site is the same methodology I'd bring to your engineering organization.
+                    Every spec, every gate decision, and every deployed change that produced this site is in the public repository — the full record is checkable.
                 </blockquote>
-            </div>
-        </section>
-
-        <!-- ================================================================
-             CLOSING CTA — dark section terminus
-             Not counted against the at-most-one alt-band rule per AG-IG-17.
-             ================================================================ -->
-        <section class="section section-dark cta-section" aria-labelledby="cta-heading">
-            <div class="container">
-                <h2 id="cta-heading">This Page Is the Portfolio</h2>
-                <p>The methodology described here is live — every spec, every gate decision, and every deployed change is in the public repo. If you build this way too, let's talk.</p>
-                <a href="contact.html" class="btn btn-white">Get in Touch</a>
             </div>
         </section>
 

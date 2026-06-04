@@ -18,6 +18,15 @@ This is **not** a list of out-of-codebase operator todos — those live in `OPER
 - **Status:** Idea — deferred pending SugarAI corroborating public material
 - **Date added:** 2026-05-08
 
+### Reconcile CLAUDE.md / roadmap to the two-phase product model
+
+- **Source:** SPEC-023 Finding 4 (2026-06-03).
+- **Origin:** SPEC-023 reworked the public "Future Evolution" copy on `how-this-site-was-built.html` to the new roadmap — **Phase 1 static marketing site → Phase 2 AI agent modeled on Rob's life experience; no Phase 3.** CLAUDE.md still describes the old roadmap (Phase 2 AI agent product → Phase 3 subscription billing) and its Security › Future Requirements still lists payment/Stripe handling. The public page now contradicts the internal governance doc.
+- **Scope:** Update CLAUDE.md "Product Roadmap" + "Architectural Implications" + "Security › Future Requirements" (drop the Phase-3/payments framing or re-scope to the AI-agent phase). Check the Complexity Tier Defaults table's "Payment/subscription → Critical" row — keep or note as not-currently-on-roadmap. Reconcile any roadmap memory.
+- **Tier estimate:** Trivial (governance-doc copy; no site change).
+- **Status:** Idea — surfaced at SPEC-023 QA; Rob to decide whether to reconcile.
+- **Date added:** 2026-06-03
+
 ---
 
 ## How to use this file
