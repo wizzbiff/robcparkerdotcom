@@ -252,3 +252,58 @@ Shipped all five byte-locked strings (128, 154, 155, 737, 844), removed the clos
 ### Finding 2 — Closing-beat distinctness confirmed
 
 Line 840 closes the Future prose with "…the pattern generalizes"; the rewritten Pareto callout (844) closes the page with "…the full record is checkable." Distinct beats — the AG-IG-3 redundancy is retired. The repo-pointer that was being deleted with the CTA section now survives as the page's terminal, factual closer.
+
+### Finding 3 — Diagram classes are shared by two diagram pairs (informational)
+
+QA confirmed `class="diagram-desktop"` and `class="diagram-mobile"` each appear **twice** on the page — the Section-3 *pipeline* diagram AND the Section-4 *two-layer architecture* diagram both use the responsive desktop/mobile pattern. Task 3 was dropped, so all four are untouched, but this is worth noting: had the diagram de-dup proceeded, the removal would have needed to target the pipeline figure specifically (by `aria-labelledby`/figure, not by the shared class) to avoid clobbering the architecture diagram. Reinforces the Spec Gate Q1 decision to keep the responsive pairs. **No action.**
+
+---
+
+## QA-SPEC-023 Checklist (2026-06-03)
+
+**Branch:** `spec/SPEC-023-how-built-attribution` · **Commit under test:** `7ea54cc`
+**Specialists:** `qa-expert` (static) + `code-reviewer` (parallel).
+**code-reviewer verdict:** **APPROVE** — byte-locked strings exact; CTA removal left balanced tags (`#future` is the last section; tail closes blockquote → `</div>` → `</section>` → `</main>`); attribution `<a>` well-formed and convention-compliant; "GeekByte" spelling consistent across both mentions; both stale comments updated; closing-beat redundancy avoided. No findings.
+
+| # | Item | AC | Result |
+|---|------|----|--------|
+| 1 | Self-promo phrases removed (`No slidedeck`, `Few can show`, `the proof`, `I'd bring`, CTA strings) all → 0 | AC1 | **PASS** |
+| 2 | Attribution: `GeekByte`=2, `Grant Howe`=1, dashboard link=1 (target/rel/aria-label correct), `adapted from prior work`=0 | AC2 | **PASS** |
+| 3 | Extension framing reads as source(GeekByte) vs. extension(Rob) — delineated at 155 + 737 | AC3 | **PASS** (read check) |
+| 4 | 5 locked strings byte-identical to String Lock (128, 154, 155, 737, 844) | AC4 | **PASS** |
+| 5 | `#pipeline` resolves; hero "See the Pipeline" lands; no `#cta-heading` dead anchor; Contact still in global nav | AC8 | **PASS** (static) |
+| 6 | Both diagram pairs intact (`diagram-desktop`=2, `diagram-mobile`=2); `css/style.css` unchanged | — | **PASS** |
+| 7 | HTML well-formed: 8 `<section>` opens / 8 closes (the naive `grep -c '<section'`=9 is the line-162 comment false positive — Finding 1); page ends on `#future` | — | **PASS** |
+| 8 | Scope: only `how-this-site-was-built.html` is a changed production asset (spec doc bundled per house convention) | AC10 | **PASS** |
+
+**Static result: 8/8 PASS, 0 FAIL.**
+
+### Deferred to operator visual check (browser-required)
+
+- **AC8 — console clean** + GeekByte link keyboard-focus/activation (no JS changed → near-zero risk).
+- **AC9 — responsive 768px/375px:** page ends cleanly on "Future Evolution" with no orphaned band/whitespace where the CTA was; the new inline link at 155 wraps cleanly; both diagram pairs render as before.
+
+No static defects block approval.
+
+---
+
+## Additional Changes at QA (2026-06-03)
+
+After reviewing the local preview, Rob requested five further edits to the same page — same "show the work / less self-promotion" theme, still pre-merge, so folded into SPEC-023 rather than spun into a new spec. Items 1–4 are Rob-dictated verbatim edits; item 5 (the Future Evolution rework) was byte-locked by marketing-copywriter (roadmap change + removal of the Phase-3/payment references).
+
+| # | Change | Verification |
+|---|--------|--------------|
+| AC-1 | Remove the sentence "The two-layer architecture, the tier system, and the Solo Operator gate-ownership model are extensions developed for this site." from the attribution paragraph (line 155). | `grep -c 'extensions developed for this site'` → **0**. Attribution paragraph now reads "Adapted from [GeekByte's…pipeline], developed by Grant Howe." |
+| AC-2 | Section heading "What's Working, What's Experimental, What's **Rough**" → "…What's **Evolving**". | `grep -c "What's Rough"` → **0**. |
+| AC-3 | Intro "…what's being evaluated, and **what still has real problems**." → "…and **what's next**." | `grep -c 'still has real problems'` → **0**; "and what's next." present. |
+| AC-4 | Card heading "**Rough or Evolving**" → "**Evolving**". | `grep -c 'Rough or Evolving'` → **0**; `>…Evolving` count = **2** (h2 + h3). |
+| AC-5 | Rework Future Evolution para for the new roadmap: Phase 1 static site; **Phase 2 = "an AI agent modeled on Rob's life experience"; no Phase 3** (remove the subscription-billing phase). Copywriter-locked. | `grep -c 'Phase 3'`, `'subscription billing'`, `'payment compliance'`, `'db-architect'`, `'AI agent product'` all → **0**; "AI agent modeled on Rob's life experience" present (1). Para still ends on "…the inventory inside each layer does." for a clean handoff to the unchanged generalization paragraph. |
+
+**Re-verification:** attribution intact (`GeekByte`=2, `Grant Howe`=1, dashboard link=1); sections balanced (8 real `<section>` / 8 `</section>` — the naïve grep "9" remains the line-162 comment false positive per Finding 1); scope still single production file (`how-this-site-was-built.html`). Static re-check passed; specialist QA agents were not re-invoked for these deterministic dictated edits + one copywriter-locked paragraph (proportionate; the visual check is Rob's preview re-eyeball).
+
+### Flags raised by these changes
+
+- **Finding 4 — CLAUDE.md / memory roadmap divergence (follow-up needed).** CLAUDE.md "Product Roadmap" still lists **Phase 2: AI agent product → Phase 3: subscription payment model**, and "Security › Future Requirements" lists payment/Stripe handling. The page now states Phase 2 = "AI agent modeled on Rob's life experience" and **no Phase 3**. This is a genuine product-direction change; CLAUDE.md and any roadmap memory should be reconciled to match. **Out of SPEC-023's page-copy scope — surfaced for Rob to decide whether to reconcile now or in a follow-on.**
+- **Finding 5 — stale section id (cosmetic, no action).** The section's internal `id="working-experimental-rough"` still contains "rough" after the visible heading/card dropped the word. It is not visible and nothing anchors to it; left as-is to avoid needless churn. Noted for awareness.
+
+**QA Gate Decision:** Approved 2026-06-03 — SPEC-023 implementation complete (8/8 static PASS + 5 Rob-requested additions verified; code-reviewer APPROVE; reflow/console + the additions visually verified by Rob on a local preview). PR opens next; live byte-equality re-confirmed at the Deploy Gate. Follow-up logged: reconcile CLAUDE.md/roadmap to the two-phase model (Finding 4), out of this spec's page-copy scope.
