@@ -326,4 +326,55 @@ The existing `.diagram-desktop`/`.diagram-mobile` + media-query rules now govern
 
 **Process note (retro input):** a Spec-Gate claim about *rendered* responsive behavior was made from reading CSS class rules alone, without accounting for inline-style specificity — and shipped through Arch + QA gates because every check was grep/structure-based, not a real browser render. The diagrams were declared "unchanged, no regression risk" precisely because they were out of edit scope, so no one rendered them. **Lesson:** when a spec's correctness depends on *rendered* layout/visibility (not just markup presence), a real browser check belongs in the gate, not a grep. Candidate `governance/stack-quirks.md` entry: "inline `style="display:…"` on an element silently overrides responsive `.class{display}` media-query rules — check inline styles before trusting a CSS-class-based responsive swap."
 
+## Deployment (2026-06-04)
+
+**PR:** [#25](https://github.com/wizzbiff/robcparkerdotcom/pull/25) merged to `main` 2026-06-04.
+**Merge commit:** `8777d29`.
+**Cloudflare deploy:** completed within the standard window; live apex polled until the GeekByte attribution appeared, then verified.
+
+### Live verification results (apex)
+
+| Check | Result |
+|-------|--------|
+| Apex page live | `https://robcparker.com/how-this-site-was-built` → HTTP 200 ✓ |
+| Attribution | `GeekByte` on 2 lines (155 attribution + 737 tiers; 3 raw occurrences = aria-label + link text + tiers), `Grant Howe` ×1, dashboard link ×1 ✓ |
+| Self-promo / CTA removed | `No slidedeck`, `Few can show`, `This Page Is the Portfolio`, `I'd bring`, `extensions developed for this site`, `What's Rough`, `Rough or Evolving`, `section-dark` all → **0** ✓ |
+| Roadmap | `Phase 3`, `subscription billing` → **0**; "AI agent modeled on Rob's life experience" present ✓ |
+| New copy | "What's…Evolving" heading, "and what's next.", "the full record is checkable" all present ✓ |
+| Diagram fix shipped | live markup: `figure…diagram-desktop` ×2, `figure…diagram-mobile` ×2, inline `display: block` → **0** ✓ (one diagram + caption per viewport; Rob-verified rendering on local preview pre-merge) |
+
+### Findings post-deploy
+
+None. Clean deploy. The diagram responsive swap (Findings 6–7) ships correct: the figure-level toggle + removed inline `display:block` are present on the live host.
+
+**Deploy Gate Decision:** Approved 2026-06-04 — SPEC-023 live at https://robcparker.com/how-this-site-was-built. Page reads as portfolio-of-record: GeekByte/Grant Howe attributed with link; self-promotional framing and the closing CTA gone; two-phase roadmap; "Evolving" headings; and the diagram responsive swap fixed (one diagram + caption per viewport) — 0 self-promo/CTA/roadmap residuals on the live apex.
+
+---
+
+## Post-Completion Retro (2026-06-04)
+
+### What went well
+
+The copy half of the spec ran textbook: two-reviewer Arch (architect-reviewer + marketing-copywriter), a byte-locked String Lock, and grep-verifiable ACs meant the factual rewrites, the GeekByte attribution, and the CTA removal shipped with zero rework. The architect caught a closing-callout redundancy (the new last line would have echoed the line above it) that a copy-only pass would have missed. The local-preview review loop earned its keep three times over — it's where the 5 follow-on edits, the dual-diagram bug, and the duplicate-caption bug all surfaced.
+
+### What surprised
+
+The diagrams were never a working responsive pair. Spec Gate Q1 confidently described them as "desktop shows horizontal, mobile shows vertical, only one per viewport" — read straight from the CSS swap rules — but every SVG had an inline `style="…display:block"` that overrode the class rules, so all four always rendered. The bug was **pre-existing (from SPEC-016), not introduced here**, and the entire SPEC-023 pipeline (Spec → Arch → QA) sailed past it because the diagrams were "out of edit scope" and every gate check was grep/structure-based. It took Rob opening the page in a browser to see it — twice (both diagrams, then both captions).
+
+### Process observations
+
+- **Rendering-dependent correctness needs a real browser render in-gate, not grep.** When a claim is about what *displays* (responsive visibility, layout, overflow), markup/CSS-reading and grep can't verify it — and "out of scope → no regression risk → don't render it" is exactly the reasoning that let a latent render bug survive three gates. The preview check should be a first-class gate step whenever a spec touches (or even just neighbors) layout/visibility.
+- **Inline `style` beats class CSS** — the specific gotcha worth codifying (stack-quirks entry added this closeout).
+- **Scope grew twice at QA** (5 dictated edits, then the diagram fix). Folding them into the open spec/PR rather than spawning SPEC-024/025 was the right call (same page, same theme, pre-merge), but it stretched the QA "approval" across several rounds — acceptable here, worth watching as a pattern.
+
+### Counterfactual
+
+Without the in-gate browser preview, SPEC-023 ships and the how-built page keeps rendering two stacked diagrams (and doubled captions) on every desktop — a pre-existing SPEC-016 defect that no grep-based gate would ever have surfaced. The manual eyeball turned a clean-looking automated pass into a caught bug. Positive evidence that a real render belongs in the loop for visual specs.
+
+### Stack-quirks follow-on
+
+Added — see `governance/stack-quirks.md` (inline-style-overrides-responsive-class). The broader "render visual specs in a browser at the gate" lesson is captured here in the retro; promote to a stack-quirk if a second visual spec hits the same grep-only blind spot.
+
+---
+
 **Finding 7 — duplicate figcaption (follow-on to Finding 6).** After the inline-`display:block` fix, Rob reported the diagram **caption** still appeared twice per section on desktop. Root cause: each diagram pair is **two `<figure>` elements**, and the responsive `.diagram-desktop`/`.diagram-mobile` toggle was on the `<svg>` only — so hiding the mobile *svg* on desktop left the mobile `<figure>` and its `<figcaption>` visible (the caption has no swap class). **Fix:** moved the responsive toggle up to the `<figure>` — added `diagram-desktop`/`diagram-mobile` to each `<figure class="diagram-figure">` (kept the class on the `<svg>` too, so the visible svg retains `display:block` for `width:100%` sizing). The hidden variant's entire figure — svg **and** figcaption — is now `display:none`. Verified: 2 `figure…diagram-desktop` + 2 `figure…diagram-mobile` + 0 bare `diagram-figure` figures; 4 figcaptions present (2 now inside hidden figures per viewport); svg classes and the `display:block` removal intact. Visual re-confirmation is Rob's preview re-check.

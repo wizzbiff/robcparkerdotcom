@@ -6,7 +6,7 @@ One-liners preferred — link to the spec or commit where it was hit.
 
 ## CSS
 
-(none yet)
+An inline `style="display: …"` on an element **silently overrides** a responsive `.class { display: … }` rule (including the `@media` swap), because inline styles outrank external class selectors. SPEC-023 hit this: the SDD-pipeline and two-layer-architecture diagrams each have a `.diagram-desktop`/`.diagram-mobile` SVG pair toggled by a `@media (max-width:768px)` swap, but every SVG also carried inline `style="…; display: block;"` — so the swap never fired and **all four SVGs always rendered** (both diagrams stacked on desktop). Fix: remove `display` from the inline style and let the class rule own visibility. Corollary: a responsive show/hide belongs on the **wrapper that contains the caption/label too** (move the swap class to the `<figure>`, not just the `<svg>`), or the hidden variant's `<figcaption>` still shows. **Before trusting a class-based responsive swap, grep the element's inline `style` for `display`.** A grep/structure-only gate cannot catch this — it requires a real browser render. Established SPEC-023 (the bug pre-existed from SPEC-016 and survived three gates because no gate rendered the page).
 
 ## JavaScript
 
