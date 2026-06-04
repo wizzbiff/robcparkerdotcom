@@ -307,3 +307,23 @@ After reviewing the local preview, Rob requested five further edits to the same 
 - **Finding 5 — stale section id (cosmetic, no action).** The section's internal `id="working-experimental-rough"` still contains "rough" after the visible heading/card dropped the word. It is not visible and nothing anchors to it; left as-is to avoid needless churn. Noted for awareness.
 
 **QA Gate Decision:** Approved 2026-06-03 — SPEC-023 implementation complete (8/8 static PASS + 5 Rob-requested additions verified; code-reviewer APPROVE; reflow/console + the additions visually verified by Rob on a local preview). PR opens next; live byte-equality re-confirmed at the Deploy Gate. Follow-up logged: reconcile CLAUDE.md/roadmap to the two-phase model (Finding 4), out of this spec's page-copy scope.
+
+---
+
+## Post-PR Correction — Diagram Responsive Bug (2026-06-04)
+
+**Finding 6 (corrects the Spec Gate Q1 premise).** After PR #25 opened, Rob reported (with a screenshot, the architecture section) that **both** the horizontal *and* vertical diagrams render on desktop — they are NOT a working responsive pair. The Spec Gate Q1 analysis ("only one shows per viewport") was **wrong**: it read the CSS swap rules (`css/style.css:2413–2418`, `.diagram-desktop{display:block}` / `.diagram-mobile{display:none}` + `@media (max-width:768px)` swap) but missed that **every SVG carries an inline `style="…; display: block;"`** (HTML lines 185, 296, 432, 594). Inline styles outrank external class rules, so `display:block` was forced on all four SVGs at all viewports — the media-query swap never took effect, and both variants always rendered (in both the pipeline and architecture sections).
+
+**Root cause:** inline `display: block` on the SVG `style` attribute overriding the responsive class CSS.
+
+**Fix (HTML-only, no CSS change):** removed `display: block;` from the inline `style` of all four diagram SVGs:
+- desktop SVGs (185, 432): `width: 100%; height: auto; display: block;` → `width: 100%; height: auto;`
+- mobile SVGs (296, 594): `width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto;` → `width: 100%; max-width: 320px; height: auto; margin: 0 auto;`
+
+The existing `.diagram-desktop`/`.diagram-mobile` + media-query rules now govern visibility unopposed: **desktop → horizontal only; ≤768px → vertical only**, for both diagram pairs. This is what Spec Gate Q1 *believed* the page already did — the fix makes the "keep both (responsive pair)" decision actually hold.
+
+**Verification:** `grep -c 'display: block' how-this-site-was-built.html` → **0**; CSS swap rules unchanged; scope = single file. Visual confirmation (one diagram per viewport, desktop + mobile) is Rob's preview re-check — required, since this is a render bug not observable via grep.
+
+**Process note (retro input):** a Spec-Gate claim about *rendered* responsive behavior was made from reading CSS class rules alone, without accounting for inline-style specificity — and shipped through Arch + QA gates because every check was grep/structure-based, not a real browser render. The diagrams were declared "unchanged, no regression risk" precisely because they were out of edit scope, so no one rendered them. **Lesson:** when a spec's correctness depends on *rendered* layout/visibility (not just markup presence), a real browser check belongs in the gate, not a grep. Candidate `governance/stack-quirks.md` entry: "inline `style="display:…"` on an element silently overrides responsive `.class{display}` media-query rules — check inline styles before trusting a CSS-class-based responsive swap."
+
+**Finding 7 — duplicate figcaption (follow-on to Finding 6).** After the inline-`display:block` fix, Rob reported the diagram **caption** still appeared twice per section on desktop. Root cause: each diagram pair is **two `<figure>` elements**, and the responsive `.diagram-desktop`/`.diagram-mobile` toggle was on the `<svg>` only — so hiding the mobile *svg* on desktop left the mobile `<figure>` and its `<figcaption>` visible (the caption has no swap class). **Fix:** moved the responsive toggle up to the `<figure>` — added `diagram-desktop`/`diagram-mobile` to each `<figure class="diagram-figure">` (kept the class on the `<svg>` too, so the visible svg retains `display:block` for `width:100%` sizing). The hidden variant's entire figure — svg **and** figcaption — is now `display:none`. Verified: 2 `figure…diagram-desktop` + 2 `figure…diagram-mobile` + 0 bare `diagram-figure` figures; 4 figcaptions present (2 now inside hidden figures per viewport); svg classes and the `display:block` removal intact. Visual re-confirmation is Rob's preview re-check.
